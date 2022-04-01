@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 module.exports = {
-    bundleName: "Hallo Welt",
-    bundleDescription: "Das Modul gibt Hallo aus.",
-    hello: "Hallo Welt"
+    root: {
+        bundleName: "Geoprocessing",
+        bundleDescription: "This bundle enables the execution of Geoprocessing services.",
+
+        tool: {
+            title: "Geoprocessing",
+            tooltip: "Geoprocessing"
+        },
+
+        ui: {
+            buttonText: "Start Geoprocessing",
+            success: "Geoprocessing completed successfully.",
+            failure: "Geoprocessing failed. Please contact the support at"
+        }
+    },
+    de: true
 };

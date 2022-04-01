@@ -1,0 +1,142 @@
+{
+    "name": "dn_geoprocessing",
+    "version": "1.0.0",
+    "title": "${bundleName}",
+    "description": "${bundleDescription}",
+    "vendor": "con terra GmbH",
+    "keywords": [
+        "geoprocessing"
+    ],
+    "dependencies": {
+        "apprt-vue": "^4.12.0",
+        "apprt-vuetify": "^4.12.0",
+        "map-widget": "^4.12.0",
+        "esri": "^4.12.0"
+    },
+    "i18n": [
+        "bundle"
+    ],
+    "CSS-Themes-Extension": [
+        {
+            "name": "*",
+            "files": [
+                "./css/styles.css"
+            ]
+        }
+    ],
+    "icon": {},
+    "license": {},
+    "productName": "devnet-mapapps-geoprocessing",
+    "layout-widgets": [
+        {
+            "widgetRole": "geoprocessingWidget",
+            "sublayout": [
+                "desktop",
+                "tablet_landscape",
+                "tablet_portrait"
+            ],
+            "window": {
+                "dockTool": "geoprocessingToggleTool",
+                "closable": true,
+                "minimizeOnClose": true,
+                "resizable": true,
+                "marginBox": {
+                    "h": 170,
+                    "w": 330,
+                    "b": 74,
+                    "r": 75
+                },
+                "windowClass": "geoprocessing-widget"
+            }
+        },
+        {
+            "widgetRole": "geoprocessingWidget",
+            "sublayout": [
+                "mobile_landscape",
+                "mobile_portrait"
+            ],
+            "window": {
+                "dockTool": "geoprocessingToggleTool",
+                "closable": true,
+                "minimizeOnClose": true,
+                "resizable": false,
+                "marginBox": {
+                    "w": "100%",
+                    "h": "100%",
+                    "b": 40,
+                    "l": 0
+                },
+                "windowClass": "mobileWindow geoprocessing-widget"
+            }
+        }
+    ],
+    "components": [
+        {
+            "name": "Config",
+            "impl": "./GeoprocessingModel",
+            "provides": "dn_geoprocessing.GeoprocessingModel",
+            "propertiesConstructor": true,
+            "properties": {
+                "supportEmailAddress": "",
+                "url": "",
+                "synchronous": true,
+                "params": {}
+            }
+        },
+        {
+            "name": "GeoprocessingWidgetFactory",
+            "provides": [
+                "dijit.Widget",
+                "dn_geoprocessing.GeoprocessingWidgetFactory"
+            ],
+            "instanceFactory": true,
+            "properties": {
+                "widgetRole": "geoprocessingWidget"
+            },
+            "references": [
+                {
+                    "name": "_controller",
+                    "providing": "dn_geoprocessing.GeoprocessingController"
+                },
+                {
+                    "name": "_model",
+                    "providing": "dn_geoprocessing.GeoprocessingModel"
+                }
+            ]
+        },
+        {
+            "name": "GeoprocessingController",
+            "provides": "dn_geoprocessing.GeoprocessingController",
+            "references": [
+                {
+                    "name": "_model",
+                    "providing": "dn_geoprocessing.GeoprocessingModel"
+                },
+                {
+                    "name": "_tool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=geoprocessingToggleTool)"
+                }
+            ]
+        },
+        {
+            "name": "GeoprocessingToggleTool",
+            "impl": "ct/tools/Tool",
+            "provides": [
+                "ct.tools.Tool"
+            ],
+            "propertiesConstructor": true,
+            "properties": {
+                "id": "geoprocessingToggleTool",
+                "title": "${tool.title}",
+                "tooltip": "${tool.tooltip}",
+                "iconClass": "icon-toolcase",
+                "toolRole": "toolset",
+                "togglable": true,
+                "rules": {
+                    "noGroup": true
+                }
+            }
+        }
+    ]
+}

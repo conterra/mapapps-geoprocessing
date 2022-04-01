@@ -20,8 +20,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
-    <artifactId>mapapps-remote-project-blueprint</artifactId>
-    <version>4.12.4-SNAPSHOT</version>
+    <artifactId>mapapps-geoprocessing</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
