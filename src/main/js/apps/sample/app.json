@@ -33,7 +33,7 @@
     "bundles": {
         "dn_geoprocessing": {
             "Config": {
-                "supportEmailAddress": "support@laixo.ch",
+                "supportEmailAddress": "support@conterra.de",
                 "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
                 "synchronous": true,
                 "params": {
