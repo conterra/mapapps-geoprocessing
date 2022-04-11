@@ -16,3 +16,7 @@
 .ctAppRoot .dn_geoprocessing--processingButton {
     margin-left: 0 !important;
 }
+
+.ctAppRoot .dn-geoprocessing--service-select .v-text-field__details {
+    display: none;
+}

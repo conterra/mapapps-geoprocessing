@@ -16,9 +16,7 @@
 import {declare} from "apprt-core/Mutable";
 
 export default declare({
-    url: "",
-    synchronous: undefined,
-    params: {},
+    services: [],
 
     loading: undefined,
     resultState: undefined,

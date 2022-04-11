@@ -25,9 +25,18 @@
             fill-height
         >
             <v-flex>
+                <v-select
+                    v-model="selectedService"
+                    :items="serviceSelection"
+                    hide-selected
+                    label="Dienst auswählen"
+                    class="dn-geoprocessing--service-select"
+                >
+                </v-select>
                 <v-btn
                     color="primary"
                     class="dn_geoprocessing--processingButton"
+                    :disabled="buttonIsDisabled"
                     @click="handleGeoprocessingButtonClick"
                 >
                     {{ i18n.buttonText }}
@@ -66,17 +75,31 @@
             return {
                 loading: false,
                 resultState: undefined,
-                supportEmailAddress: ""
+                supportEmailAddress: "",
+                services: [],
+                selectedService: undefined
             };
         },
         computed: {
-            supportContact: function () {
+            supportContact: function() {
                 return "mailto:" + this.supportEmailAddress;
+            },
+            serviceSelection: function() {
+                const selectionItems = [];
+
+                this.services.forEach(service => {
+                    selectionItems.push(service.title);
+                });
+
+                return selectionItems;
+            },
+            buttonIsDisabled: function() {
+                return (!this.selectedService);
             }
         },
         methods: {
             handleGeoprocessingButtonClick() {
-                this.$emit('startGeoprocessing');
+                this.$emit('startGeoprocessing', this.selectedService);
             }
         }
     };

@@ -50,10 +50,12 @@ export default class GeoprocessingWidgetFactory {
         const vm = this.#vm = new Vue(GeoprocessingWidget);
         vm.i18n = this._i18n.get().ui;
 
-        vm.$on("startGeoprocessing", controller._startGeoprocessing.bind(controller));
+        vm.$on("startGeoprocessing", (selectedService) => {
+            controller._startGeoprocessing(selectedService).bind(controller);
+        });
 
         this.#binding = Binding.for(vm, model)
-            .syncAllToLeft("loading", "resultState", "supportEmailAddress")
+            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "services")
             .enable()
             .syncToLeftNow();
     }

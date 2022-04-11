@@ -19,19 +19,19 @@ export default class GeoprocessingController {
 
     _processor = undefined;
 
-    activate() {
-        const model = this._model;
-        this._processor = new Geoprocessor({url: model.url});
-    }
-
     deactivate() {
         this._processor = undefined;
     }
 
-    _startGeoprocessing() {
+    _startGeoprocessing(selectedService) {
         const model = this._model;
-        const params = model.params;
-        const synchronous = model.synchronous;
+        const serviceIndex = this._getServiceIndex(model.services, selectedService);
+
+        const url = model.services[serviceIndex].url;
+        const params = model.services[serviceIndex].params;
+        const synchronous = model.services[serviceIndex].synchronous;
+
+        this._processor = new Geoprocessor({url: url});
 
         model.resultState = undefined;
 
@@ -55,5 +55,10 @@ export default class GeoprocessingController {
                 model.resultState = "failure";
             });
         }
+    }
+
+    _getServiceIndex(service, selectedService){
+        const isSelectedService = (service) => service.title === selectedService;
+        return service.findIndex(isSelectedService);
     }
 }

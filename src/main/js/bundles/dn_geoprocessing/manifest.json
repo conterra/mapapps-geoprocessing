@@ -41,7 +41,7 @@
                 "minimizeOnClose": true,
                 "resizable": true,
                 "marginBox": {
-                    "h": 170,
+                    "h": 220,
                     "w": 330,
                     "b": 74,
                     "r": 75
@@ -77,10 +77,41 @@
             "provides": "dn_geoprocessing.GeoprocessingModel",
             "propertiesConstructor": true,
             "properties": {
-                "supportEmailAddress": "",
-                "url": "",
-                "synchronous": true,
-                "params": {}
+                "supportEmailAddress": "support@laixo.ch",
+                "services": [
+                    {
+                        "title": "Service 1",
+                        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
+                        "synchronous": true,
+                        "params": {
+                            "Input_Point": {
+                                "features": [{
+                                    "geometry":{
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }]
+                            },
+                            "Days": 50
+                        }
+                    },
+                    {
+                        "title": "Service 2",
+                        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
+                        "synchronous": true,
+                        "params": {
+                            "Input_Point": {
+                                "features": [{
+                                    "geometry":{
+                                        "x": "zero",
+                                        "y": 0
+                                    }
+                                }]
+                            },
+                            "Days": "fifty"
+                        }
+                    }
+                ]
             }
         },
         {
