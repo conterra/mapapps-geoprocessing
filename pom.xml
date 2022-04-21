@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-geoprocessing</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -246,7 +246,7 @@
                     <!-- add here properties which are used in plugin configuration resolution -->
                     <properties>
                         <!-- deployment of map.apps installation -->
-                        <mapapps.remote.base>.</mapapps.remote.base>
+                        <mapapps.remote.base>http://localhost:8080/mapapps</mapapps.remote.base>
                     </properties>
                 </configuration>
             </plugin>

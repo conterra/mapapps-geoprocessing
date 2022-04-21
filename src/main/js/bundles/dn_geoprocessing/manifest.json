@@ -1,6 +1,6 @@
 {
     "name": "dn_geoprocessing",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "title": "${bundleName}",
     "description": "${bundleDescription}",
     "vendor": "con terra GmbH",
@@ -11,7 +11,8 @@
         "apprt-vue": "^4.12.0",
         "apprt-vuetify": "^4.12.0",
         "map-widget": "^4.12.0",
-        "esri": "^4.12.0"
+        "esri": "^4.12.0",
+        "authentication": "^4.12.0"
     },
     "i18n": [
         "bundle"
@@ -77,41 +78,8 @@
             "provides": "dn_geoprocessing.GeoprocessingModel",
             "propertiesConstructor": true,
             "properties": {
-                "supportEmailAddress": "support@laixo.ch",
-                "services": [
-                    {
-                        "title": "Service 1",
-                        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                        "synchronous": true,
-                        "params": {
-                            "Input_Point": {
-                                "features": [{
-                                    "geometry":{
-                                        "x": 0,
-                                        "y": 0
-                                    }
-                                }]
-                            },
-                            "Days": 50
-                        }
-                    },
-                    {
-                        "title": "Service 2",
-                        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                        "synchronous": true,
-                        "params": {
-                            "Input_Point": {
-                                "features": [{
-                                    "geometry":{
-                                        "x": "zero",
-                                        "y": 0
-                                    }
-                                }]
-                            },
-                            "Days": "fifty"
-                        }
-                    }
-                ]
+                "supportEmailAddress": "",
+                "services": []
             }
         },
         {
@@ -147,6 +115,10 @@
                     "name": "_tool",
                     "providing": "ct.tools.Tool",
                     "filter": "(id=geoprocessingToggleTool)"
+                },
+                {
+                    "name": "_userService",
+                    "providing": "ct.framework.api.UserAdmin"
                 }
             ]
         },
