@@ -50,8 +50,11 @@ export default class GeoprocessingWidgetFactory {
         const vm = this.#vm = new Vue(GeoprocessingWidget);
         vm.i18n = this._i18n.get().ui;
 
+        const filteredServices = controller._filterServicesForUser(model.services);
+        model.services = filteredServices;
+
         vm.$on("startGeoprocessing", (selectedService) => {
-            controller._startGeoprocessing(selectedService).bind(controller);
+            controller._startGeoprocessing(selectedService);
         });
 
         this.#binding = Binding.for(vm, model)

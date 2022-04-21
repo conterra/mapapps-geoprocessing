@@ -12,6 +12,7 @@
             "console",
             "notifier",
             "splashscreen",
+            "authentication",
             "templatelayout",
             "template-seasons",
             "theme-autumn",
@@ -37,6 +38,7 @@
                 "services": [
                     {
                         "title": "Service 1",
+                        "allowedUserRoles": [],
                         "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
                         "synchronous": true,
                         "params": {
@@ -57,6 +59,7 @@
                         "title": "Service 2",
                         "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
                         "synchronous": true,
+                        "allowedUserRoles": [],
                         "params": {
                             "Input_Point": {
                                 "features": [

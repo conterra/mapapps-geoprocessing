@@ -23,6 +23,32 @@ export default class GeoprocessingController {
         this._processor = undefined;
     }
 
+    _filterServicesForUser(services) {
+        const authentication = this._userService.getAuthentication();
+        const filteredServices = [];
+
+        if (!authentication.isAuthenticated()) {
+            throw new Error("User is not authenticated");
+        } else {
+            const user = authentication.getUser();
+            const userRoles = this._userService.getAuthorization(user).roles;
+
+            services.forEach(service => {
+                if(!service.allowedUserRoles || service.allowedUserRoles.length === 0){
+                    filteredServices.push(service);
+                } else {
+                    userRoles.forEach(role => {
+                        if(service.allowedUserRoles.includes(role)){
+                            filteredServices.push(service);
+                        }
+                    });
+                }
+            });
+        }
+
+        return filteredServices;
+    }
+
     _startGeoprocessing(selectedService) {
         const model = this._model;
         const serviceIndex = this._getServiceIndex(model.services, selectedService);
@@ -57,7 +83,7 @@ export default class GeoprocessingController {
         }
     }
 
-    _getServiceIndex(service, selectedService){
+    _getServiceIndex(service, selectedService) {
         const isSelectedService = (service) => service.title === selectedService;
         return service.findIndex(isSelectedService);
     }
