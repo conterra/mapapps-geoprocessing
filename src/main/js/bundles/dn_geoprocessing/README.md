@@ -22,7 +22,7 @@ This is caused by the reliance on the user roles to determine usable GP Services
 ### Config
 
 #### Sample configurations
-```
+```json
 "Config": {
     "supportEmailAddress": "support@laixo.ch",
     "services": [

@@ -10,7 +10,7 @@ https://demos.conterra.de/mapapps/resources/apps/downloads_geoprocessing/index.h
 ## Installation Guide
 **Requirement: map.apps 4.12.0**
 
-[dn_magnifier Documentation](https://github.com/conterra/mapapps-geoprocessing/tree/master/src/main/js/bundles/dn_geoprocessing)
+[dn_geoprocessing Documentation](https://github.com/conterra/mapapps-geoprocessing/tree/master/src/main/js/bundles/dn_geoprocessing)
 
 ## Development Guide
 ### Define the mapapps remote base
