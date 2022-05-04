@@ -24,9 +24,13 @@ export default class GeoprocessingController {
     }
 
     _filterServicesForUser(services) {
-        const authentication = this._userService.getAuthentication();
-        const filteredServices = [];
+        const userService = this._userService;
+        if(!userService) {
+            return services;
+        }
 
+        const filteredServices = [];
+        const authentication = this._userService.getAuthentication();
         if (!authentication.isAuthenticated()) {
             throw new Error("User is not authenticated");
         } else {

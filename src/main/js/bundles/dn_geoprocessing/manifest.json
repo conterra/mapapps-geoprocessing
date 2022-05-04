@@ -11,8 +11,7 @@
         "apprt-vue": "^4.12.0",
         "apprt-vuetify": "^4.12.0",
         "map-widget": "^4.12.0",
-        "esri": "^4.12.0",
-        "authentication": "^4.12.0"
+        "esri": "^4.12.0"
     },
     "i18n": [
         "bundle"
@@ -118,7 +117,8 @@
                 },
                 {
                     "name": "_userService",
-                    "providing": "ct.framework.api.UserAdmin"
+                    "providing": "ct.framework.api.UserAdmin",
+                    "cardinality": "0..1"
                 }
             ]
         },

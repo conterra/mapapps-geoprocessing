@@ -13,10 +13,6 @@ To make the functions of this bundle available to the user, the following tool c
 |-------------------------|-------------------------|--------------------------|
 | geoprocessingToggleTool | GeoprocessingToggleTool | Show or hide the widget. |
 
-## Known Limitations
-The geoprocessing bundle expects the user to be logged in before using the app featuring the geoprocessing widget.
-This is caused by the reliance on the user roles to determine usable GP Services.
-
 ## Configuration Reference
 
 ### Config
