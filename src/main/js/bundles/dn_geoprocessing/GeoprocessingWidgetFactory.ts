@@ -13,52 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import type {InjectedReference} from "apprt-core/InjectedReference";
 import GeoprocessingWidget from "./GeoprocessingWidget.vue";
-import Vue from "apprt-vue/Vue";
+import {Vue} from "apprt-vue/module";
 import VueDijit from "apprt-vue/VueDijit";
-import Binding from "apprt-binding/Binding";
+import Binding, {Bindable} from "apprt-binding/Binding";
 
 export default class GeoprocessingWidgetFactory {
 
-    #vm = undefined;
-    #binding = undefined;
+    private vm: Vue;
+    private binding: Bindable;
+    private _i18n!: InjectedReference<any>;
+    private _model!: InjectedReference<any>;
+    private _controller!: InjectedReference<any>;
 
-    activate() {
-        this.#initComponent();
+    activate(): void {
+        this.initComponent();
     }
 
-    deactivate() {
-        this.#destroyWidget();
-        this.#binding.unbind();
-        this.#binding = undefined;
+    deactivate(): void {
+        this.destroyWidget();
+        this.binding.unbind();
+        this.binding = undefined;
     }
 
-    createInstance() {
-        return VueDijit(this.#vm, {
+    createInstance(): any {
+        return VueDijit(this.vm, {
             class: "geoprocessing-widget"
         });
     }
 
-    #destroyWidget() {
-        this.#vm?.destroy();
-        this.#vm = undefined;
+    private destroyWidget(): void {
+        this.vm?.destroy();
+        this.vm = undefined;
     }
 
-    #initComponent() {
+    private initComponent(): void {
         const model = this._model;
         const controller = this._controller;
-        const vm = this.#vm = new Vue(GeoprocessingWidget);
+        const vm = this.vm = new Vue(GeoprocessingWidget);
         vm.i18n = this._i18n.get().ui;
 
-        const filteredServices = controller._filterServicesForUser(model.services);
-        model.services = filteredServices;
-
-        vm.$on("startGeoprocessing", (selectedService) => {
-            controller._startGeoprocessing(selectedService);
+        vm.$on("startGeoprocessing", (toolId) => {
+            controller.startGeoprocessing(toolId);
         });
 
-        this.#binding = Binding.for(vm, model)
-            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "services")
+        this.binding = Binding.for(vm, model)
+            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "tools")
             .enable()
             .syncToLeftNow();
     }

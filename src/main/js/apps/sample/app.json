@@ -32,48 +32,54 @@
     },
     "bundles": {
         "dn_geoprocessing": {
-            "Config": {
-                "supportEmailAddress": "support@laixo.ch",
-                "services": [
-                    {
-                        "title": "Service 1",
-                        "allowedUserRoles": [],
-                        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                        "synchronous": true,
-                        "params": {
-                            "Input_Point": {
-                                "features": [
-                                    {
-                                        "geometry": {
-                                            "x": 0,
-                                            "y": 0
-                                        }
-                                    }
-                                ]
-                            },
-                            "Days": 50
-                        }
+            "GeoprocessingTools": [
+                {
+                    "id": "gp_01",
+                    "title": "Service 1",
+                    "allowedUserRoles": [],
+                    "rules": {
+                        "roles": ["maAdmin", "maEditor"],
+                        "ruleSuccessProperty": "enabled"
                     },
-                    {
-                        "title": "Service 2",
-                        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                        "synchronous": true,
-                        "allowedUserRoles": [],
-                        "params": {
-                            "Input_Point": {
-                                "features": [
-                                    {
-                                        "geometry": {
-                                            "x": "zero",
-                                            "y": 0
-                                        }
+                    "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
+                    "synchronous": true,
+                    "params": {
+                        "Input_Point": {
+                            "features": [
+                                {
+                                    "geometry": {
+                                        "x": 0,
+                                        "y": 0
                                     }
-                                ]
-                            },
-                            "Days": "fifty"
-                        }
+                                }
+                            ]
+                        },
+                        "Days": 50
                     }
-                ]
+                },
+                {
+                    "id": "gp_02",
+                    "title": "Service 2",
+                    "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
+                    "synchronous": true,
+                    "allowedUserRoles": [],
+                    "params": {
+                        "Input_Point": {
+                            "features": [
+                                {
+                                    "geometry": {
+                                        "x": "zero",
+                                        "y": 0
+                                    }
+                                }
+                            ]
+                        },
+                        "Days": "fifty"
+                    }
+                }
+            ],
+            "Config": {
+                "supportEmailAddress": "support@laixo.ch"
             }
         },
         "banner": {
@@ -155,11 +161,7 @@
                         "cssClass": "ct-main-app-menu",
                         "tools": [
                             "tocToggleTool",
-                            "printingToggleTool",
-                            "sharelinkTool",
-                            "helloTool",
-                            "IMPRINT_Imprint_CustomInfoTool",
-                            "IMPRINT_Imprint_CustomInfoTool_mobile"
+                            "gp_*"
                         ],
                         "registerWidget": {
                             "widgetRole": "drawer_button"

@@ -26,20 +26,23 @@
         >
             <v-flex>
                 <v-select
-                    v-model="selectedService"
-                    :items="serviceSelection"
+                    v-model="selectedTool"
+                    :items="tools"
                     hide-selected
-                    label="Dienst auswählen"
+                    item-value="id"
+                    item-text="title"
+                    :label="i18n.selectTool"
                     class="dn-geoprocessing--service-select"
                 >
                 </v-select>
                 <v-btn
                     color="primary"
+                    block
                     class="dn_geoprocessing--processingButton"
-                    :disabled="buttonIsDisabled"
+                    :disabled="!selectedTool"
                     @click="handleGeoprocessingButtonClick"
                 >
-                    {{ i18n.buttonText }}
+                    {{ i18n.startGeoprocessing }}
                 </v-btn>
                 <v-progress-circular
                     v-if="loading"
@@ -59,7 +62,7 @@
                 <div
                     v-if="resultState==='failure'"
                 >
-                    {{ i18n.failure }} <a :href="supportContact">{{ this.supportEmailAddress }}</a>!
+                    {{ i18n.failure }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
                 </div>
             </v-flex>
         </v-layout>
@@ -71,35 +74,43 @@
 
     export default {
         mixins: [Bindable],
+        props: {
+            i18n: {
+                type: Object,
+                default: () => {
+                    return {};
+                }
+            },
+            loading: {
+                type: Boolean,
+                default: false
+            },
+            resultState: {
+                type: String,
+                default: ""
+            },
+            supportEmailAddress: {
+                type: String,
+                default: ""
+            },
+            tools: {
+                type: Array,
+                default: () => []
+            }
+        },
         data: function () {
             return {
-                loading: false,
-                resultState: undefined,
-                supportEmailAddress: "",
-                services: [],
-                selectedService: undefined
+                selectedTool: undefined
             };
         },
         computed: {
             supportContact: function() {
                 return "mailto:" + this.supportEmailAddress;
-            },
-            serviceSelection: function() {
-                const selectionItems = [];
-
-                this.services.forEach(service => {
-                    selectionItems.push(service.title);
-                });
-
-                return selectionItems;
-            },
-            buttonIsDisabled: function() {
-                return (!this.selectedService);
             }
         },
         methods: {
             handleGeoprocessingButtonClick() {
-                this.$emit('startGeoprocessing', this.selectedService);
+                this.$emit('start-geoprocessing', this.selectedTool);
             }
         }
     };

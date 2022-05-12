@@ -17,14 +17,13 @@ module.exports = {
     root: {
         bundleName: "Geoprocessing",
         bundleDescription: "This bundle enables the execution of Geoprocessing services.",
-
         tool: {
             title: "Geoprocessing",
             tooltip: "Geoprocessing"
         },
-
         ui: {
-            buttonText: "Start Geoprocessing",
+            startGeoprocessing: "Start Geoprocessing",
+            selectTool: "Select Tool",
             success: "Geoprocessing completed successfully.",
             failure: "Geoprocessing failed. Please contact the support at"
         }

@@ -1,6 +1,6 @@
 {
     "name": "dn_geoprocessing",
-    "version": "1.0.2",
+    "version": "1.0.0",
     "title": "${bundleName}",
     "description": "${bundleDescription}",
     "vendor": "con terra GmbH",
@@ -10,8 +10,9 @@
     "dependencies": {
         "apprt-vue": "^4.12.0",
         "apprt-vuetify": "^4.12.0",
+        "apprt-binding": "^4.12.0",
         "map-widget": "^4.12.0",
-        "esri": "^4.12.0"
+        "esri": "^4.20.0"
     },
     "i18n": [
         "bundle"
@@ -77,9 +78,55 @@
             "provides": "dn_geoprocessing.GeoprocessingModel",
             "propertiesConstructor": true,
             "properties": {
-                "supportEmailAddress": "",
-                "services": []
+                "supportEmailAddress": ""
             }
+        },
+        {
+            "name": "GeoprocessingTools",
+            "impl": "ct/tools/Tool",
+            "provides": "ct.tools.Tool",
+            "propertiesConstructor": true,
+            "componentFactory": true,
+            "properties": {
+                "id": "gpTool",
+                "title": "Execute a Geoprocessing Tool",
+                "tooltip": "Execute a Geoprocessing Tool",
+                "toolRole": "toolset",
+                "toolGroup": "geoprocessingTools",
+                "iconClass": "icon-toolcase",
+                "clickHandler": "startGeoprocessorTool",
+                "togglable": false,
+                "url": "",
+                "synchronous": true,
+                "params": {}
+            },
+            "references": [
+                {
+                    "name": "handlerScope",
+                    "providing": "dn_geoprocessing.GeoprocessingController"
+                }
+            ]
+        },
+        {
+            "name": "GeoprocessingController",
+            "provides": "dn_geoprocessing.GeoprocessingController",
+            "references": [
+                {
+                    "name": "_model",
+                    "providing": "dn_geoprocessing.GeoprocessingModel"
+                },
+                {
+                    "name": "_userService",
+                    "providing": "ct.framework.api.UserAdmin",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "tool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(toolGroup=geoprocessingTools)",
+                    "cardinality": "0..n"
+                }
+            ]
         },
         {
             "name": "GeoprocessingWidgetFactory",
@@ -99,26 +146,12 @@
                 {
                     "name": "_model",
                     "providing": "dn_geoprocessing.GeoprocessingModel"
-                }
-            ]
-        },
-        {
-            "name": "GeoprocessingController",
-            "provides": "dn_geoprocessing.GeoprocessingController",
-            "references": [
-                {
-                    "name": "_model",
-                    "providing": "dn_geoprocessing.GeoprocessingModel"
                 },
                 {
-                    "name": "_tool",
+                    "name": "_tools",
                     "providing": "ct.tools.Tool",
-                    "filter": "(id=geoprocessingToggleTool)"
-                },
-                {
-                    "name": "_userService",
-                    "providing": "ct.framework.api.UserAdmin",
-                    "cardinality": "0..1"
+                    "filter": "(id=gp_*)",
+                    "cardinality": "1..n"
                 }
             ]
         },

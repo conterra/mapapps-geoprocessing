@@ -23,7 +23,8 @@ module.exports = {
     },
 
     ui: {
-        buttonText: "Starte Geoprocessing",
+        startGeoprocessing: "Starte Geoprocessing",
+        selectTool: "Tool wählen",
         success: "Geoprocessing erfolgreich abgeschlossen.",
         failure: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an"
     }
