@@ -94,7 +94,7 @@
                 "toolRole": "toolset",
                 "toolGroup": "geoprocessingTools",
                 "iconClass": "icon-toolcase",
-                "clickHandler": "startGeoprocessorTool",
+                "clickHandler": "startGeoprocessingTool",
                 "togglable": false,
                 "url": "",
                 "synchronous": true,

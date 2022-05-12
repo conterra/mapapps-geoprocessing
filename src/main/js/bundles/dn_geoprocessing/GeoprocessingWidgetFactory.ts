@@ -55,7 +55,7 @@ export default class GeoprocessingWidgetFactory {
         const vm = this.vm = new Vue(GeoprocessingWidget);
         vm.i18n = this._i18n.get().ui;
 
-        vm.$on("startGeoprocessing", (toolId) => {
+        vm.$on("start-geoprocessing", (toolId) => {
             controller.startGeoprocessing(toolId);
         });
 

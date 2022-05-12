@@ -31,7 +31,7 @@
  */
 
 import type {InjectedReference} from "apprt-core/InjectedReference";
-import Geoprocessor from "esri/tasks/Geoprocessor";
+import * as geoprocessor from "esri/rest/geoprocessor";
 
 interface Tool {
     id: string,
@@ -70,7 +70,7 @@ export default class GeoprocessingController {
         this.tools = this.tools.splice(removeIndex, 1);
     }
 
-    startGeoprocessorTool(event: any): void {
+    startGeoprocessingTool(event: any): void {
         const model = this._model;
         const tool = event.tool;
         const url = tool.url;
@@ -79,12 +79,10 @@ export default class GeoprocessingController {
 
         tool.set("processing", true);
         model.loading = true;
-
-        const geoprocessor = new Geoprocessor({url: url});
         model.resultState = undefined;
 
         if (synchronous) {
-            geoprocessor.execute(params).then((resolved) => {
+            geoprocessor.execute(url, params).then((resolved) => {
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
@@ -94,7 +92,7 @@ export default class GeoprocessingController {
                 tool.set("processing", false);
             });
         } else {
-            geoprocessor.submitJob(params).then((resolved) => {
+            geoprocessor.submitJob(url, params).then((resolved) => {
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
@@ -108,7 +106,7 @@ export default class GeoprocessingController {
 
     startGeoprocessing(toolId: string): void {
         const tool = this.tools.find((t) => t.id === toolId);
-        this.startGeoprocessorTool(tool);
+        this.startGeoprocessingTool(tool);
     }
 
 }
