@@ -42,7 +42,6 @@
                         "ruleSuccessProperty": "enabled"
                     },
                     "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                    "synchronous": true,
                     "params": {
                         "Input_Point": {
                             "features": [
@@ -62,7 +61,6 @@
                     "title": "Service 2",
                     "tooltip": "Service 2",
                     "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                    "synchronous": true,
                     "params": {
                         "Input_Point": {
                             "features": [

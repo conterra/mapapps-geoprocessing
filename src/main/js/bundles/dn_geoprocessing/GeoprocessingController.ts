@@ -32,6 +32,7 @@
 
 import type {InjectedReference} from "apprt-core/InjectedReference";
 import * as geoprocessor from "esri/rest/geoprocessor";
+import apprt_request from "apprt-request";
 
 interface Tool {
     id: string,
@@ -70,18 +71,20 @@ export default class GeoprocessingController {
         this.tools = this.tools.splice(removeIndex, 1);
     }
 
-    startGeoprocessingTool(event: any): void {
+    async startGeoprocessingTool(event: any): Promise<any> {
         const model = this._model;
         const tool = event.tool;
         const url = tool.url;
-        const synchronous = tool.synchronous;
         const params = tool.params;
 
         tool.set("processing", true);
         model.loading = true;
         model.resultState = undefined;
 
-        if (synchronous) {
+        const metadata = await this.getMetadata(url);
+        const executionType = metadata.executionType;
+
+        if (executionType === "esriExecutionTypeSynchronous") {
             geoprocessor.execute(url, params).then((resolved) => {
                 model.loading = false;
                 model.resultState = "success";
@@ -107,6 +110,15 @@ export default class GeoprocessingController {
     startGeoprocessing(toolId: string): void {
         const tool = this.tools.find((t) => t.id === toolId);
         this.startGeoprocessingTool(tool);
+    }
+
+    private getMetadata(url: string) {
+        return apprt_request(url, {
+            query: {
+                f: 'json'
+            },
+            handleAs: 'json'
+        });
     }
 
 }

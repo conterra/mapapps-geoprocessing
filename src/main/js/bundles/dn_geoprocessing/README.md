@@ -28,7 +28,6 @@ To make the functions of this bundle available to the user, the following tool c
             "ruleSuccessProperty": "enabled"
         },
         "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-        "synchronous": true,
         "params": {
             "Input_Point": {
                 "features": [
@@ -48,7 +47,6 @@ To make the functions of this bundle available to the user, the following tool c
         "title": "Service 2",
         "tooltip": "Service 2",
         "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-        "synchronous": true,
         "params": {
             "Input_Point": {
                 "features": [
@@ -72,7 +70,6 @@ To make the functions of this bundle available to the user, the following tool c
 | title       | String  | Any String                                       | ```""```   | Title of GP Service                                                  |
 | tooltip     | String  | Any String                                       | ```""```   | Tooltip of GP Service                                                |
 | url         | String  | URL of GP Service                                | ```""```   | URL of GP Service                                                    |
-| synchronous | Boolean | ```true``` &#124; ```false```                    | ```true``` | Determines whether GP Service is run synchronously or asynchronously |
 | params      | Object  | Object of key-value pairs required by GP Service | ```{}```   | Object containing any key-value pair required by GP Service          |
 
 ### Config
