@@ -36,7 +36,7 @@
                 {
                     "id": "gp_01",
                     "title": "Service 1",
-                    "allowedUserRoles": [],
+                    "tooltip": "Service 1",
                     "rules": {
                         "roles": ["maAdmin", "maEditor"],
                         "ruleSuccessProperty": "enabled"
@@ -60,9 +60,9 @@
                 {
                     "id": "gp_02",
                     "title": "Service 2",
+                    "tooltip": "Service 2",
                     "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
                     "synchronous": true,
-                    "allowedUserRoles": [],
                     "params": {
                         "Input_Point": {
                             "features": [
