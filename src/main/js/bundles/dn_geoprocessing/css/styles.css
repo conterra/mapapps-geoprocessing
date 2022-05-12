@@ -13,10 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.ctAppRoot .dn_geoprocessing--processingButton {
-    margin-left: 0 !important;
-}
-
-.ctAppRoot .dn-geoprocessing--service-select .v-text-field__details {
-    display: none;
-}

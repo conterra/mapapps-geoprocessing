@@ -29,41 +29,38 @@
                     v-model="selectedTool"
                     :items="tools"
                     hide-selected
+                    hide-details
+                    clearable
                     item-value="id"
                     item-text="title"
                     :label="i18n.selectTool"
-                    class="dn-geoprocessing--service-select"
                 >
                 </v-select>
                 <v-btn
                     color="primary"
                     block
-                    class="dn_geoprocessing--processingButton"
                     :disabled="!selectedTool"
+                    :loading="loading"
                     @click="handleGeoprocessingButtonClick"
                 >
                     {{ i18n.startGeoprocessing }}
                 </v-btn>
-                <v-progress-circular
-                    v-if="loading"
-                    :indeterminate="true"
-                    size="32"
-                    width="3"
-                    color="primary"
-                />
             </v-flex>
-            <v-flex
-                class="dn_geoprocessing--resultText">
-                <div
+            <v-flex>
+                <v-alert
                     v-if="resultState==='success'"
+                    :value="true"
+                    type="success"
                 >
                     {{ i18n.success }}
-                </div>
-                <div
+                </v-alert>
+                <v-alert
                     v-if="resultState==='failure'"
+                    :value="true"
+                    type="error"
                 >
                     {{ i18n.failure }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
-                </div>
+                </v-alert>
             </v-flex>
         </v-layout>
     </v-container>
