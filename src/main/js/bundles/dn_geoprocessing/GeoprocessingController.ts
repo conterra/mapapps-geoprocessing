@@ -13,26 +13,10 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-
-/*
- * Copyright (C) 2022 con terra GmbH (info@conterra.de)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import type {InjectedReference} from "apprt-core/InjectedReference";
 import * as geoprocessor from "esri/rest/geoprocessor";
 import apprt_request from "apprt-request";
+import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
 
 interface Tool {
     id: string,
@@ -81,30 +65,16 @@ export default class GeoprocessingController {
         model.loading = true;
         model.resultState = undefined;
 
-        const metadata = await this.getMetadata(url);
+        const metadata = await GeoprocessingController.getMetadata(url);
         const executionType = metadata.executionType;
 
+        let promise;
         if (executionType === "esriExecutionTypeSynchronous") {
-            geoprocessor.execute(url, params).then((resolved) => {
-                model.loading = false;
-                model.resultState = "success";
-                tool.set("processing", false);
-            }, (rejected) => {
-                model.loading = false;
-                model.resultState = "failure";
-                tool.set("processing", false);
-            });
+            promise = geoprocessor.execute(url, params);
         } else {
-            geoprocessor.submitJob(url, params).then((resolved) => {
-                model.loading = false;
-                model.resultState = "success";
-                tool.set("processing", false);
-            }, (rejected) => {
-                model.loading = false;
-                model.resultState = "failure";
-                tool.set("processing", false);
-            });
+            promise = geoprocessor.submitJob(url, params);
         }
+        this.handleGeoprocessingResult(promise, model, tool);
     }
 
     startGeoprocessing(toolId: string): void {
@@ -112,7 +82,19 @@ export default class GeoprocessingController {
         this.startGeoprocessingTool(tool);
     }
 
-    private getMetadata(url: string) {
+    private handleGeoprocessingResult(promise: Promise<any>, model: typeof GeoprocessingModel, tool: Tool): void {
+        promise.then((resolved) => {
+            model.loading = false;
+            model.resultState = "success";
+            tool.set("processing", false);
+        }, (rejected) => {
+            model.loading = false;
+            model.resultState = "failure";
+            tool.set("processing", false);
+        });
+    }
+
+    private static getMetadata(url: string) {
         return apprt_request(url, {
             query: {
                 f: 'json'
