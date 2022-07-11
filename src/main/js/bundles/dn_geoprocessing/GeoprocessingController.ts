@@ -13,10 +13,13 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
+
 import type {InjectedReference} from "apprt-core/InjectedReference";
 import * as geoprocessor from "esri/rest/geoprocessor";
 import apprt_request from "apprt-request";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
+import ct_string from "ct/_string";
+import apprt_when from "apprt-core/when";
 
 interface Tool {
     id: string,
@@ -30,7 +33,7 @@ interface Tool {
 export default class GeoprocessingController {
 
     private tools: Tool[];
-    private _userService!: InjectedReference<any>;
+    private _dataModel!: InjectedReference<any>;
     private _model!: InjectedReference<any>;
 
     activate(): void {
@@ -59,11 +62,15 @@ export default class GeoprocessingController {
         const model = this._model;
         const tool = event.tool;
         const url = tool.url;
-        const params = tool.params;
+        let params = tool.params;
 
         tool.set("processing", true);
         model.loading = true;
         model.resultState = undefined;
+
+        if (event.toolRole === "resultcenter") {
+            params = await this.getResultCenterData(params);
+        }
 
         const metadata = await GeoprocessingController.getMetadata(url);
         const executionType = metadata.executionType;
@@ -103,4 +110,22 @@ export default class GeoprocessingController {
         });
     }
 
+    private async getResultCenterData(params: object): Promise<object> {
+        const dataModel = this._dataModel;
+        return new Promise((resolve) => {
+            apprt_when(dataModel.getSelected(), (selectedId) => {
+                apprt_when(dataModel.queryById(selectedId), (result) => {
+                    if (result.length) {
+                        const feature = result[0];
+                        for (const prop in params) {
+                            if (typeof (params[prop]) === "string") {
+                                params[prop] = ct_string.stringReplace(params[prop], feature);
+                            }
+                        }
+                    }
+                    resolve(params);
+                });
+            });
+        });
+    }
 }

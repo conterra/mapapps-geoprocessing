@@ -27,6 +27,9 @@
             "search-ui",
             "locator-store",
             "toc",
+            "agssearch",
+            "selection-resultcenter",
+            "selection-ui",
             "dn_geoprocessing"
         ]
     },
@@ -34,9 +37,9 @@
         "dn_geoprocessing": {
             "GeoprocessingTools": [
                 {
-                    "id": "gp_01",
-                    "title": "Service 1",
-                    "tooltip": "Service 1",
+                    "id": "gp_toolset",
+                    "title": "Geoprocessing Toolset",
+                    "tooltip": "Geoprocessing Toolset",
                     "rules": {
                         "roles": ["maAdmin", "maEditor"],
                         "ruleSuccessProperty": "enabled"
@@ -53,31 +56,45 @@
                                 }
                             ]
                         },
-                        "Days": 50
+                        "Days": "{$days}"
                     }
                 },
                 {
-                    "id": "gp_02",
-                    "title": "Service 2",
-                    "tooltip": "Service 2",
+                    "id": "gp_resultcenter",
+                    "title": "Geoprocessing Resultcenter",
+                    "tooltip": "Geoprocessing Resultcenter",
+                    "rules": {
+                        "datasourceIdInResultcenter": [
+                            "libraries"
+                        ],
+                        "minimumSelectedItemsInResultcenter": 1,
+                        "maximumSelectedItemsInResultcenter": 1,
+                        "ruleSuccessProperty": "enabled"
+                    },
                     "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
                     "params": {
                         "Input_Point": {
                             "features": [
                                 {
                                     "geometry": {
-                                        "x": "zero",
+                                        "x": 0,
                                         "y": 0
                                     }
                                 }
                             ]
                         },
-                        "Days": "fifty"
-                    }
+                        "Days": "{OBJECTID}"
+                    },
+                    "toolRole": "resultcenter"
                 }
             ],
             "Config": {
                 "supportEmailAddress": "support@laixo.ch"
+            }
+        },
+        "agssearch": {
+            "AutoStoreRegistration": {
+                "componentEnabled": true
             }
         },
         "banner": {
@@ -107,7 +124,40 @@
                     }
                 ],
                 "map": {
-                    "layers": []
+                    "layers": [
+                        {
+                            "id": "libraries",
+                            "title": "Bibliotheken",
+                            "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/1",
+                            "type": "AGS_FEATURE",
+                            "visible": true,
+                            "maptipTemplate": {
+                                "content": "{NAME_LANG}"
+                            },
+                            "popupTemplate": {
+                                "title": "{NAME_LANG}",
+                                "content": [
+                                    {
+                                        "type": "fields",
+                                        "fieldInfos": [
+                                            {
+                                                "fieldName": "NAME_LANG",
+                                                "label": "${common.name}"
+                                            },
+                                            {
+                                                "fieldName": "ADRESSE",
+                                                "label": "${common.address}"
+                                            },
+                                            {
+                                                "fieldName": "PLZ",
+                                                "label": "${common.zip}"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 },
                 "view": {
                     "viewmode": "2D",
@@ -122,7 +172,7 @@
         },
         "toc": {
             "Config": {
-                "showBasemaps" : true,
+                "showBasemaps": true,
                 "showLayerLegend": true
             }
         },
@@ -132,7 +182,6 @@
                     {
                         "id": "mapview_tools",
                         "tools": [
-                            "geoprocessingToggleTool",
                             "locateMeTool",
                             "zoomInTool",
                             "zoomOutTool",
@@ -159,6 +208,8 @@
                         "cssClass": "ct-main-app-menu",
                         "tools": [
                             "tocToggleTool",
+                            "selection-ui-tool",
+                            "geoprocessingToggleTool",
                             "gp_*"
                         ],
                         "registerWidget": {

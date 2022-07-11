@@ -125,6 +125,11 @@
                     "providing": "ct.tools.Tool",
                     "filter": "(toolGroup=geoprocessingTools)",
                     "cardinality": "0..n"
+                },
+                {
+                    "name": "_dataModel",
+                    "providing": "resultcenter.DataModel",
+                    "cardinality": "0..1"
                 }
             ]
         },
