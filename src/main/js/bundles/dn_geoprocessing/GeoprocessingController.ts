@@ -18,7 +18,7 @@ import type {InjectedReference} from "apprt-core/InjectedReference";
 import * as geoprocessor from "esri/rest/geoprocessor";
 import apprt_request from "apprt-request";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
-import ct_string from "ct/_string";
+import * as intl from "esri/intl";
 import apprt_when from "apprt-core/when";
 
 interface Tool {
@@ -119,7 +119,7 @@ export default class GeoprocessingController {
                         const feature = result[0];
                         for (const prop in params) {
                             if (typeof (params[prop]) === "string") {
-                                params[prop] = ct_string.stringReplace(params[prop], feature);
+                                params[prop] = intl.substitute(params[prop], feature);
                             }
                         }
                     }
