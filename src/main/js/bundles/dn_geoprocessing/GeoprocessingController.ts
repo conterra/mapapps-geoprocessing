@@ -115,18 +115,19 @@ export default class GeoprocessingController {
         return new Promise((resolve) => {
             apprt_when(dataModel.getSelected(), (selectedIds) => {
                 apprt_when(dataModel.queryById(selectedIds), (result) => {
-                    for (const prop in params) {
+                    const paramsClone = Object.assign({}, params);
+                    for (const prop in paramsClone) {
+                        if (paramsClone[prop] === "{SELECTED_IDS}") {
+                            paramsClone[prop] = selectedIds.toString();
+                        }
                         if (result.length === 1) {
                             const feature = result[0];
-                            if (typeof (params[prop]) === "string") {
-                                params[prop] = intl.substitute(params[prop], feature);
+                            if (typeof (paramsClone[prop]) === "string") {
+                                paramsClone[prop] = intl.substitute(paramsClone[prop], feature);
                             }
                         }
-                        if (params[prop] === "{SELECTED_IDS}") {
-                            params[prop] = selectedIds.toString();
-                        }
                     }
-                    resolve(params);
+                    resolve(paramsClone);
                 });
             });
         });
