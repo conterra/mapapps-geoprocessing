@@ -60,9 +60,9 @@
                     }
                 },
                 {
-                    "id": "gp_resultcenter",
-                    "title": "Geoprocessing Resultcenter",
-                    "tooltip": "Geoprocessing Resultcenter",
+                    "id": "gp_resultcenter_1",
+                    "title": "Geoprocessing Resultcenter 1",
+                    "tooltip": "Geoprocessing Resultcenter 1",
                     "rules": {
                         "datasourceIdInResultcenter": [
                             "libraries"
@@ -83,7 +83,36 @@
                                 }
                             ]
                         },
+                        // reference an attribute
+                        // only possible if only one result is selected and toolRole = resultcenter
                         "Days": "{OBJECTID}"
+                    },
+                    "toolRole": "resultcenter"
+                },
+                {
+                    "id": "gp_resultcenter_2",
+                    "title": "Geoprocessing Resultcenter 2",
+                    "tooltip": "Geoprocessing Resultcenter 2",
+                    "rules": {
+                        "datasourceIdInResultcenter": [
+                            "libraries"
+                        ],
+                        "minimumSelectedItemsInResultcenter": 1,
+                        "ruleSuccessProperty": "enabled"
+                    },
+                    "url": "https://dev.laixoversum.ch/dev1ags2/rest/services/invers_automations/gpBundleTester/GPServer/GP_Bundle_Tester",
+                    "params": {
+                        "APP_JSON_FIX_PARAMETER": {
+                            "features": [
+                                {
+                                    "geometry": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                }
+                            ]
+                        },
+                        "OBJECTIDS": "{SELECTED_IDS}"
                     },
                     "toolRole": "resultcenter"
                 }

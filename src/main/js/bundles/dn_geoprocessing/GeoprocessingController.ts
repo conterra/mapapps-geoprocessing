@@ -113,14 +113,17 @@ export default class GeoprocessingController {
     private async getResultCenterData(params: object): Promise<object> {
         const dataModel = this._dataModel;
         return new Promise((resolve) => {
-            apprt_when(dataModel.getSelected(), (selectedId) => {
-                apprt_when(dataModel.queryById(selectedId), (result) => {
-                    if (result.length) {
-                        const feature = result[0];
-                        for (const prop in params) {
+            apprt_when(dataModel.getSelected(), (selectedIds) => {
+                apprt_when(dataModel.queryById(selectedIds), (result) => {
+                    for (const prop in params) {
+                        if (result.length === 1) {
+                            const feature = result[0];
                             if (typeof (params[prop]) === "string") {
                                 params[prop] = intl.substitute(params[prop], feature);
                             }
+                        }
+                        if (params[prop] === "{SELECTED_IDS}") {
+                            params[prop] = selectedIds.toString();
                         }
                     }
                     resolve(params);
