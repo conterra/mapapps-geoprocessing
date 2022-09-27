@@ -20,6 +20,10 @@ import apprt_request from "apprt-request";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
 import * as intl from "esri/intl";
 import apprt_when from "apprt-core/when";
+import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
+import Vue from "apprt-vue/Vue";
+import VueDijit from "apprt-vue/VueDijit";
+import ct_util from "ct/ui/desktop/util";
 
 interface Tool {
     id: string,
@@ -35,9 +39,12 @@ export default class GeoprocessingController {
     private tools: Tool[];
     private _dataModel!: InjectedReference<any>;
     private _model!: InjectedReference<any>;
+    private bundleContext: InjectedReference<any>;
+    private widgetServiceregistration: InjectedReference<any>;
 
-    activate(): void {
+    activate(componentContext: InjectedReference<any>): void {
         this.tools = [];
+        this.bundleContext = componentContext.getBundleContext();
     }
 
     deactivate(): void {
@@ -63,6 +70,13 @@ export default class GeoprocessingController {
         const tool = event.tool;
         const url = tool.url;
         let params = tool.params;
+
+        Object.values(params).forEach(param => {
+            if (param.editable) {
+                this.getEditableParamInputs(params);
+                return;
+            }
+        });
 
         tool.set("processing", true);
         model.loading = true;
@@ -131,5 +145,64 @@ export default class GeoprocessingController {
                 });
             });
         });
+    }
+
+    private async getEditableParamInputs(params: object): Promise<object> {
+        this.showWidget(params);
+        return new Promise((resolve) => {
+
+        });
+    }
+
+    private showWidget(parameters): void {
+        const widget = this.getInputParameterWidget(parameters);
+        const serviceProperties = {
+            "widgetRole": "inputParameterEntryWidget"
+        };
+        const interfaces = ["dijit.Widget"];
+        this.widgetServiceregistration = this.bundleContext.registerService(interfaces, widget, serviceProperties);
+        setTimeout(() => {
+            const window = ct_util.findEnclosingWindow(widget);
+            window?.on("Close", () => {
+                this.hideWidget();
+            });
+        }, 500);
+    }
+
+    private getInputParameterWidget(parameters): object {
+        const vm = new Vue(InputParameterEntryMask);
+
+        const editableParameterArray = [];
+        Object.entries(parameters).forEach(param => {
+            //access value part of key: value representation of param
+            if (param[1].editable) {
+                editableParameterArray.push(param);
+            }
+        });
+        vm.editableParameterArray = editableParameterArray;
+
+        vm.$on('execute-button-clicked', (parameters) => {
+            debugger
+        });
+
+        const widget = VueDijit(vm);
+        widget.own({
+            remove() {
+                vm.$off();
+            }
+        });
+        return widget;
+    }
+
+    private hideWidget(): void {
+        const registration = this.widgetServiceregistration;
+
+        // clear the reference
+        this.widgetServiceregistration = null;
+
+        if (registration) {
+            // call unregister
+            registration.unregister();
+        }
     }
 }

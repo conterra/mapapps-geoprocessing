@@ -47,16 +47,22 @@
                     "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
                     "params": {
                         "Input_Point": {
-                            "features": [
-                                {
-                                    "geometry": {
-                                        "x": 0,
-                                        "y": 0
+                            "defaultValue": {
+                                "features": [
+                                    {
+                                        "geometry": {
+                                            "x": 0,
+                                            "y": 0
+                                        }
                                     }
-                                }
-                            ]
+                                ]
+                            },
+                            "editable": false
                         },
-                        "Days": "{$days}"
+                        "Days": {
+                            "defaultValue": 7,
+                            "editable": true
+                        }
                     }
                 },
                 {
