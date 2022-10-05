@@ -57,11 +57,13 @@
                                     }
                                 ]
                             },
-                            "editable": false
+                            "editable": true,
+                            "required": true
                         },
                         "Days": {
                             "defaultValue": 7,
-                            "editable": true
+                            "editable": true,
+                            "required": false
                         }
                     }
                 },
@@ -121,6 +123,49 @@
                         "OBJECTIDS": "{SELECTED_IDS}"
                     },
                     "toolRole": "resultcenter"
+                },
+                {
+                    "id": "gp_toolset_dev",
+                    "title": "DEV Geoprocessing Toolset",
+                    "tooltip": "DEV Geoprocessing Toolset",
+                    "rules": {
+                        "roles": ["maAdmin", "maEditor"],
+                        "ruleSuccessProperty": "enabled"
+                    },
+                    "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
+                    "params": {
+                        "sampleString": {
+                            "type": "string",
+                            "defaultValue": "dev",
+                            "choiceList": ["test", "sample"],
+                            "editable": true,
+                            "required": true
+                        },
+                        "sampleLong": {
+                            "type": "long",
+                            "defaultValue": 7,
+                            "range": {
+                                "lowerLimit": 1,
+                                "upperLimit": 14
+                            },
+                            "editable": true,
+                            "required": false
+                        },
+                        "sampleDouble": {
+                            "type": "double",
+                            "defaultValue": 3.14,
+                            "range": {
+                                "lowerLimit": 1.5,
+                                "upperLimit": 15.5
+                            },
+                            "editable": true,
+                            "required": true
+                        },
+                        "unedit": {
+                            "defaultValue": 5,
+                            "editable": false
+                        }
+                    }
                 }
             ],
             "Config": {
