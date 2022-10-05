@@ -41,6 +41,7 @@ export default class GeoprocessingController {
     private _model!: InjectedReference<any>;
     private bundleContext: InjectedReference<any>;
     private widgetServiceregistration: InjectedReference<any>;
+    private uneditableParameters: Array<any>;
 
     activate(componentContext: InjectedReference<any>): void {
         this.tools = [];
@@ -71,31 +72,39 @@ export default class GeoprocessingController {
         const url = tool.url;
         let params = tool.params;
 
+        // if any of the GP parameters is editable, stop execution and open InputWidget
+        let breakFunction = false;
         Object.values(params).forEach(param => {
-            if (param.editable) {
-                this.getEditableParamInputs(params);
-                return;
+            if (param.editable && !breakFunction) {
+                breakFunction = true;
+                this.getEditableParamInputs(params, event);
             }
         });
 
-        tool.set("processing", true);
-        model.loading = true;
-        model.resultState = undefined;
+        // if no inputs for editable properties is required run function as usual
+        if (!breakFunction) {
+            tool.set("processing", true);
+            model.loading = true;
+            model.resultState = undefined;
 
-        if (event.toolRole === "resultcenter") {
-            params = await this.getResultCenterData(params);
-        }
+            if (event.toolRole === "resultcenter") {
+                params = await this.getResultCenterData(params);
+            }
 
-        const metadata = await GeoprocessingController.getMetadata(url);
-        const executionType = metadata.executionType;
+            const metadata = await GeoprocessingController.getMetadata(url);
+            const executionType = metadata.executionType;
 
-        let promise;
-        if (executionType === "esriExecutionTypeSynchronous") {
-            promise = geoprocessor.execute(url, params);
+            let promise;
+            if (executionType === "esriExecutionTypeSynchronous") {
+                promise = geoprocessor.execute(url, params);
+            } else {
+                promise = geoprocessor.submitJob(url, params);
+            }
+            this.handleGeoprocessingResult(promise, model, tool);
         } else {
-            promise = geoprocessor.submitJob(url, params);
+            // else end function execution and get inputs
+            return;
         }
-        this.handleGeoprocessingResult(promise, model, tool);
     }
 
     startGeoprocessing(toolId: string): void {
@@ -147,15 +156,30 @@ export default class GeoprocessingController {
         });
     }
 
-    private async getEditableParamInputs(params: object): Promise<object> {
-        this.showWidget(params);
-        return new Promise((resolve) => {
+    private getEditableParamInputs(params: object, toolEvent: Event): void {
+        const requiredEditableParams = [];
+        const optionalEditableParams = [];
+        const uneditableParameters = this.uneditableParameters = [];
 
+        Object.values(params).forEach((param, index) => {
+            if (param.editable) {
+                param.key = Object.keys(params)[index];
+                if (param.required) {
+                    requiredEditableParams.push(param);
+                } else {
+                    optionalEditableParams.push(param);
+                }
+            } else {
+                param.key = Object.keys(params)[index];
+                uneditableParameters.push(param);
+            }
         });
+
+        this.showWidget(requiredEditableParams, optionalEditableParams, toolEvent);
     }
 
-    private showWidget(parameters): void {
-        const widget = this.getInputParameterWidget(parameters);
+    private showWidget(requiredParams, optionalParams, toolEvent): void {
+        const widget = this.getInputParameterWidget(requiredParams, optionalParams, toolEvent);
         const serviceProperties = {
             "widgetRole": "inputParameterEntryWidget"
         };
@@ -169,20 +193,31 @@ export default class GeoprocessingController {
         }, 500);
     }
 
-    private getInputParameterWidget(parameters): object {
+    private getInputParameterWidget(requiredParams, optionalParams, toolEvent): object {
         const vm = new Vue(InputParameterEntryMask);
 
-        const editableParameterArray = [];
-        Object.entries(parameters).forEach(param => {
-            //access value part of key: value representation of param
-            if (param[1].editable) {
-                editableParameterArray.push(param);
-            }
-        });
-        vm.editableParameterArray = editableParameterArray;
+        vm.requiredEditableParameters = requiredParams;
+        vm.optionalRequiredParameters = optionalParams;
 
-        vm.$on('execute-button-clicked', (parameters) => {
-            debugger
+        vm.$on('execute-button-clicked', (paramsObj) => {
+            const completeParamsObject = {};
+
+            // add required parameters
+            paramsObj.req.forEach(param => {
+                completeParamsObject[param.key] = param.value || param.defaultValue;
+            });
+
+            // add optional parameters
+            paramsObj.opt.forEach(param => {
+                completeParamsObject[param.key] = param.value || param.defaultValue;
+            });
+
+            // add uneditable parameters
+            this.uneditableParameters.forEach(param => {
+                completeParamsObject[param.key] = param.defaultValue;
+            });
+
+            this.startGeoprocessingWithEditedParameters(completeParamsObject, toolEvent);
         });
 
         const widget = VueDijit(vm);
@@ -204,5 +239,30 @@ export default class GeoprocessingController {
             // call unregister
             registration.unregister();
         }
+    }
+
+    private async startGeoprocessingWithEditedParameters(params: object, toolEvent){
+        const model = this._model;
+        const tool = toolEvent.tool;
+        const url = tool.url;
+
+        tool.set("processing", true);
+        model.loading = true;
+        model.resultState = undefined;
+
+        if (toolEvent.toolRole === "resultcenter") {
+            params = await this.getResultCenterData(params);
+        }
+
+        const metadata = await GeoprocessingController.getMetadata(url);
+        const executionType = metadata.executionType;
+
+        let promise;
+        if (executionType === "esriExecutionTypeSynchronous") {
+            promise = geoprocessor.execute(url, params);
+        } else {
+            promise = geoprocessor.submitJob(url, params);
+        }
+        this.handleGeoprocessingResult(promise, model, tool);
     }
 }
