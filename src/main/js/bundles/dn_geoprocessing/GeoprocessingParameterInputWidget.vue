@@ -22,21 +22,32 @@
                 Editable Parameters for:
             </v-flex>
             <v-flex>
-                <v-text-field
-                    v-for="(param, index) in editableParameterArray"
-                    :key="param[0]"
-                    v-model="editableParameterArray[index]"
-                    :label="param[0]"
-                    :value="param[1].defaultValue"
-                />
-                <p
-                    v-for="(param) in editableParameterArray">
-                    {{ param[1].defaultValue }}
-                </p>
+                Required Parameters:
+                <v-card>
+                    <v-text-field
+                        v-for="(param, index) in requiredEditableParameters"
+                        :key="param.key"
+                        v-model="requiredEditableParameters[index].value"
+                        :label="param.key"
+                        :value="requiredEditableParameters[index].defaultValue"
+                    />
+                </v-card>
+            </v-flex>
+            <v-flex>
+                Optional Parameters:
+                <v-card>
+                    <v-text-field
+                        v-for="(param, index) in optionalRequiredParameters"
+                        :key="param.key"
+                        v-model="optionalRequiredParameters[index].value"
+                        :label="param.key"
+                        :value="optionalRequiredParameters[index].defaultValue"
+                    />
+                </v-card>
             </v-flex>
             <v-flex>
                 <v-btn
-                    @click="$emit('execute-button-clicked', editableParameterArray)"
+                    @click="$emit('execute-button-clicked', {req: requiredEditableParameters, opt: optionalRequiredParameters})"
                 >
                     Execute
                 </v-btn>
@@ -47,10 +58,15 @@
 
 <script>
     export default {
-        data: function () {
-            return {
-                editableParameterArray: []
-            };
+        props: {
+            requiredEditableParameters: {
+                type: Array,
+                default: () => []
+            },
+            optionalRequiredParameters: {
+                type: Array,
+                default: () => []
+            }
         }
     };
 </script>
