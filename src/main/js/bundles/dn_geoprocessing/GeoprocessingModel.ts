@@ -17,7 +17,8 @@
 import {Mutable, properties} from "apprt-core/Mutable";
 import type {Mutable as MutableType} from "@conterra/ct-mapapps-typings/apprt-core/Mutable";
 
-function defineProperties<Impl, P>(mutableDefinition: any, mutableProperties: { supportEmailAddress: string; addTool(tool): void; removeTool(tool): void; resultState: string; loading: boolean; tools: any[] }): Impl & Mutable<P> {
+function defineProperties<Impl, P>(mutableDefinition: any, mutableProperties: { supportEmailAddress: string; gpServiceResponseMessages: string[];
+    gpServiceResponseResults: string[]; addTool(tool): void; removeTool(tool): void; resultState: string; loading: boolean; tools: any[]; editableParams: object[] }): Impl & Mutable<P> {
     properties(mutableDefinition, mutableProperties);
     return mutableDefinition;
 }
@@ -30,6 +31,10 @@ interface GeoprocessingModelProps {
     resultState: string,
     supportEmailAddress: string,
     tools: object[],
+    editableParams: object[],
+
+    gpServiceResponseMessages: string[],
+    gpServiceResponseResults: string[],
 
     addTool(): void
     removeTool(): void
@@ -41,6 +46,10 @@ export default defineProperties<GeoprocessingModel, GeoprocessingModelProps>(Geo
         resultState: "false",
         supportEmailAddress: "false",
         tools: [],
+        editableParams: [],
+
+        gpServiceResponseMessages: [],
+        gpServiceResponseResults: [],
 
         addTool(tool): void {
             const id = tool?.id;

@@ -25,7 +25,9 @@ module.exports = {
             startGeoprocessing: "Start Geoprocessing",
             selectTool: "Select Tool",
             success: "Geoprocessing completed successfully.",
-            failure: "Geoprocessing failed. Please contact the support at"
+            failure: "Geoprocessing failed. Please contact the support at",
+            limitRuleText: "Value is not within limits.",
+            NaNRuleText: "Value is not a number."
         }
     },
     de: true

@@ -24,6 +24,7 @@ import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import ct_util from "ct/ui/desktop/util";
+import Binding from "apprt-binding/Binding";
 
 interface Tool {
     id: string,
@@ -157,29 +158,24 @@ export default class GeoprocessingController {
     }
 
     private getEditableParamInputs(params: object, toolEvent: Event): void {
-        const requiredEditableParams = [];
-        const optionalEditableParams = [];
+        const editableParams = [];
         const uneditableParameters = this.uneditableParameters = [];
 
         Object.values(params).forEach((param, index) => {
             if (param.editable) {
                 param.key = Object.keys(params)[index];
-                if (param.required) {
-                    requiredEditableParams.push(param);
-                } else {
-                    optionalEditableParams.push(param);
-                }
+                editableParams.push(param);
             } else {
                 param.key = Object.keys(params)[index];
                 uneditableParameters.push(param);
             }
         });
 
-        this.showWidget(requiredEditableParams, optionalEditableParams, toolEvent);
+        this.showWidget(editableParams, toolEvent);
     }
 
-    private showWidget(requiredParams, optionalParams, toolEvent): void {
-        const widget = this.getInputParameterWidget(requiredParams, optionalParams, toolEvent);
+    private showWidget(editableParams, toolEvent): void {
+        const widget = this.getInputParameterWidget(editableParams, toolEvent);
         const serviceProperties = {
             "widgetRole": "inputParameterEntryWidget"
         };
@@ -193,22 +189,20 @@ export default class GeoprocessingController {
         }, 500);
     }
 
-    private getInputParameterWidget(requiredParams, optionalParams, toolEvent): object {
+    private getInputParameterWidget(editableParams, toolEvent): object {
+        const model = this._model;
+
         const vm = new Vue(InputParameterEntryMask);
+        const tool = toolEvent.tool;
+        model.toolTitle = tool.title;
+        model.editableParams = editableParams;
+        vm.i18n = this._i18n.get().ui;
 
-        vm.requiredEditableParameters = requiredParams;
-        vm.optionalRequiredParameters = optionalParams;
-
-        vm.$on('execute-button-clicked', (paramsObj) => {
+        vm.$on('execute-button-clicked', paramsObj => {
             const completeParamsObject = {};
 
             // add required parameters
-            paramsObj.req.forEach(param => {
-                completeParamsObject[param.key] = param.value || param.defaultValue;
-            });
-
-            // add optional parameters
-            paramsObj.opt.forEach(param => {
+            paramsObj.forEach(param => {
                 completeParamsObject[param.key] = param.value || param.defaultValue;
             });
 
@@ -219,6 +213,11 @@ export default class GeoprocessingController {
 
             this.startGeoprocessingWithEditedParameters(completeParamsObject, toolEvent);
         });
+
+        Binding.for(vm, this._model)
+            .syncAllToLeft("toolTitle", "editableParams", "gpServiceResponseMessages", "gpServiceResponseResults")
+            .enable()
+            .syncToLeftNow();
 
         const widget = VueDijit(vm);
         widget.own({
@@ -263,6 +262,21 @@ export default class GeoprocessingController {
         } else {
             promise = geoprocessor.submitJob(url, params);
         }
-        this.handleGeoprocessingResult(promise, model, tool);
+        this.handleGeoprocessingResultInWidget(promise, model, tool);
+    }
+
+
+    private handleGeoprocessingResultInWidget(promise: Promise<any>, model: typeof GeoprocessingModel, tool: Tool): void {
+        promise.then((resolved) => {
+            model.gpServiceResponseMessages = resolved.messages;
+            model.gpServiceResponseResults = resolved.results;
+            model.loading = false;
+            model.resultState = "success";
+            tool.set("processing", false);
+        }, (rejected) => {
+            model.loading = false;
+            model.resultState = "failure";
+            tool.set("processing", false);
+        });
     }
 }

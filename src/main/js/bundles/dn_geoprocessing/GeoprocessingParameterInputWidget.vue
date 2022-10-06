@@ -19,39 +19,43 @@
     <v-container>
         <v-layout column>
             <v-flex>
-                Editable Parameters for:
+                {{ editableParamsWithRules }}
+                Editable Parameters for: {{ toolTitle }}
             </v-flex>
-            <v-flex>
-                Required Parameters:
-                <v-card>
-                    <v-text-field
-                        v-for="(param, index) in requiredEditableParameters"
-                        :key="param.key"
-                        v-model="requiredEditableParameters[index].value"
-                        :label="param.key"
-                        :value="requiredEditableParameters[index].defaultValue"
-                    />
-                </v-card>
+            <v-flex v-if="editableParams.length > 0">
+                <v-text-field
+                    v-for="(param, index) in editableParams"
+                    :key="param.key"
+                    v-model="editableParams[index].value"
+                    :rules="editableParams[index].rule"
+                    :label="param.key"
+                    :value="editableParams[index].defaultValue"
+                />
             </v-flex>
-            <v-flex>
-                Optional Parameters:
-                <v-card>
-                    <v-text-field
-                        v-for="(param, index) in optionalRequiredParameters"
-                        :key="param.key"
-                        v-model="optionalRequiredParameters[index].value"
-                        :label="param.key"
-                        :value="optionalRequiredParameters[index].defaultValue"
-                    />
-                </v-card>
-            </v-flex>
+
             <v-flex>
                 <v-btn
-                    @click="$emit('execute-button-clicked', {req: requiredEditableParameters, opt: optionalRequiredParameters})"
+                    @click="$emit('execute-button-clicked', editableParams)"
                 >
                     Execute
                 </v-btn>
             </v-flex>
+
+            <v-flex>
+                <div
+                    v-for="message in gpServiceResponseMessages"
+                    :key="message.description"
+                >
+                    {{ message.description }}
+                </div>
+                <div
+                    v-for="result in gpServiceResponseResults"
+                    :key="result"
+                >
+                    {{ result }}
+                </div>
+            </v-flex>
+
         </v-layout>
     </v-container>
 </template>
@@ -59,13 +63,64 @@
 <script>
     export default {
         props: {
-            requiredEditableParameters: {
+            i18n: {
+                type: Object,
+                default: () => {
+                    return {};
+                }
+            },
+            toolTitle: {
+                type: String,
+                default: ""
+            },
+            editableParams: {
                 type: Array,
                 default: () => []
             },
-            optionalRequiredParameters: {
+            gpServiceResponseMessages: {
                 type: Array,
                 default: () => []
+            },
+            gpServiceResponseResults: {
+                type: Array,
+                default: () => []
+            }
+        },
+        computed: {
+            editableParamsWithRules: {
+                get: function () {
+                    this.editableParams.forEach(param => {
+                        if (param.range) {
+                            const lower = param.range.lowerLimit;
+                            const upper = param.range.upperLimit;
+
+                            param.rule =  [v => (v >= lower && v <= upper) || this.i18n.limitRuleText];
+
+                            // switch(param.type) {
+                            //     case "double":
+                            //         const temp = param.rule[0];
+                            //         debugger
+                            //         param.rule[0].concat(v => {
+                            //             if (/^[0-9]*$/.test(v)) {
+                            //                 // valid
+                            //                 return true;
+                            //             } else {
+                            //                 // invalid
+                            //                 return this.i18n.ui.NaNRuleText;
+                            //             }
+                            //         });
+                            //         break;
+                            //     case "long":
+                            //         break;
+                            //     default:
+                            //         break;
+                            // }
+                        } else {
+                            param.rule = [];
+                        }
+                    });
+                    return this.editableParams;
+                }
             }
         }
     };
