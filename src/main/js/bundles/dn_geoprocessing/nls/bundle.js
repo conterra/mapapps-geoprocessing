@@ -27,7 +27,9 @@ module.exports = {
             success: "Geoprocessing completed successfully.",
             failure: "Geoprocessing failed. Please contact the support at",
             limitRuleText: "Value is not within limits.",
-            NaNRuleText: "Value is not a number."
+            NaNRuleText: "Value is not a number.",
+            parametersTab: "Parameters",
+            resultsTab: "Results"
         }
     },
     de: true

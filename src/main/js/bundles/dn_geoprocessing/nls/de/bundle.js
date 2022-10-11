@@ -28,6 +28,8 @@ module.exports = {
         success: "Geoprocessing erfolgreich abgeschlossen.",
         failure: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an",
         limitRuleText: "Der eingegebene Wert liegt nicht im vorgegebenen Wertebereich.",
-        NaNRuleText: "Der eingegebene Wert ist keine Zahl."
+        NaNRuleText: "Der eingegebene Wert ist keine Zahl.",
+        parametersTab: "Parameter",
+        resultsTab: "Ergebnisse"
     }
 };

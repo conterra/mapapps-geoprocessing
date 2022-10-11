@@ -16,3 +16,7 @@
 .ctAppRoot .geoprocessing-widget .v-alert.error a {
     color: white;
 }
+
+.ctAppRoot .inputParameterEntryWidget .ctWindowPadding .ctWindowContentPadding .dijitDialogPaneContent {
+    padding: 0;
+}

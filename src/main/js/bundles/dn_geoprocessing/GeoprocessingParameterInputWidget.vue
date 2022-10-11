@@ -16,47 +16,62 @@
 
 -->
 <template>
-    <v-container>
-        <v-layout column>
-            <v-flex>
-                {{ editableParamsWithRules }}
-                Editable Parameters for: {{ toolTitle }}
-            </v-flex>
-            <v-flex v-if="editableParams.length > 0">
-                <v-text-field
-                    v-for="(param, index) in editableParams"
-                    :key="param.key"
-                    v-model="editableParams[index].value"
-                    :rules="editableParams[index].rule"
-                    :label="param.key"
-                    :value="editableParams[index].defaultValue"
-                />
-            </v-flex>
+    <v-container pa-0>
+        <v-tabs
+            grow
+            slider-color="primary"
+        >
 
-            <v-flex>
-                <v-btn
-                    @click="$emit('execute-button-clicked', editableParams)"
-                >
-                    Execute
-                </v-btn>
-            </v-flex>
+            <v-tab>
+                {{ i18n.parametersTab }}
+            </v-tab>
+            <v-tab>
+                {{ i18n.resultsTab }}
+            </v-tab>
 
-            <v-flex>
-                <div
-                    v-for="message in gpServiceResponseMessages"
-                    :key="message.description"
-                >
-                    {{ message.description }}
-                </div>
-                <div
-                    v-for="result in gpServiceResponseResults"
-                    :key="result"
-                >
-                    {{ result }}
-                </div>
-            </v-flex>
+            <v-tab-item>
+                <v-layout column>
+                    <v-flex>
+                        Editable Parameters for: {{ toolTitle }}
+                    </v-flex>
+                    <v-flex>
+                        <v-text-field
+                            v-for="(param, index) in editableParamsWithRules"
+                            :key="param.key"
+                            v-model="editableParamsWithRules[index].value"
+                            :rules="editableParamsWithRules[index].rule"
+                            :label="param.key"
+                            :value="editableParamsWithRules[index].defaultValue"
+                        />
+                    </v-flex>
+                    <v-flex>
+                        <v-btn
+                            @click="$emit('execute-button-clicked', editableParamsWithRules)"
+                        >
+                            Execute
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-tab-item>
 
-        </v-layout>
+            <v-tab-item>
+                <v-flex>
+                    <div
+                        v-for="message in gpServiceResponseMessages"
+                        :key="message.description"
+                    >
+                        {{ message.description }}
+                    </div>
+                    <div
+                        v-for="result in gpServiceResponseResults"
+                        :key="result"
+                    >
+                        {{ result }}
+                    </div>
+                </v-flex>
+            </v-tab-item>
+
+        </v-tabs>
     </v-container>
 </template>
 
@@ -96,25 +111,20 @@
 
                             param.rule =  [v => (v >= lower && v <= upper) || this.i18n.limitRuleText];
 
-                            // switch(param.type) {
-                            //     case "double":
-                            //         const temp = param.rule[0];
-                            //         debugger
-                            //         param.rule[0].concat(v => {
-                            //             if (/^[0-9]*$/.test(v)) {
-                            //                 // valid
-                            //                 return true;
-                            //             } else {
-                            //                 // invalid
-                            //                 return this.i18n.ui.NaNRuleText;
-                            //             }
-                            //         });
-                            //         break;
-                            //     case "long":
-                            //         break;
-                            //     default:
-                            //         break;
-                            // }
+                            if (param.type === "double" || param.type === "long") {
+                                const temp = param.rule[0];
+                                param.rule[0] = v => {
+                                    if (/^[0-9]*$/.test(v)) {
+                                        // valid
+                                        return true;
+                                    } else {
+                                        // invalid
+                                        return this.i18n.NaNRuleText;
+                                    }
+                                };
+
+                                param.rule[1] = temp;
+                            }
                         } else {
                             param.rule = [];
                         }
