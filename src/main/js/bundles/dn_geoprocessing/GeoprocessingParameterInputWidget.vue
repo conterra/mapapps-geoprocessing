@@ -18,6 +18,7 @@
 <template>
     <v-container pa-0>
         <v-tabs
+            v-model="activeTab"
             grow
             slider-color="primary"
         >
@@ -29,7 +30,7 @@
                 {{ i18n.resultsTab }}
             </v-tab>
 
-            <v-tab-item>
+            <v-tab-item v-if="activeTab === 0">
                 <v-layout column>
                     <v-flex>
                         Editable Parameters for: {{ toolTitle }}
@@ -54,13 +55,21 @@
                 </v-layout>
             </v-tab-item>
 
-            <v-tab-item>
-                <v-flex>
+            <v-tab-item v-if="activeTab === 1">
+                <div v-if="loading">
+                    <v-progress-circular
+                        v-if="loading"
+                        :indeterminate="true"
+                        size="64"
+                        width="6"
+                        color="primary"
+                    />
+                </div>
+                <div v-else>
                     <div
-                        v-for="message in gpServiceResponseMessages"
-                        :key="message.description"
+                        v-for="entry in gpServiceResponseMessages"
                     >
-                        {{ message.description }}
+                        {{ entry.description }}
                     </div>
                     <div
                         v-for="result in gpServiceResponseResults"
@@ -68,7 +77,8 @@
                     >
                         {{ result }}
                     </div>
-                </v-flex>
+                </div>
+
             </v-tab-item>
 
         </v-tabs>
@@ -87,6 +97,14 @@
             toolTitle: {
                 type: String,
                 default: ""
+            },
+            activeTab: {
+                type: Number,
+                default: 0
+            },
+            loading: {
+                type: Boolean,
+                default: false
             },
             editableParams: {
                 type: Array,

@@ -215,7 +215,7 @@ export default class GeoprocessingController {
         });
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("toolTitle", "editableParams", "gpServiceResponseMessages", "gpServiceResponseResults")
+            .syncAllToLeft("toolTitle", "loading", "activeTab", "editableParams", "gpServiceResponseMessages", "gpServiceResponseResults")
             .enable()
             .syncToLeftNow();
 
@@ -248,6 +248,7 @@ export default class GeoprocessingController {
         tool.set("processing", true);
         model.loading = true;
         model.resultState = undefined;
+        model.activeTab = 1;
 
         if (toolEvent.toolRole === "resultcenter") {
             params = await this.getResultCenterData(params);
@@ -267,16 +268,31 @@ export default class GeoprocessingController {
 
 
     private handleGeoprocessingResultInWidget(promise: Promise<any>, model: typeof GeoprocessingModel, tool: Tool): void {
-        promise.then((resolved) => {
-            model.gpServiceResponseMessages = resolved.messages;
-            model.gpServiceResponseResults = resolved.results;
-            model.loading = false;
-            model.resultState = "success";
-            tool.set("processing", false);
-        }, (rejected) => {
-            model.loading = false;
-            model.resultState = "failure";
-            tool.set("processing", false);
+        promise.then((jobInfo) => {
+            // model.gpServiceResponseMessages.push({description: "ArcGIS Server job ID: " + jobInfo.jobId});
+
+            const options = {
+                interval: 1500,
+                statusCallback: (j) => {
+                    // key = key + 1;
+                    // model.gpServiceResponseMessages.push({message: "Current Status: " + j.jobStatus, key: key});
+                }
+            };
+
+            jobInfo.waitForJobCompletion(options).then((result) => {
+                model.gpServiceResponseResults = result;
+                // model.gpServiceResponseMessages.push({description: "Final Status: " + result.jobStatus});
+                result.messages.forEach(message => {
+                    model.gpServiceResponseMessages.push({description: message.description});
+                });
+                model.loading = false;
+                model.resultState = "success";
+                tool.set("processing", false);
+            }, (rejected) => {
+                model.loading = false;
+                model.resultState = "failure";
+                tool.set("processing", false);
+            });
         });
     }
 }
