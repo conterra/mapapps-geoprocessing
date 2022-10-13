@@ -35,25 +35,25 @@
                     Editable Parameters for: {{ toolTitle }}
                 </div>
                 <div
-                    v-for="(param) in editableParamsWithRules"
-                    :key="param.key"
+                    v-for="(param) in parametersWithRules"
+                    :key="param.name"
                 >
                     <v-autocomplete
                         v-if="param.choiceList"
                         v-model="param.value"
-                        :label="param.key"
+                        :label="param.name"
                         :items="param.choiceList"
                     />
                     <v-text-field
                         v-if="param.range"
                         v-model="param.value"
                         :rules="param.rule"
-                        :label="param.key"
+                        :label="param.name"
                     />
                 </div>
                 <div>
                     <v-btn
-                        @click="$emit('execute-button-clicked', editableParamsWithRules)"
+                        @click="$emit('execute-button-clicked', parametersWithRules)"
                     >
                         Execute
                     </v-btn>
@@ -112,7 +112,7 @@
                 type: Boolean,
                 default: false
             },
-            editableParams: {
+            parameters: {
                 type: Array,
                 default: () => []
             },
@@ -126,9 +126,9 @@
             }
         },
         computed: {
-            editableParamsWithRules: {
+            parametersWithRules: {
                 get: function () {
-                    this.editableParams.forEach(param => {
+                    return this.parameters.map(param => {
                         if (param.range) {
                             const lower = param.range.lowerLimit;
                             const upper = param.range.upperLimit;
@@ -152,8 +152,8 @@
                         } else {
                             param.rule = [];
                         }
+                        return param;
                     });
-                    return this.editableParams;
                 }
             }
         }

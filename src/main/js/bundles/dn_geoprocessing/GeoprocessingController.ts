@@ -67,62 +67,76 @@ export default class GeoprocessingController {
         this.tools = this.tools.splice(removeIndex, 1);
     }
 
-    async startGeoprocessingTool(event: any): Promise<any> {
-        const model = this._model;
-        const tool = event.tool;
-        const url = tool.url;
-        let params = tool.params;
-
-        // if any of the GP parameters is editable, stop execution and open InputWidget
-        let breakFunction = false;
-        Object.values(params).forEach(param => {
-            if (param.editable && !breakFunction) {
-                breakFunction = true;
-                this.getEditableParamInputs(params, event);
-            }
-        });
-
-        // if no inputs for editable properties is required run function as usual
-        if (!breakFunction) {
-            tool.set("processing", true);
-            model.loading = true;
-            model.resultState = undefined;
-
-            if (event.toolRole === "resultcenter") {
-                params = await this.getResultCenterData(params);
-            }
-
-            const metadata = await GeoprocessingController.getMetadata(url);
-            const executionType = metadata.executionType;
-
-            let promise;
-            if (executionType === "esriExecutionTypeSynchronous") {
-                promise = geoprocessor.execute(url, params);
-            } else {
-                promise = geoprocessor.submitJob(url, params);
-            }
-            this.handleGeoprocessingResult(promise, model, tool);
-        } else {
-            // else end function execution and get inputs
-            return;
-        }
-    }
-
+    /**
+     * Gets called by the click-tool
+     *
+     * @param toolId Tool ID
+     */
     startGeoprocessing(toolId: string): void {
         const tool = this.tools.find((t) => t.id === toolId);
         this.startGeoprocessingTool(tool);
     }
 
-    private handleGeoprocessingResult(promise: Promise<any>, model: typeof GeoprocessingModel, tool: Tool): void {
-        promise.then((resolved) => {
-            model.loading = false;
-            model.resultState = "success";
-            tool.set("processing", false);
-        }, (rejected) => {
-            model.loading = false;
-            model.resultState = "failure";
-            tool.set("processing", false);
+    private async startGeoprocessingTool(event: any): Promise<any> {
+        const model = this._model;
+        const tool = event.tool;
+        const url = tool.url;
+        let parameters = tool.parameters;
+
+        tool.set("processing", true);
+        model.loading = true;
+        model.resultState = undefined;
+
+        if (event.toolRole === "resultcenter") {
+            parameters = await this.getResultCenterData(parameters);
+        }
+        if (tool.showWidget) {
+            this.showParametersWidget(parameters, tool);
+        } else {
+            await this.runGeoprocessingService(parameters, tool);
+        }
+    }
+
+    private async runGeoprocessingService(parameters: any[], tool) {
+        const model = this._model;
+        const params = {};
+        // add required parameters
+        parameters.forEach(param => {
+            params[param.name] = param.value;
         });
+
+        const metadata = await GeoprocessingController.getMetadata(tool.url);
+        const executionType = metadata.executionType;
+
+        if (executionType === "esriExecutionTypeSynchronous") {
+            geoprocessor.execute(tool.url, params).then((result) => {
+                model.loading = false;
+                model.resultState = "success";
+                tool.set("processing", false);
+            });
+        } else {
+            geoprocessor.submitJob(tool.url, params).then((jobInfo) => {
+                const options = {
+                    interval: 1500,
+                    statusCallback: (j) => {
+                        model.gpServiceResponseMessages = [];
+                        j.messages.forEach(message => {
+                            model.gpServiceResponseMessages.push({description: message.description});
+                        });
+                    }
+                };
+
+                jobInfo.waitForJobCompletion(options).then((supportJobInfo) => {
+                    model.gpServiceResponseMessages = [];
+                    jobInfo.messages.forEach(message => {
+                        model.gpServiceResponseMessages.push({description: message.description});
+                    });
+                    model.loading = false;
+                    model.resultState = "success";
+                    tool.set("processing", false);
+                });
+            });
+        }
     }
 
     private static getMetadata(url: string) {
@@ -134,7 +148,7 @@ export default class GeoprocessingController {
         });
     }
 
-    private async getResultCenterData(params: object): Promise<object> {
+    private getResultCenterData(params: object): Promise<object> {
         const dataModel = this._dataModel;
         return new Promise((resolve) => {
             apprt_when(dataModel.getSelected(), (selectedIds) => {
@@ -157,25 +171,14 @@ export default class GeoprocessingController {
         });
     }
 
-    private getEditableParamInputs(params: object, toolEvent: Event): void {
-        const editableParams = [];
-        const uneditableParameters = this.uneditableParameters = [];
+    private showParametersWidget(parameters: object, tool: any): void {
+        const widget = this.getInputParameterWidget(parameters, tool);
+        const vm = widget.getVM();
 
-        Object.values(params).forEach((param, index) => {
-            if (param.editable) {
-                param.key = Object.keys(params)[index];
-                editableParams.push(param);
-            } else {
-                param.key = Object.keys(params)[index];
-                uneditableParameters.push(param);
-            }
+        vm.$on('execute-button-clicked', async parametersWithRules => {
+            await this.runGeoprocessingService(parametersWithRules, tool);
         });
 
-        this.showWidget(editableParams, toolEvent);
-    }
-
-    private showWidget(editableParams, toolEvent): void {
-        const widget = this.getInputParameterWidget(editableParams, toolEvent);
         const serviceProperties = {
             "widgetRole": "inputParameterEntryWidget"
         };
@@ -189,33 +192,16 @@ export default class GeoprocessingController {
         }, 500);
     }
 
-    private getInputParameterWidget(editableParams, toolEvent): object {
+    private getInputParameterWidget(parameters, tool): any {
         const model = this._model;
 
         const vm = new Vue(InputParameterEntryMask);
-        const tool = toolEvent.tool;
         model.toolTitle = tool.title;
-        model.editableParams = editableParams;
         vm.i18n = this._i18n.get().ui;
-
-        vm.$on('execute-button-clicked', paramsObj => {
-            const completeParamsObject = {};
-
-            // add required parameters
-            paramsObj.forEach(param => {
-                completeParamsObject[param.key] = param.value || param.defaultValue;
-            });
-
-            // add uneditable parameters
-            this.uneditableParameters.forEach(param => {
-                completeParamsObject[param.key] = param.defaultValue;
-            });
-
-            this.startGeoprocessingWithEditedParameters(completeParamsObject, toolEvent);
-        });
+        vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("toolTitle", "loading", "activeTab", "editableParams", "gpServiceResponseMessages", "gpServiceResponseResults")
+            .syncAllToLeft("toolTitle", "loading", "activeTab", "gpServiceResponseMessages", "gpServiceResponseResults")
             .enable()
             .syncToLeftNow();
 
@@ -238,61 +224,5 @@ export default class GeoprocessingController {
             // call unregister
             registration.unregister();
         }
-    }
-
-    private async startGeoprocessingWithEditedParameters(params: object, toolEvent){
-        const model = this._model;
-        const tool = toolEvent.tool;
-        const url = tool.url;
-
-        tool.set("processing", true);
-        model.loading = true;
-        model.resultState = undefined;
-        model.activeTab = 1;
-
-        if (toolEvent.toolRole === "resultcenter") {
-            params = await this.getResultCenterData(params);
-        }
-
-        const metadata = await GeoprocessingController.getMetadata(url);
-        const executionType = metadata.executionType;
-
-        let promise;
-        if (executionType === "esriExecutionTypeSynchronous") {
-            promise = geoprocessor.execute(url, params);
-        } else {
-            promise = geoprocessor.submitJob(url, params);
-        }
-        this.handleGeoprocessingResultInWidget(promise, model, tool);
-    }
-
-
-    private handleGeoprocessingResultInWidget(promise: Promise<any>, model: typeof GeoprocessingModel, tool: Tool): void {
-        promise.then((jobInfo) => {
-            // model.gpServiceResponseMessages.push({description: "ArcGIS Server job ID: " + jobInfo.jobId});
-
-            const options = {
-                interval: 1500,
-                statusCallback: (j) => {
-                    // key = key + 1;
-                    // model.gpServiceResponseMessages.push({message: "Current Status: " + j.jobStatus, key: key});
-                }
-            };
-
-            jobInfo.waitForJobCompletion(options).then((result) => {
-                model.gpServiceResponseResults = result;
-                // model.gpServiceResponseMessages.push({description: "Final Status: " + result.jobStatus});
-                result.messages.forEach(message => {
-                    model.gpServiceResponseMessages.push({description: message.description});
-                });
-                model.loading = false;
-                model.resultState = "success";
-                tool.set("processing", false);
-            }, (rejected) => {
-                model.loading = false;
-                model.resultState = "failure";
-                tool.set("processing", false);
-            });
-        });
     }
 }

@@ -41,13 +41,17 @@
                     "title": "Geoprocessing Toolset",
                     "tooltip": "Geoprocessing Toolset",
                     "rules": {
-                        "roles": ["maAdmin", "maEditor"],
+                        "roles": [
+                            "maAdmin",
+                            "maEditor"
+                        ],
                         "ruleSuccessProperty": "enabled"
                     },
                     "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                    "params": {
-                        "Input_Point": {
-                            "defaultValue": {
+                    "parameters": [
+                        {
+                            "name": "Input_Point",
+                            "value": {
                                 "features": [
                                     {
                                         "geometry": {
@@ -56,16 +60,15 @@
                                         }
                                     }
                                 ]
-                            },
-                            "editable": true,
-                            "required": true
+                            }
                         },
-                        "Days": {
-                            "defaultValue": 7,
+                        {
+                            "name": "Days",
+                            "value": 7,
                             "editable": true,
                             "required": false
                         }
-                    }
+                    ]
                 },
                 {
                     "id": "gp_resultcenter_1",
@@ -80,21 +83,27 @@
                         "ruleSuccessProperty": "enabled"
                     },
                     "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                    "params": {
-                        "Input_Point": {
-                            "features": [
-                                {
-                                    "geometry": {
-                                        "x": 0,
-                                        "y": 0
+                    "parameters": [
+                        {
+                            "name": "Input_Point",
+                            "value": {
+                                "features": [
+                                    {
+                                        "geometry": {
+                                            "x": 0,
+                                            "y": 0
+                                        }
                                     }
-                                }
-                            ]
+                                ]
+                            }
                         },
                         // reference an attribute
                         // only possible if only one result is selected and toolRole = resultcenter
-                        "Days": "{OBJECTID}"
-                    },
+                        {
+                            "name": "Days",
+                            "value": "{OBJECTID}"
+                        }
+                    ],
                     "toolRole": "resultcenter"
                 },
                 {
@@ -109,19 +118,25 @@
                         "ruleSuccessProperty": "enabled"
                     },
                     "url": "https://dev.laixoversum.ch/dev1ags2/rest/services/invers_automations/gpBundleTester/GPServer/GP_Bundle_Tester",
-                    "params": {
-                        "APP_JSON_FIX_PARAMETER": {
-                            "features": [
-                                {
-                                    "geometry": {
-                                        "x": 0,
-                                        "y": 0
+                    "parameters": [
+                        {
+                            "name": "APP_JSON_FIX_PARAMETER",
+                            "value": {
+                                "features": [
+                                    {
+                                        "geometry": {
+                                            "x": 0,
+                                            "y": 0
+                                        }
                                     }
-                                }
-                            ]
+                                ]
+                            }
                         },
-                        "OBJECTIDS": "{SELECTED_IDS}"
-                    },
+                        {
+                            "name": "OBJECTIDS",
+                            "value": "{SELECTED_IDS}"
+                        }
+                    ],
                     "toolRole": "resultcenter"
                 },
                 {
@@ -129,21 +144,30 @@
                     "title": "DEV Geoprocessing Toolset",
                     "tooltip": "DEV Geoprocessing Toolset",
                     "rules": {
-                        "roles": ["maAdmin", "maEditor"],
+                        "roles": [
+                            "maAdmin",
+                            "maEditor"
+                        ],
                         "ruleSuccessProperty": "enabled"
                     },
-                    "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                    "params": {
-                        "sampleString": {
+                    "url": "https://dev.laixoversum.ch/dev1ags2/rest/services/invers_automations/gpBundleTester/GPServer/GP_Bundle_Tester",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "sampleString",
                             "type": "string",
-                            "defaultValue": "dev",
-                            "choiceList": ["test", "sample"],
+                            "value": "dev",
+                            "choiceList": [
+                                "test",
+                                "sample"
+                            ],
                             "editable": true,
                             "required": true
                         },
-                        "sampleLong": {
+                        {
+                            "name": "sampleLong",
                             "type": "long",
-                            "defaultValue": 7,
+                            "value": 754673473567,
                             "range": {
                                 "lowerLimit": 1,
                                 "upperLimit": 14
@@ -151,9 +175,10 @@
                             "editable": true,
                             "required": false
                         },
-                        "sampleDouble": {
+                        {
+                            "name": "sampleDouble",
                             "type": "double",
-                            "defaultValue": 3.14,
+                            "value": 3.14,
                             "range": {
                                 "lowerLimit": 1.5,
                                 "upperLimit": 15.5
@@ -161,15 +186,16 @@
                             "editable": true,
                             "required": true
                         },
-                        "unedit": {
-                            "defaultValue": 5,
+                        {
+                            "name": "unedit",
+                            "value": 5,
                             "editable": false
                         }
-                    }
+                    ]
                 }
             ],
             "Config": {
-                "supportEmailAddress": "support@laixo.ch"
+                "supportEmailAddress": ""
             }
         },
         "agssearch": {

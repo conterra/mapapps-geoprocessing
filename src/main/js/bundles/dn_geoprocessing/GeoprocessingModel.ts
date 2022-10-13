@@ -31,7 +31,6 @@ interface GeoprocessingModelProps {
     resultState: string,
     supportEmailAddress: string,
     tools: object[],
-    editableParams: object[],
 
     gpServiceResponseMessages: string[],
     gpServiceResponseResults: string[],
