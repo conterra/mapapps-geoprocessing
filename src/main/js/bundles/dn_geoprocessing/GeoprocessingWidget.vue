@@ -55,7 +55,7 @@
                     {{ i18n.success }}
                 </v-alert>
                 <v-alert
-                    v-if="resultState==='failure'"
+                    v-if="resultState==='error'"
                     :value="true"
                     type="error"
                 >

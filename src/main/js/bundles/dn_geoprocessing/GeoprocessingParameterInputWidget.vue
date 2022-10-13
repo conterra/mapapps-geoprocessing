@@ -77,6 +77,20 @@
                         width="6"
                         color="primary"
                     />
+                    <v-alert
+                        v-if="resultState==='success'"
+                        :value="true"
+                        type="success"
+                    >
+                        {{ i18n.success }}
+                    </v-alert>
+                    <v-alert
+                        v-if="resultState==='error'"
+                        :value="true"
+                        type="error"
+                    >
+                        {{ i18n.failure }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
+                    </v-alert>
                     <div
                         v-for="(entry, index) in gpServiceResponseMessages"
                         :key="index"
@@ -119,6 +133,10 @@
             parameters: {
                 type: Array,
                 default: () => []
+            },
+            resultState: {
+                type: String,
+                default: ""
             },
             gpServiceResponseMessages: {
                 type: Array,
