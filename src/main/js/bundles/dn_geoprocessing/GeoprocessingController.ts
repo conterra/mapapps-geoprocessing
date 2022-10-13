@@ -200,7 +200,7 @@ export default class GeoprocessingController {
         vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("toolTitle", "loading", "activeTab", "gpServiceResponseMessages", "gpServiceResponseResults")
+            .syncAllToLeft("toolTitle", "loading", "gpServiceResponseMessages", "gpServiceResponseResults")
             .enable()
             .syncToLeftNow();
 

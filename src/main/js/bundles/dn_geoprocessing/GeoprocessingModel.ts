@@ -15,7 +15,6 @@
 ///
 
 import {Mutable, properties} from "apprt-core/Mutable";
-import type {Mutable as MutableType} from "@conterra/ct-mapapps-typings/apprt-core/Mutable";
 
 function defineProperties<Impl, P>(mutableDefinition: any, mutableProperties: { supportEmailAddress: string; gpServiceResponseMessages: string[];
     gpServiceResponseResults: string[]; addTool(tool): void; removeTool(tool): void; resultState: string; loading: boolean; tools: any[]; editableParams: object[] }): Impl & Mutable<P> {
