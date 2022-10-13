@@ -147,24 +147,24 @@ export default class GeoprocessingController {
         });
     }
 
-    private getResultCenterData(params: object): Promise<object> {
+    private getResultCenterData(parameters: any[]): Promise<object> {
         const dataModel = this._dataModel;
         return new Promise((resolve) => {
             apprt_when(dataModel.getSelected(), (selectedIds) => {
                 apprt_when(dataModel.queryById(selectedIds), (result) => {
-                    const paramsClone = Object.assign({}, params);
-                    for (const prop in paramsClone) {
-                        if (paramsClone[prop] === "{SELECTED_IDS}") {
-                            paramsClone[prop] = selectedIds.toString();
+                    const newParameters = parameters.map((parameter) => {
+                        if (parameter.value === "{SELECTED_IDS}") {
+                            parameter.value = selectedIds.toString();
                         }
                         if (result.length === 1) {
                             const feature = result[0];
-                            if (typeof (paramsClone[prop]) === "string") {
-                                paramsClone[prop] = intl.substitute(paramsClone[prop], feature);
+                            if (typeof (parameter.value) === "string") {
+                                parameter.value = intl.substitute(parameter.value, feature);
                             }
                         }
-                    }
-                    resolve(paramsClone);
+                        return parameter;
+                    });
+                    resolve(newParameters);
                 });
             });
         });
