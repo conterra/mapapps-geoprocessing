@@ -26,7 +26,7 @@ module.exports = {
         startGeoprocessing: "Starte Geoprocessing",
         selectTool: "Tool wählen",
         success: "Geoprocessing erfolgreich abgeschlossen.",
-        failure: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an",
+        error: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an",
         limitRuleText: "Der eingegebene Wert liegt nicht im vorgegebenen Wertebereich.",
         NaNRuleText: "Der eingegebene Wert ist keine Zahl.",
         parametersTab: "Parameter",

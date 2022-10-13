@@ -89,7 +89,7 @@
                         :value="true"
                         type="error"
                     >
-                        {{ i18n.failure }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
+                        {{ i18n.error }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
                     </v-alert>
                     <div
                         v-for="(entry, index) in gpServiceResponseMessages"
