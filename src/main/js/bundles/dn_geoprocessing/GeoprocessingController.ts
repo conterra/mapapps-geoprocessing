@@ -196,11 +196,14 @@ export default class GeoprocessingController {
         const interfaces = ["dijit.Widget"];
         this.widgetServiceregistration = this.bundleContext.registerService(interfaces, widget, serviceProperties);
         setTimeout(() => {
-            const window = ct_util.findEnclosingWindow(widget);
-            window?.on("Close", () => {
-                this.hideWidget();
-            });
-        }, 500);
+            const window: any = ct_util.findEnclosingWindow(widget);
+            if (window) {
+                window.set("title", tool.title);
+                window.on("Close", () => {
+                    this.hideWidget();
+                });
+            }
+        }, 100);
     }
 
     private getInputParameterWidget(parameters, tool): any {

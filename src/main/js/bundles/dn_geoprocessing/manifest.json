@@ -76,16 +76,12 @@
                 "desktop"
             ],
             "window": {
-                "title": "test",
+                "title": "Geoprocessing Widget",
                 "closable": true,
                 "maximizable": true,
                 "minimizeOnClose": false,
                 "resizable": true,
                 "marginBox": {
-                    "w": 600,
-                    "h": 500
-                },
-                "minSize": {
                     "w": 600,
                     "h": 500
                 },
