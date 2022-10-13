@@ -31,28 +31,33 @@
             </v-tab>
 
             <v-tab-item v-if="activeTab === 0">
-                <v-layout column>
-                    <v-flex>
-                        Editable Parameters for: {{ toolTitle }}
-                    </v-flex>
-                    <v-flex>
-                        <v-text-field
-                            v-for="(param, index) in editableParamsWithRules"
-                            :key="param.key"
-                            v-model="editableParamsWithRules[index].value"
-                            :rules="editableParamsWithRules[index].rule"
-                            :label="param.key"
-                            :value="editableParamsWithRules[index].defaultValue"
-                        />
-                    </v-flex>
-                    <v-flex>
-                        <v-btn
-                            @click="$emit('execute-button-clicked', editableParamsWithRules)"
-                        >
-                            Execute
-                        </v-btn>
-                    </v-flex>
-                </v-layout>
+                <div>
+                    Editable Parameters for: {{ toolTitle }}
+                </div>
+                <div
+                    v-for="(param) in editableParamsWithRules"
+                    :key="param.key"
+                >
+                    <v-autocomplete
+                        v-if="param.choiceList"
+                        v-model="param.value"
+                        :label="param.key"
+                        :items="param.choiceList"
+                    />
+                    <v-text-field
+                        v-if="param.range"
+                        v-model="param.value"
+                        :rules="param.rule"
+                        :label="param.key"
+                    />
+                </div>
+                <div>
+                    <v-btn
+                        @click="$emit('execute-button-clicked', editableParamsWithRules)"
+                    >
+                        Execute
+                    </v-btn>
+                </div>
             </v-tab-item>
 
             <v-tab-item v-if="activeTab === 1">
@@ -67,13 +72,14 @@
                 </div>
                 <div v-else>
                     <div
-                        v-for="entry in gpServiceResponseMessages"
+                        v-for="(entry, index) in gpServiceResponseMessages"
+                        :key="index"
                     >
                         {{ entry.description }}
                     </div>
                     <div
-                        v-for="result in gpServiceResponseResults"
-                        :key="result"
+                        v-for="(result, index) in gpServiceResponseResults"
+                        :key="index"
                     >
                         {{ result }}
                     </div>
