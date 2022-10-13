@@ -108,33 +108,43 @@ export default class GeoprocessingController {
         const executionType = metadata.executionType;
 
         if (executionType === "esriExecutionTypeSynchronous") {
-            geoprocessor.execute(tool.url, params).then((result) => {
+            try {
+                const result = await geoprocessor.execute(tool.url, params);
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
-            });
+            } catch (error) {
+                model.loading = false;
+                tool.set("processing", false);
+            }
         } else {
-            geoprocessor.submitJob(tool.url, params).then((jobInfo) => {
-                const options = {
-                    interval: 1500,
-                    statusCallback: (j) => {
-                        model.gpServiceResponseMessages = [];
-                        j.messages.forEach(message => {
-                            model.gpServiceResponseMessages.push({description: message.description});
-                        });
-                    }
-                };
-
-                jobInfo.waitForJobCompletion(options).then((supportJobInfo) => {
+            const jobInfo = await geoprocessor.submitJob(tool.url, params);
+            const options = {
+                interval: 1500,
+                statusCallback: (j) => {
                     model.gpServiceResponseMessages = [];
-                    jobInfo.messages.forEach(message => {
+                    j.messages.forEach(message => {
                         model.gpServiceResponseMessages.push({description: message.description});
                     });
-                    model.loading = false;
-                    model.resultState = "success";
-                    tool.set("processing", false);
+                }
+            };
+
+            try {
+                const supportJobInfo = await jobInfo.waitForJobCompletion(options);
+                model.gpServiceResponseMessages = [];
+                jobInfo.messages.forEach(message => {
+                    model.gpServiceResponseMessages.push({description: message.description});
                 });
-            });
+                model.loading = false;
+                model.resultState = "success";
+                tool.set("processing", false);
+            } catch (error) {
+                jobInfo.messages.forEach(message => {
+                    model.gpServiceResponseMessages.push({description: message.description});
+                });
+                model.loading = false;
+                tool.set("processing", false);
+            }
         }
     }
 
