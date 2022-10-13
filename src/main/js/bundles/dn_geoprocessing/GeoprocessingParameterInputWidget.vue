@@ -16,61 +16,67 @@
 
 -->
 <template>
-    <v-container pa-0>
-        <v-tabs
-            v-model="activeTab"
-            grow
-            slider-color="primary"
+    <div class="fill-height">
+        <v-stepper
+            v-model="activeStep"
+            class="fill-height"
         >
-
-            <v-tab>
-                {{ i18n.parametersTab }}
-            </v-tab>
-            <v-tab>
-                {{ i18n.resultsTab }}
-            </v-tab>
-
-            <v-tab-item v-if="activeTab === 0">
-                <div>
-                    Editable Parameters for: {{ toolTitle }}
-                </div>
-                <div
-                    v-for="(param) in parametersWithRules"
-                    :key="param.name"
+            <v-stepper-header>
+                <v-stepper-step
+                    :complete="activeStep > 1"
+                    :editable="!loading"
+                    step="1"
                 >
-                    <v-autocomplete
-                        v-if="param.choiceList"
-                        v-model="param.value"
-                        :label="param.name"
-                        :items="param.choiceList"
-                    />
-                    <v-text-field
-                        v-if="param.range"
-                        v-model="param.value"
-                        :rules="param.rule"
-                        :label="param.name"
-                    />
-                </div>
-                <div>
-                    <v-btn
-                        @click="$emit('execute-button-clicked', parametersWithRules)"
-                    >
-                        Execute
-                    </v-btn>
-                </div>
-            </v-tab-item>
+                    {{ i18n.parametersTab }}
+                </v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step
+                    :complete="!loading"
+                    step="2"
+                >
+                    {{ i18n.resultsTab }}
+                </v-stepper-step>
+            </v-stepper-header>
 
-            <v-tab-item v-if="activeTab === 1">
-                <div v-if="loading">
-                    <v-progress-circular
+            <v-stepper-items class="fill-height">
+                <v-stepper-content step="1">
+                    <div>
+                        Editable Parameters for: {{ toolTitle }}
+                    </div>
+                    <div
+                        v-for="(param) in parametersWithRules"
+                        :key="param.name"
+                    >
+                        <v-autocomplete
+                            v-if="param.choiceList"
+                            v-model="param.value"
+                            :label="param.name"
+                            :items="param.choiceList"
+                        />
+                        <v-text-field
+                            v-if="param.range"
+                            v-model="param.value"
+                            :rules="param.rule"
+                            :label="param.name"
+                        />
+                    </div>
+                    <div>
+                        <v-btn
+                            @click="execute"
+                        >
+                            Execute
+                        </v-btn>
+                    </div>
+                </v-stepper-content>
+
+                <v-stepper-content step="2">
+                    <v-progress-linear
                         v-if="loading"
                         :indeterminate="true"
                         size="64"
                         width="6"
                         color="primary"
                     />
-                </div>
-                <div v-else>
                     <div
                         v-for="(entry, index) in gpServiceResponseMessages"
                         :key="index"
@@ -83,12 +89,10 @@
                     >
                         {{ result }}
                     </div>
-                </div>
-
-            </v-tab-item>
-
-        </v-tabs>
-    </v-container>
+                </v-stepper-content>
+            </v-stepper-items>
+        </v-stepper>
+    </div>
 </template>
 
 <script>
@@ -104,7 +108,7 @@
                 type: String,
                 default: ""
             },
-            activeTab: {
+            activeStep: {
                 type: Number,
                 default: 0
             },
@@ -155,6 +159,12 @@
                         return param;
                     });
                 }
+            }
+        },
+        methods: {
+            execute: function () {
+                this.$emit('execute-button-clicked', this.parametersWithRules);
+                this.activeStep = 2;
             }
         }
     };

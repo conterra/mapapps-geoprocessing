@@ -80,12 +80,9 @@ export default class GeoprocessingController {
     private async startGeoprocessingTool(event: any): Promise<any> {
         const model = this._model;
         const tool = event.tool;
-        const url = tool.url;
         let parameters = tool.parameters;
 
         tool.set("processing", true);
-        model.loading = true;
-        model.resultState = undefined;
 
         if (event.toolRole === "resultcenter") {
             parameters = await this.getResultCenterData(parameters);
@@ -99,6 +96,8 @@ export default class GeoprocessingController {
 
     private async runGeoprocessingService(parameters: any[], tool) {
         const model = this._model;
+        model.loading = true;
+        model.resultState = undefined;
         const params = {};
         // add required parameters
         parameters.forEach(param => {
