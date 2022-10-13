@@ -78,24 +78,43 @@
                         color="primary"
                     />
                     <v-alert
+                        v-if="resultState==='success'"
+                        :value="true"
+                        type="success"
+                    >
+                        {{ i18n.success }}
+                    </v-alert>
+                    <v-alert
                         v-if="resultState==='error'"
                         :value="true"
                         type="error"
                     >
                         {{ i18n.error }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
                     </v-alert>
-                    <div
-                        v-for="(entry, index) in gpServiceResponseMessages"
-                        :key="index"
-                    >
-                        {{ entry.description }}
-                    </div>
-                    <div
-                        v-for="(result, index) in gpServiceResponseResults"
-                        :key="index"
-                    >
-                        {{ result }}
-                    </div>
+                    <v-list dense>
+                        <v-list-tile
+                            v-for="message in gpServiceResponseMessages"
+                            :key="message.id"
+                        >
+                            <v-list-tile-action>
+                                <v-icon
+                                    v-if="message.type==='informative'"
+                                    color="primary"
+                                >
+                                    info
+                                </v-icon>
+                                <v-icon
+                                    v-if="message.type==='error'"
+                                    color="red"
+                                >
+                                    warning
+                                </v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title v-text="message.description"></v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>

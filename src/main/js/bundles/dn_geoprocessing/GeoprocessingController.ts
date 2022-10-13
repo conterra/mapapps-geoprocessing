@@ -122,32 +122,35 @@ export default class GeoprocessingController {
             const options = {
                 interval: 1500,
                 statusCallback: (j) => {
-                    model.gpServiceResponseMessages = [];
-                    j.messages.forEach(message => {
-                        model.gpServiceResponseMessages.push({description: message.description});
-                    });
+                    this.addResultMessages(jobInfo);
                 }
             };
 
             try {
                 const supportJobInfo = await jobInfo.waitForJobCompletion(options);
-                model.gpServiceResponseMessages = [];
-                jobInfo.messages.forEach(message => {
-                    model.gpServiceResponseMessages.push({description: message.description});
-                });
+                this.addResultMessages(jobInfo);
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
             } catch (error) {
-                model.gpServiceResponseMessages = [];
-                jobInfo.messages.forEach(message => {
-                    model.gpServiceResponseMessages.push({description: message.description});
-                });
+                this.addResultMessages(jobInfo);
                 model.loading = false;
                 model.resultState = "error";
                 tool.set("processing", false);
             }
         }
+    }
+
+    private addResultMessages(jobInfo): void {
+        const model = this._model;
+        model.gpServiceResponseMessages = [];
+        jobInfo.messages.forEach((message, i) => {
+            model.gpServiceResponseMessages.push({
+                id: i,
+                description: message.description,
+                type: message.type
+            });
+        });
     }
 
     private static getMetadata(url: string) {
