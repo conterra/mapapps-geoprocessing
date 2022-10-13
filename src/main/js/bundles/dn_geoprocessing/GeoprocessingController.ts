@@ -212,11 +212,14 @@ export default class GeoprocessingController {
         vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("toolTitle", "loading", "resultState", "gpServiceResponseMessages", "gpServiceResponseResults")
+            .syncAllToLeft("toolTitle", "loading", "resultState", "supportEmailAddress",
+                "gpServiceResponseMessages", "gpServiceResponseResults")
             .enable()
             .syncToLeftNow();
 
-        const widget = VueDijit(vm);
+        const widget = VueDijit(vm, {
+            class: "geoprocessing-parameter-widget"
+        });
         widget.own({
             remove() {
                 vm.$off();

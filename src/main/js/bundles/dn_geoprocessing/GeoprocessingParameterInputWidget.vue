@@ -78,13 +78,6 @@
                         color="primary"
                     />
                     <v-alert
-                        v-if="resultState==='success'"
-                        :value="true"
-                        type="success"
-                    >
-                        {{ i18n.success }}
-                    </v-alert>
-                    <v-alert
                         v-if="resultState==='error'"
                         :value="true"
                         type="error"
@@ -138,6 +131,10 @@
                 type: String,
                 default: ""
             },
+            supportEmailAddress: {
+                type: String,
+                default: ""
+            },
             gpServiceResponseMessages: {
                 type: Array,
                 default: () => []
@@ -148,35 +145,36 @@
             }
         },
         computed: {
-            parametersWithRules: {
-                get: function () {
-                    return this.parameters.map(param => {
-                        if (param.range) {
-                            const lower = param.range.lowerLimit;
-                            const upper = param.range.upperLimit;
+            supportContact: function() {
+                return "mailto:" + this.supportEmailAddress;
+            },
+            parametersWithRules: function () {
+                return this.parameters.map(param => {
+                    if (param.range) {
+                        const lower = param.range.lowerLimit;
+                        const upper = param.range.upperLimit;
 
-                            param.rule =  [v => (v >= lower && v <= upper) || this.i18n.limitRuleText];
+                        param.rule = [v => (v >= lower && v <= upper) || this.i18n.limitRuleText];
 
-                            if (param.type === "double" || param.type === "long") {
-                                const temp = param.rule[0];
-                                param.rule[0] = v => {
-                                    if (/^[0-9]*$/.test(v)) {
-                                        // valid
-                                        return true;
-                                    } else {
-                                        // invalid
-                                        return this.i18n.NaNRuleText;
-                                    }
-                                };
+                        if (param.type === "double" || param.type === "long") {
+                            const temp = param.rule[0];
+                            param.rule[0] = v => {
+                                if (/^[0-9]*$/.test(v)) {
+                                    // valid
+                                    return true;
+                                } else {
+                                    // invalid
+                                    return this.i18n.NaNRuleText;
+                                }
+                            };
 
-                                param.rule[1] = temp;
-                            }
-                        } else {
-                            param.rule = [];
+                            param.rule[1] = temp;
                         }
-                        return param;
-                    });
-                }
+                    } else {
+                        param.rule = [];
+                    }
+                    return param;
+                });
             }
         },
         methods: {
