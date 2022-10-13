@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.ctAppRoot .geoprocessing-widget .v-alert.error a,
+.ctAppRoot .geoprocessing-tools-widget .v-alert.error a,
 .ctAppRoot .geoprocessing-parameter-widget .v-alert.error a {
     color: white;
 }

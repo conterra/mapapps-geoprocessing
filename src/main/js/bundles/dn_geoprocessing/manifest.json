@@ -30,7 +30,7 @@
     "productName": "devnet-mapapps-geoprocessing",
     "layout-widgets": [
         {
-            "widgetRole": "geoprocessingWidget",
+            "widgetRole": "geoprocessingToolsWidget",
             "sublayout": [
                 "desktop",
                 "tablet_landscape",
@@ -47,11 +47,11 @@
                     "b": 74,
                     "r": 75
                 },
-                "windowClass": "geoprocessing-widget"
+                "windowClass": "geoprocessing-tools-widget"
             }
         },
         {
-            "widgetRole": "geoprocessingWidget",
+            "widgetRole": "geoprocessingToolsWidget",
             "sublayout": [
                 "mobile_landscape",
                 "mobile_portrait"
@@ -67,7 +67,7 @@
                     "b": 40,
                     "l": 0
                 },
-                "windowClass": "mobileWindow geoprocessing-widget"
+                "windowClass": "mobileWindow geoprocessing-tools-widget"
             }
         },
         {
@@ -152,14 +152,14 @@
             ]
         },
         {
-            "name": "GeoprocessingWidgetFactory",
+            "name": "GeoprocessingToolsWidgetFactory",
             "provides": [
                 "dijit.Widget",
-                "dn_geoprocessing.GeoprocessingWidgetFactory"
+                "dn_geoprocessing.GeoprocessingToolsWidgetFactory"
             ],
             "instanceFactory": true,
             "properties": {
-                "widgetRole": "geoprocessingWidget"
+                "widgetRole": "geoprocessingToolsWidget"
             },
             "references": [
                 {

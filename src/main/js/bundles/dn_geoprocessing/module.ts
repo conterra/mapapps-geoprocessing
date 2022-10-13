@@ -34,4 +34,4 @@ import ".";
 import "ct/tools/Tool";
 import "./GeoprocessingModel";
 import "./GeoprocessingController";
-import "./GeoprocessingWidgetFactory";
+import "./GeoprocessingToolsWidgetFactory";
