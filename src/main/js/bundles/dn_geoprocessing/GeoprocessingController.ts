@@ -186,7 +186,7 @@ export default class GeoprocessingController {
     }
 
     private showParametersWidget(parameters: object, tool: any): void {
-        const widget = this.getInputParameterWidget(parameters, tool);
+        const widget = this.getInputParameterWidget(parameters);
         const vm = widget.getVM();
 
         vm.$on('execute-button-clicked', async parametersWithRules => {
@@ -209,16 +209,13 @@ export default class GeoprocessingController {
         }, 100);
     }
 
-    private getInputParameterWidget(parameters, tool): any {
-        const model = this._model;
-
+    private getInputParameterWidget(parameters): any {
         const vm = new Vue(InputParameterEntryMask);
-        model.toolTitle = tool.title;
         vm.i18n = this._i18n.get().ui;
         vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("toolTitle", "loading", "resultState", "supportEmailAddress",
+            .syncAllToLeft("loading", "resultState", "supportEmailAddress",
                 "gpServiceResponseMessages", "gpServiceResponseResults")
             .enable()
             .syncToLeftNow();

@@ -30,6 +30,7 @@ module.exports = {
         limitRuleText: "Der eingegebene Wert liegt nicht im vorgegebenen Wertebereich.",
         NaNRuleText: "Der eingegebene Wert ist keine Zahl.",
         parametersTab: "Parameter",
-        resultsTab: "Ergebnisse"
+        resultsTab: "Ergebnisse",
+        editableParameters: "Editierbare Parameter"
     }
 };

@@ -40,8 +40,8 @@
 
             <v-stepper-items class="fill-height">
                 <v-stepper-content step="1">
-                    <div>
-                        Editable Parameters for: {{ toolTitle }}
+                    <div class="title">
+                        {{ i18n.editableParameters }}
                     </div>
                     <div
                         v-for="(param) in parametersWithRules"
@@ -129,10 +129,6 @@
                 default: () => {
                     return {};
                 }
-            },
-            toolTitle: {
-                type: String,
-                default: ""
             },
             activeStep: {
                 type: Number,

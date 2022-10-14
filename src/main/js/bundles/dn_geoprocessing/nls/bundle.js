@@ -29,7 +29,8 @@ module.exports = {
             limitRuleText: "Value is not within limits.",
             NaNRuleText: "Value is not a number.",
             parametersTab: "Parameters",
-            resultsTab: "Results"
+            resultsTab: "Results",
+            editableParameters: "Editable parameters"
         }
     },
     de: true
