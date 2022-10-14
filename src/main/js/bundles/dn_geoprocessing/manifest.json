@@ -85,7 +85,7 @@
                     "w": 600,
                     "h": 500
                 },
-                "windowClass": "geoprocessing-subwidget"
+                "windowClass": "geoprocessing-subwidget noPadding"
             }
         }
     ],
