@@ -37,7 +37,11 @@
                     {{ i18n.resultsTab }}
                 </v-stepper-step>
             </v-stepper-header>
-
+            <v-progress-linear
+                v-if="loading"
+                :indeterminate="true"
+                color="primary"
+            />
             <v-stepper-items class="fill-height">
                 <v-stepper-content step="1">
                     <div class="subheading pb-2 geoprocessing--parameters-title">
@@ -74,44 +78,33 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
-                    <v-progress-linear
-                        v-if="loading"
-                        :indeterminate="true"
-                        size="64"
-                        width="6"
-                        color="primary"
-                    />
-                    <v-alert
-                        v-if="resultState==='success'"
-                        :value="true"
-                        type="success"
+                    <v-list
+                        v-if="gpServiceResponseMessages.length"
+                        dense
+                        class="geoprocessing--messages"
                     >
-                        {{ i18n.success }}
-                    </v-alert>
-                    <v-alert
-                        v-if="resultState==='error'"
-                        :value="true"
-                        type="error"
-                    >
-                        {{ i18n.error }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
-                    </v-alert>
-                    <v-list dense>
                         <v-list-tile
                             v-for="message in gpServiceResponseMessages"
                             :key="message.id"
                         >
                             <v-list-tile-action>
                                 <v-icon
-                                    v-if="message.type==='informative'"
-                                    color="primary"
-                                >
-                                    info
-                                </v-icon>
-                                <v-icon
                                     v-if="message.type==='error'"
                                     color="red"
                                 >
+                                    error
+                                </v-icon>
+                                <v-icon
+                                    v-else-if="message.type==='warning'"
+                                    color="yellow"
+                                >
                                     warning
+                                </v-icon>
+                                <v-icon
+                                    v-else
+                                    color="grey"
+                                >
+                                    info
                                 </v-icon>
                             </v-list-tile-action>
                             <v-list-tile-content>
@@ -119,6 +112,22 @@
                             </v-list-tile-content>
                         </v-list-tile>
                     </v-list>
+                    <div class="geoprocessing--alert">
+                        <v-alert
+                            v-if="resultState==='success'"
+                            :value="true"
+                            type="success"
+                        >
+                            {{ i18n.success }}
+                        </v-alert>
+                        <v-alert
+                            v-if="resultState==='error'"
+                            :value="true"
+                            type="error"
+                        >
+                            {{ i18n.error }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
+                        </v-alert>
+                    </div>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
