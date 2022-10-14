@@ -184,10 +184,10 @@
 
                         param.rule = [v => (v >= lower && v <= upper) || this.i18n.limitRuleText];
 
-                        if (param.type === "double" || param.type === "long") {
+                        if (param.type === "double") {
                             const temp = param.rule[0];
                             param.rule[0] = v => {
-                                if (/^[0-9]*$/.test(v)) {
+                                if (/^[0-9.,]*$/.test(v)) {
                                     // valid
                                     return true;
                                 } else {
@@ -196,7 +196,40 @@
                                 }
                             };
 
-                            param.rule[1] = temp;
+                            param.rule[1] = v => {
+                                if (/^[0-9.]*$/.test(v)) {
+                                    // valid
+                                    return true;
+                                } else {
+                                    // invalid
+                                    return this.i18n.pointSeparatedRuleText;
+                                }
+                            };
+
+                            param.rule[2] = temp;
+                        } else if (param.type === "long") {
+                            const temp = param.rule[0];
+                            param.rule[0] = v => {
+                                if (/^[0-9.,]*$/.test(v)) {
+                                    // valid
+                                    return true;
+                                } else {
+                                    // invalid
+                                    return this.i18n.NaNRuleText;
+                                }
+                            };
+
+                            param.rule[1] = v => {
+                                if (/^[0-9]*$/.test(v)) {
+                                    // valid
+                                    return true;
+                                } else {
+                                    // invalid
+                                    return this.i18n.noDecimalsRuleText;
+                                }
+                            };
+
+                            param.rule[2] = temp;
                         }
                     } else {
                         param.rule = [];

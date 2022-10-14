@@ -28,6 +28,8 @@ module.exports = {
             error: "Geoprocessing failed. Please contact the support at",
             limitRuleText: "Value is not within limits.",
             NaNRuleText: "Value is not a number.",
+            pointSeparatedRuleText: "Decimal values need to be separated by a point.",
+            noDecimalsRuleText: "Long values cannot include a delimiter",
             parametersTab: "Parameters",
             resultsTab: "Results",
             editableParameters: "Editable parameters"

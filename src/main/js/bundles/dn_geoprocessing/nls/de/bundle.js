@@ -29,6 +29,8 @@ module.exports = {
         error: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an",
         limitRuleText: "Der eingegebene Wert liegt nicht im vorgegebenen Wertebereich.",
         NaNRuleText: "Der eingegebene Wert ist keine Zahl.",
+        pointSeparatedRuleText: "Dezimalwerte müssen mit einem Punkt getrennt sein.",
+        noDecimalsRuleText: "Long Werte könnte keine Dezimaltrennzeichen beinhalten.",
         parametersTab: "Parameter",
         resultsTab: "Ergebnisse",
         editableParameters: "Editierbare Parameter"
