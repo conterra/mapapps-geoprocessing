@@ -40,28 +40,32 @@
 
             <v-stepper-items class="fill-height">
                 <v-stepper-content step="1">
-                    <div class="title">
+                    <div class="subheading pb-2 geoprocessing--parameters-title">
                         {{ i18n.editableParameters }}
                     </div>
-                    <div
-                        v-for="(param) in parametersWithRules"
-                        :key="param.name"
-                    >
-                        <v-autocomplete
-                            v-if="param.choiceList"
-                            v-model="param.value"
-                            :label="param.name"
-                            :items="param.choiceList"
-                        />
-                        <v-text-field
-                            v-if="param.range"
-                            v-model="param.value"
-                            :rules="param.rule"
-                            :label="param.name"
-                        />
+                    <div class="geoprocessing--parameters">
+                        <div
+                            v-for="(param) in parametersWithRules"
+                            :key="param.name"
+                        >
+                            <v-autocomplete
+                                v-if="param.choiceList"
+                                v-model="param.value"
+                                :label="param.name"
+                                :items="param.choiceList"
+                            />
+                            <v-text-field
+                                v-if="param.range"
+                                v-model="param.value"
+                                :rules="param.rule"
+                                :label="param.name"
+                            />
+                        </div>
                     </div>
-                    <div>
+                    <div class="geoprocessing--execute">
                         <v-btn
+                            class="ml-0"
+                            color="primary"
                             @click="execute"
                         >
                             Execute
