@@ -20,11 +20,14 @@ import apprt_request from "apprt-request";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
 import * as intl from "esri/intl";
 import apprt_when from "apprt-core/when";
-import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
+import ct_util from "ct/ui/desktop/util";
+import ServiceRegistration from "apprt/ServiceRegistration";
+import BundleContext from "apprt/BundleContext";
+import {LogService} from "system/module";
+import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
-import ct_util from "ct/ui/desktop/util";
-import Binding from "apprt-binding/Binding";
+import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
 
 interface Tool {
     id: string,
@@ -37,12 +40,14 @@ interface Tool {
 
 export default class GeoprocessingController {
 
-    private tools: Tool[];
     private _dataModel!: InjectedReference<any>;
-    private _model!: InjectedReference<any>;
-    private bundleContext: InjectedReference<any>;
-    private widgetServiceregistration: InjectedReference<any>;
-    private uneditableParameters: Array<any>;
+    private _model!: InjectedReference<typeof GeoprocessingModel>;
+    private _i18n!: InjectedReference<any>;
+    private _logService!: InjectedReference<LogService>;
+
+    private bundleContext: BundleContext;
+    private widgetServiceRegistration: ServiceRegistration;
+    private tools: Tool[];
 
     activate(componentContext: InjectedReference<any>): void {
         this.tools = [];
@@ -94,10 +99,10 @@ export default class GeoprocessingController {
     private async runGeoprocessingService(parameters: any[], tool) {
         const model = this._model;
 
-        if(!tool.showWidget){
+        if (!tool.showWidget) {
             this._logService.info({
                 message: this._i18n.get().ui.notifierStart
-            });
+            }, null, null, null);
         }
         tool.set("processing", true);
         model.loading = true;
@@ -119,20 +124,20 @@ export default class GeoprocessingController {
                 model.resultState = "success";
                 tool.set("processing", false);
 
-                if(!tool.showWidget){
+                if (!tool.showWidget) {
                     this._logService.info({
                         message: this._i18n.get().ui.notifierSuccess
-                    });
+                    }, null, null, null);
                 }
             } catch (error) {
                 model.loading = false;
                 model.resultState = "error";
                 tool.set("processing", false);
 
-                if(!tool.showWidget){
+                if (!tool.showWidget) {
                     this._logService.info({
                         error: this._i18n.get().ui.notifierError
-                    });
+                    }, null, null, null);
                 }
             }
         } else {
@@ -153,7 +158,7 @@ export default class GeoprocessingController {
                 if (!tool.showWidget) {
                     this._logService.info({
                         message: this._i18n.get().ui.notifierSuccess
-                    });
+                    }, null, null, null);
                 }
             } catch (error) {
                 this.addResultMessages(jobInfo);
@@ -163,7 +168,7 @@ export default class GeoprocessingController {
                 if (!tool.showWidget) {
                     this._logService.info({
                         error: this._i18n.get().ui.notifierError
-                    });
+                    }, null, null, null);
                 }
             }
         }
@@ -226,7 +231,7 @@ export default class GeoprocessingController {
             "widgetRole": "inputParameterEntryWidget"
         };
         const interfaces = ["dijit.Widget"];
-        this.widgetServiceregistration = this.bundleContext.registerService(interfaces, widget, serviceProperties);
+        this.widgetServiceRegistration = this.bundleContext.registerService(interfaces, widget, serviceProperties);
         setTimeout(() => {
             const window: any = ct_util.findEnclosingWindow(widget);
             if (window) {
@@ -261,10 +266,10 @@ export default class GeoprocessingController {
     }
 
     private hideWidget(): void {
-        const registration = this.widgetServiceregistration;
+        const registration = this.widgetServiceRegistration;
 
         // clear the reference
-        this.widgetServiceregistration = null;
+        this.widgetServiceRegistration = null;
 
         if (registration) {
             // call unregister

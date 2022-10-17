@@ -17,7 +17,7 @@
 import {Mutable, properties} from "apprt-core/Mutable";
 
 function defineProperties<Impl, P>(mutableDefinition: any, mutableProperties: { supportEmailAddress: string; gpServiceResponseMessages: string[];
-    gpServiceResponseResults: string[]; addTool(tool): void; removeTool(tool): void; resultState: string; loading: boolean; tools: any[]; editableParams: object[] }): Impl & Mutable<P> {
+    gpServiceResponseResults: string[]; addTool(tool: any): void; removeTool(tool: any): void; resultState: string; loading: boolean; tools: any[]; editableParams: object[] }): Impl & Mutable<P> {
     properties(mutableDefinition, mutableProperties);
     return mutableDefinition;
 }
@@ -31,11 +31,11 @@ interface GeoprocessingModelProps {
     supportEmailAddress: string,
     tools: object[],
 
-    gpServiceResponseMessages: string[],
+    gpServiceResponseMessages: object[],
     gpServiceResponseResults: string[],
 
-    addTool(): void
-    removeTool(): void
+    addTool(tool): void
+    removeTool(tool): void
 }
 
 export default defineProperties<GeoprocessingModel, GeoprocessingModelProps>(GeoprocessingModel,
@@ -49,7 +49,7 @@ export default defineProperties<GeoprocessingModel, GeoprocessingModelProps>(Geo
         gpServiceResponseMessages: [],
         gpServiceResponseResults: [],
 
-        addTool(tool): void {
+        addTool(tool: any): void {
             const id = tool?.id;
             if (!id) {
                 console.debug("Tool has no id and will be ignored!");
@@ -69,7 +69,7 @@ export default defineProperties<GeoprocessingModel, GeoprocessingModelProps>(Geo
             this.tools = newTools;
         },
 
-        removeTool(tool): void {
+        removeTool(tool: any): void {
             const id = tool?.id;
             if (!id) {
                 return;
