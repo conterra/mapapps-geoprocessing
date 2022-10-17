@@ -93,12 +93,18 @@ export default class GeoprocessingController {
 
     private async runGeoprocessingService(parameters: any[], tool) {
         const model = this._model;
+
+        if(!tool.showWidget){
+            this._logService.info({
+                message: this._i18n.get().ui.notifierStart
+            });
+        }
         tool.set("processing", true);
         model.loading = true;
         model.resultState = undefined;
         model.gpServiceResponseMessages = [];
         const params = {};
-        // add required parameters
+
         parameters.forEach(param => {
             params[param.name] = param.value;
         });
@@ -112,10 +118,22 @@ export default class GeoprocessingController {
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
+
+                if(!tool.showWidget){
+                    this._logService.info({
+                        message: this._i18n.get().ui.notifierSuccess
+                    });
+                }
             } catch (error) {
                 model.loading = false;
                 model.resultState = "error";
                 tool.set("processing", false);
+
+                if(!tool.showWidget){
+                    this._logService.info({
+                        error: this._i18n.get().ui.notifierError
+                    });
+                }
             }
         } else {
             const jobInfo = await geoprocessor.submitJob(tool.url, params);
@@ -132,11 +150,21 @@ export default class GeoprocessingController {
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
+                if (!tool.showWidget) {
+                    this._logService.info({
+                        message: this._i18n.get().ui.notifierSuccess
+                    });
+                }
             } catch (error) {
                 this.addResultMessages(jobInfo);
                 model.loading = false;
                 model.resultState = "error";
                 tool.set("processing", false);
+                if (!tool.showWidget) {
+                    this._logService.info({
+                        error: this._i18n.get().ui.notifierError
+                    });
+                }
             }
         }
     }

@@ -32,7 +32,10 @@ module.exports = {
             noDecimalsRuleText: "Long values cannot include a delimiter",
             parametersTab: "Parameters",
             resultsTab: "Results",
-            editableParameters: "Editable parameters"
+            editableParameters: "Editable parameters",
+            notifierStart:"The Geoprocessing Service has been started.",
+            notifierSuccess: "The Geoprocessing Service was executed successfully.",
+            notifierError: "The Geoprocessing Service execution encountered an error."
         }
     },
     de: true
