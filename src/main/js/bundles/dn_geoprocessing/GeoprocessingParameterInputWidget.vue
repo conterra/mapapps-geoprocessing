@@ -64,6 +64,12 @@
                                 :rules="param.rule"
                                 :label="param.name"
                             />
+                            <v-text-field
+                                v-if="!param.choiceList && !param.range"
+                                v-model="param.value"
+                                :label="param.name"
+                                disabled
+                            />
                         </div>
                     </div>
                     <div class="geoprocessing--execute">
