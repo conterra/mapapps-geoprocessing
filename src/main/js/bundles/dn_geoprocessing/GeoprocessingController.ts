@@ -214,6 +214,7 @@ export default class GeoprocessingController {
     }
 
     private showParametersWidget(parameters: object, tool: any): void {
+        this.hideWidget();
         const widget = this.getInputParameterWidget(parameters);
         const vm = widget.getVM();
 
