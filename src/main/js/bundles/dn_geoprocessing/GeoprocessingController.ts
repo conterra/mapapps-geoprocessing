@@ -44,6 +44,7 @@ export default class GeoprocessingController {
     private _model!: InjectedReference<typeof GeoprocessingModel>;
     private _i18n!: InjectedReference<any>;
     private _logService!: InjectedReference<LogService>;
+    private _mapWidgetModel!: InjectedReference<LogService>;
 
     private bundleContext: BundleContext;
     private widgetServiceRegistration: ServiceRegistration;
@@ -133,8 +134,7 @@ export default class GeoprocessingController {
         // if editable parameters are given in the tool definition wait for them...
         if (tool.showWidget) {
             this.showParametersWidget(parameters, tool);
-        }
-        else { // ... then run the service
+        } else { // ... then run the service
             await this.runGeoprocessingService(parameters, tool);
         }
     }
@@ -194,6 +194,10 @@ export default class GeoprocessingController {
                         message: this._i18n.get().ui.notifierSuccess
                     }, null, null, null);
                 }
+
+                if (tool.refreshLayerIds) {
+                    this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
+                }
             } catch (error) {
                 // case: geoprocessing service ran unsuccessfully
 
@@ -240,6 +244,10 @@ export default class GeoprocessingController {
                     this._logService.info({
                         message: this._i18n.get().ui.notifierSuccess
                     }, null, null, null);
+                }
+
+                if (tool.refreshLayerIds) {
+                    this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
                 }
             } catch (error) {
                 // case: geoprocessing service has completed execution unsuccessfully
@@ -419,5 +427,25 @@ export default class GeoprocessingController {
             // call unregister
             registration.unregister();
         }
+    }
+
+    /**
+     * reloadLayersAfterGeoprocessing()
+     * Helper function used to refresh configured layers after successful geoprocessing service execution
+     *
+     * @param layerIds Array of layerId strings to refresh
+     *
+     * @private
+     */
+    private reloadLayersAfterGeoprocessing(layerIds) {
+        const view = this._mapWidgetModel.view;
+        const layers = view.map.layers;
+
+        layerIds.forEach(layerId => {
+            const foundLayer = layers.find(layer => layer.id === layerId);
+            if (foundLayer.type === "feature") {
+                foundLayer.refresh();
+            }
+        });
     }
 }
