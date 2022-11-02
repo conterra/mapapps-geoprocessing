@@ -78,7 +78,7 @@
                             color="primary"
                             @click="execute"
                         >
-                            Execute
+                            {{ i18n.executeButtonLabel }}
                         </v-btn>
                     </div>
                 </v-stepper-content>
