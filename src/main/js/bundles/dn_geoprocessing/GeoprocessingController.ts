@@ -49,14 +49,33 @@ export default class GeoprocessingController {
     private widgetServiceRegistration: ServiceRegistration;
     private tools: Tool[];
 
+    /**
+     * activate()
+     * Run automatically on component activation
+     *
+     * @param componentContext Context of the component used for service registration of widget
+     */
     activate(componentContext: InjectedReference<any>): void {
         this.tools = [];
         this.bundleContext = componentContext.getBundleContext();
     }
 
+    /**
+     * deactivate()
+     * Run automatically on component activation
+     */
     deactivate(): void {
     }
 
+    // TODO: add caller
+    /**
+     * addTool()
+     * Run on ???
+     * Calls addTool() of GeoprocessingModel
+     * Adds all tools specified in app.json to this.tools
+     *
+     * @param tool A tool definition taken from the app.json
+     */
     addTool(tool: Tool): void {
         const model = this._model;
         model.addTool(tool);
@@ -64,6 +83,14 @@ export default class GeoprocessingController {
         this.tools.push(tool);
     }
 
+    // TODO: add caller
+    /**
+     * removeTool()
+     * Run on ???
+     * Removes a specific tool from the list of tools in this.tools
+     *
+     * @param tool A tool definition taken from the app.json
+     */
     removeTool(tool: Tool): void {
         const model = this._model;
         model.removeTool(tool);
@@ -73,67 +100,109 @@ export default class GeoprocessingController {
     }
 
     /**
-     * Gets called by the click-tool
+     * startGeoprocessing()
+     * Called by GeoprocessingToolsWidgetFactory on "start-geoprocessing" event.
+     * This event is thrown by the GeoprocessingToolsWidget startGeoprocessing button on click
      *
-     * @param toolId Tool ID
+     * @param toolId ID of the tool to start
      */
     startGeoprocessing(toolId: string): void {
-        const tool = this.tools.find((t) => t.id === toolId);
+        const tool = this.tools.find(tool => tool.id === toolId);
         this.startGeoprocessingTool(tool);
     }
 
+    /**
+     * startGeoprocessingTool()
+     * Called by startGeoprocessing()
+     * Also called by handlerScope of geoprocessingtools
+     * Handles usage of resultcenter and InputParametersWidget
+     *
+     * @param event An event containing geoprocessing tool information
+     *
+     * @private
+     */
     private async startGeoprocessingTool(event: any): Promise<any> {
         const tool = event.tool;
         let parameters = tool.parameters;
 
+        // if resultcenter data is necessary wait for it...
         if (event.toolRole === "resultcenter") {
             parameters = await this.getResultCenterData(parameters);
         }
+
+        // if editable parameters are given in the tool definition wait for them...
         if (tool.showWidget) {
             this.showParametersWidget(parameters, tool);
-        } else {
+        }
+        else { // ... then run the service
             await this.runGeoprocessingService(parameters, tool);
         }
     }
 
+    /**
+     * runGeoprocessingService()
+     * Run on 'execute-button-clicked' event of ParameterInputWidget execute button
+     * Also called by startGeoprocessingTool()
+     *
+     * @param parameters (edited) parameters to forward to the geoprocessing service
+     * @param tool A tool definition taken from the app.json
+     *
+     * @private
+     */
     private async runGeoprocessingService(parameters: any[], tool) {
         const model = this._model;
 
+        // if no widget is to be displayed, inform user of geoprocessing service start
         if (!tool.showWidget) {
             this._logService.info({
                 message: this._i18n.get().ui.notifierStart
             }, null, null, null);
         }
+
+        // handle geoporcessing start internally
         tool.set("processing", true);
         model.loading = true;
         model.resultState = undefined;
         model.gpServiceResponseMessages = [];
         const params = {};
 
+        // add params from array to object as property: value
         parameters.forEach(param => {
             params[param.name] = param.value;
         });
 
+        // determine whether geoprocessing service works synchronously or asynchronously
         const metadata = await GeoprocessingController.getMetadata(tool.url);
         const executionType = metadata.executionType;
 
+        // synchronous workflow
         if (executionType === "esriExecutionTypeSynchronous") {
             try {
+                // case: geoprocessing service ran successfully
+
+                // start synchronous geoprocessing service execution
                 const result = await geoprocessor.execute(tool.url, params);
+
+                // handle finishing of geoprocessing service internally
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
 
+                // if no widget is to be displayed, inform user of geoprocessing service success
                 if (!tool.showWidget) {
                     this._logService.info({
                         message: this._i18n.get().ui.notifierSuccess
                     }, null, null, null);
                 }
             } catch (error) {
+                // case: geoprocessing service ran unsuccessfully
+
+                // handle finishing of geoprocessing service internally
                 model.loading = false;
                 model.resultState = "error";
                 tool.set("processing", false);
 
+                // if no widget is to be displayed, inform user of geoprocessing service failure
                 if (!tool.showWidget) {
                     this._logService.info({
                         error: this._i18n.get().ui.notifierError
@@ -141,7 +210,12 @@ export default class GeoprocessingController {
                 }
             }
         } else {
+            // asynchronous workflow
+
+            // start asynchronous geoprocessing service execution
             const jobInfo = await geoprocessor.submitJob(tool.url, params);
+
+            // get status messages and add them to widget
             const options = {
                 interval: 1500,
                 statusCallback: (j) => {
@@ -150,21 +224,34 @@ export default class GeoprocessingController {
             };
 
             try {
+                // case: geoprocessing service has completed execution successfully
                 const supportJobInfo = await jobInfo.waitForJobCompletion(options);
+
+                // add final status message to widget
                 this.addResultMessages(jobInfo);
+
+                // handle finishing of geoprocessing service internally
                 model.loading = false;
                 model.resultState = "success";
                 tool.set("processing", false);
+
+                // if no widget is to be displayed, inform user of geoprocessing service success
                 if (!tool.showWidget) {
                     this._logService.info({
                         message: this._i18n.get().ui.notifierSuccess
                     }, null, null, null);
                 }
             } catch (error) {
+                // case: geoprocessing service has completed execution unsuccessfully
+                // add final status message to widget
                 this.addResultMessages(jobInfo);
+
+                // handle finishing of geoprocessing service internally
                 model.loading = false;
                 model.resultState = "error";
                 tool.set("processing", false);
+
+                // if no widget is to be displayed, inform user of geoprocessing service failure
                 if (!tool.showWidget) {
                     this._logService.info({
                         error: this._i18n.get().ui.notifierError
@@ -174,9 +261,21 @@ export default class GeoprocessingController {
         }
     }
 
+    /**
+     * addResultMessage()
+     * Called by runGeoprocessingService() in the asynchronous workflow
+     *
+     * @param jobInfo Information string returned by the geoprocessing service describing current or final execution status
+     *
+     * @private
+     */
     private addResultMessages(jobInfo): void {
         const model = this._model;
+
+        // clear status information previously saved in model
         model.gpServiceResponseMessages = [];
+
+        // push new status messages into model
         jobInfo.messages.forEach((message, i) => {
             model.gpServiceResponseMessages.push({
                 id: i,
@@ -186,6 +285,15 @@ export default class GeoprocessingController {
         });
     }
 
+    /**
+     * getMetdadata()
+     * Helper function used to access the metadata of the geoprocessing service available at given url
+     * Called when starting a geoprocessing service execution to determine mode of service exectuion
+     *
+     * @param url Address of the geoprocessing service queried for metadata
+     *
+     * @private
+     */
     private static getMetadata(url: string) {
         return apprt_request(url, {
             query: {
@@ -195,6 +303,14 @@ export default class GeoprocessingController {
         });
     }
 
+    /**
+     * getResultCenterData()
+     * Called by startGeoprocessingTool() if result center data is required
+     *
+     * @param parameters Parameters configured in the app.json for the geoprocessing service
+     *
+     * @private
+     */
     private getResultCenterData(parameters: any[]): Promise<object> {
         const dataModel = this._dataModel;
         return new Promise((resolve) => {
@@ -218,15 +334,30 @@ export default class GeoprocessingController {
         });
     }
 
+    /**
+     * showParametersWidget()
+     * Called by startGeoprocessingTool() when editable parameters are configured
+     *
+     * @param parameters Parameters configured in the app.json for the geoprocessing service
+     * @param tool A tool definition taken from the app.json
+     *
+     * @private
+     */
     private showParametersWidget(parameters: object, tool: any): void {
+        // if widget is already opened, close it
         this.hideWidget();
+
+        // start widget creation
         const widget = this.getInputParameterWidget(parameters);
         const vm = widget.getVM();
 
+        // add listener to the execution button click event
         vm.$on('execute-button-clicked', async parametersWithRules => {
+            // run geoprocessing service with edited parameters
             await this.runGeoprocessingService(parametersWithRules, tool);
         });
 
+        // finish widget creation
         const serviceProperties = {
             "widgetRole": "inputParameterEntryWidget"
         };
@@ -243,6 +374,13 @@ export default class GeoprocessingController {
         }, 100);
     }
 
+    /**
+     * getInputParameterWidget()
+     * Helper function used in widget creation
+     *
+     * @param parameters Parameters configured in the app.json for the geoprocessing service
+     * @private
+     */
     private getInputParameterWidget(parameters): any {
         const vm = new Vue(InputParameterEntryMask);
         vm.i18n = this._i18n.get().ui;
@@ -265,6 +403,12 @@ export default class GeoprocessingController {
         return widget;
     }
 
+    /**
+     * hideWidget()
+     * Helper function used to close widget
+     *
+     * @private
+     */
     private hideWidget(): void {
         const registration = this.widgetServiceRegistration;
 
