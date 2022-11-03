@@ -1,7 +1,9 @@
 # Geoprocessing
+
 This bundle enables the user to trigger the execution of Geoprocessing services.
 
 ## Usage
+
 **Requirement: map.apps 4.12.0**
 
 1. First you need to add the bundle dn_geoprocessing to your app.
@@ -20,63 +22,79 @@ To make the functions of this bundle available to the user, the following tool c
 ```json
 "GeoprocessingTools": [
     {
-        "id": "gp_01",
-        "title": "Service 1",
-        "tooltip": "Service 1",
+        "id": "gp_toolset_dev",
+        "title": "DEV Geoprocessing Toolset",
+        "tooltip": "DEV Geoprocessing Toolset",
         "rules": {
-            "roles": ["maAdmin", "maEditor"],
+            "roles": [
+                "maAdmin",
+                "maEditor"
+            ],
             "ruleSuccessProperty": "enabled"
         },
-        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-        "params": {
-            "Input_Point": {
-                "features": [
-                    {
-                        "geometry": {
-                            "x": 0,
-                            "y": 0
-                        }
-                    }
-                ]
+        "url": "https://dev.laixoversum.ch/dev1ags2/rest/services/invers_automations/gpBundleTester/GPServer/GP_Bundle_Tester",
+        "showWidget": true,
+        "parameters": [
+            {
+                "name": "sampleString",
+                "type": "string",
+                "value": "dev",
+                "choiceList": [
+                    "test",
+                    "sample"
+                ],
+                "editable": true,
+                "required": true
             },
-            "Days": 50
-        }
-    },
-    {
-        "id": "gp_02",
-        "title": "Service 2",
-        "tooltip": "Service 2",
-        "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-        "params": {
-            "Input_Point": {
-                "features": [
-                    {
-                        "geometry": {
-                            "x": "zero",
-                            "y": 0
-                        }
-                    }
-                ]
+            {
+                "name": "sampleLong",
+                "type": "long",
+                "value": 754673473567,
+                "range": {
+                    "lowerLimit": 1,
+                    "upperLimit": 14
+                },
+                "editable": true,
+                "required": false
             },
-            "Days": "fifty"
-        }
+            {
+                "name": "sampleDouble",
+                "type": "double",
+                "value": 3.14,
+                "range": {
+                    "lowerLimit": 1.5,
+                    "upperLimit": 15.5
+                },
+                "editable": true,
+                "required": true
+            },
+            {
+                "name": "unedit",
+                "value": 5,
+                "editable": false
+            }
+        ]
     }
-],
+]
+
+
 ```
 
-| Property    | Type    | Possible Values                                  | Default    | Description                                                          |
-|-------------|---------|--------------------------------------------------|------------|----------------------------------------------------------------------|
-| id          | String  | Any String                                       | ```""```   | Id of GP Service                                                     |
-| title       | String  | Any String                                       | ```""```   | Title of GP Service                                                  |
-| tooltip     | String  | Any String                                       | ```""```   | Tooltip of GP Service                                                |
-| url         | String  | URL of GP Service                                | ```""```   | URL of GP Service                                                    |
-| params      | Object  | Object of key-value pairs required by GP Service | ```{}```   | Object containing any key-value pair required by GP Service          |
+| Property    | Type    | Possible Values                                     | Default    | Description                                                          |
+|-------------|---------|-----------------------------------------------------|------------|----------------------------------------------------------------------|
+| id          | String  | Any String prefixed with gp_                        | ```""```   | Id of GP Service Tool                                                |
+| title       | String  | Any String                                          | ```""```   | Title of GP Service Tool                                             |
+| tooltip     | String  | Any String                                          | ```""```   | Tooltip of GP Service Tool                                           |
+| rules       | Object  | Any Object containing roles and ruleSuccessProperty | ```""```   | User access configuration                                            |
+| url         | String  | URL of GP Service                                   | ```""```   | URL of GP Service                                                    |
+| showWidget  | Boolean | `true` or `false`                                   | ```""```   | Determines whether the parameterInputWidget will be shown            |
+| parameters  | Array   | Array of any objects                                | ```[]```   | Array of parameters as required by GP Service                        |
 
 ### Config
 
 ```json
 "Config": {
-    "supportEmailAddress": "support@laixo.ch"
+"supportEmailAddress": "support@conterra.de"
 }
 ```
 
