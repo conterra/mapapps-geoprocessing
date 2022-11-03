@@ -150,6 +150,10 @@
                     "cardinality": "0..1"
                 },
                 {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                },
+                {
                     "name": "_logService",
                     "providing": "ct.framework.api.LogService"
                 }
