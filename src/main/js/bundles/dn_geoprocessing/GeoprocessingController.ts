@@ -51,7 +51,6 @@ export default class GeoprocessingController {
     private tools: Tool[];
 
     /**
-     * activate()
      * Run automatically on component activation
      *
      * @param componentContext Context of the component used for service registration of widget
@@ -70,7 +69,6 @@ export default class GeoprocessingController {
 
 
     /**
-     * addTool()
      * Run by SCR on adding tool
      * Calls addTool() of GeoprocessingModel
      * Adds all tools specified in app.json to this.tools
@@ -101,7 +99,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * startGeoprocessing()
      * Called by GeoprocessingToolsWidgetFactory on "start-geoprocessing" event.
      * This event is thrown by the GeoprocessingToolsWidget startGeoprocessing button on click
      *
@@ -113,7 +110,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * startGeoprocessingTool()
      * Called by startGeoprocessing()
      * Also called by handlerScope of geoprocessingtools
      * Handles usage of resultcenter and InputParametersWidget
@@ -140,7 +136,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * runGeoprocessingService()
      * Run on 'execute-button-clicked' event of ParameterInputWidget execute button
      * Also called by startGeoprocessingTool()
      *
@@ -270,10 +265,10 @@ export default class GeoprocessingController {
     }
 
     /**
-     * addResultMessage()
      * Called by runGeoprocessingService() in the asynchronous workflow
      *
-     * @param jobInfo Information string returned by the geoprocessing service describing current or final execution status
+     * @param jobInfo Information string returned by the geoprocessing
+     * service describing current or final execution status
      *
      * @private
      */
@@ -294,7 +289,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * getMetdadata()
      * Helper function used to access the metadata of the geoprocessing service available at given url
      * Called when starting a geoprocessing service execution to determine mode of service exectuion
      *
@@ -312,7 +306,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * getResultCenterData()
      * Called by startGeoprocessingTool() if result center data is required
      *
      * @param parameters Parameters configured in the app.json for the geoprocessing service
@@ -343,7 +336,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * showParametersWidget()
      * Called by startGeoprocessingTool() when showWidget is configured as true
      *
      * @param parameters Parameters configured in the app.json for the geoprocessing service
@@ -383,7 +375,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * getInputParameterWidget()
      * Helper function used in widget creation
      *
      * @param parameters Parameters configured in the app.json for the geoprocessing service
