@@ -44,7 +44,7 @@ export default class GeoprocessingController {
     private _model!: InjectedReference<typeof GeoprocessingModel>;
     private _i18n!: InjectedReference<any>;
     private _logService!: InjectedReference<LogService>;
-    private _mapWidgetModel!: InjectedReference<LogService>;
+    private _mapWidgetModel!: InjectedReference<any>;
 
     private bundleContext: BundleContext;
     private widgetServiceRegistration: ServiceRegistration;
