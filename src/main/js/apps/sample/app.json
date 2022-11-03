@@ -37,88 +37,206 @@
         "dn_geoprocessing": {
             "GeoprocessingTools": [
                 {
-                    "id": "gp_toolset",
-                    "title": "Geoprocessing Toolset",
-                    "tooltip": "Geoprocessing Toolset",
+                    "id": "gp_toolset_1",
+                    "title": "Synchrones Drucken",
+                    "tooltip": "Synchrones Drucken",
                     "rules": {
-                        "roles": ["maAdmin", "maEditor"],
+                        "roles": [
+                            "maAdmin",
+                            "maEditor"
+                        ],
                         "ruleSuccessProperty": "enabled"
                     },
-                    "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                    "params": {
-                        "Input_Point": {
-                            "features": [
-                                {
-                                    "geometry": {
-                                        "x": 0,
-                                        "y": 0
+                    "url": "https://services.conterra.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "Web_Map_as_JSON",
+                            "type": "string",
+                            "value": {
+                                "mapOptions": {
+                                    "extent": {
+                                        "spatialReference": {
+                                            "wkid": 3857
+                                        },
+                                        "xmin": 758448.8005249344,
+                                        "ymin": 6599379.269071205,
+                                        "xmax": 791257.1994750656,
+                                        "ymax": 6621974.730928795
+                                    },
+                                    "spatialReference": {
+                                        "wkid": 3857
+                                    },
+                                    "showAttribution": true,
+                                    "scale": 100000
+                                },
+                                "operationalLayers": [
+                                    {
+                                        "id": "1843ce5ec22-layer-6",
+                                        "title": "Libraries",
+                                        "opacity": 1,
+                                        "minScale": 0,
+                                        "maxScale": 0,
+                                        "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/1",
+                                        "layerDefinition": {
+                                            "definitionExpression": null,
+                                            "drawingInfo": {
+                                                "renderer": {
+                                                    "type": "simple",
+                                                    "symbol": {
+                                                        "type": "esriPMS",
+                                                        "angle": 0,
+                                                        "xoffset": 0,
+                                                        "yoffset": 0,
+                                                        "contentType": "image/png",
+                                                        "imageData": "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",
+                                                        "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/1/images/52017ede-66ca-454e-b3c8-a59beed1a8fe",
+                                                        "height": 18,
+                                                        "width": 18
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "showLabels": true
+                                    }
+                                ],
+                                "baseMap": {
+                                    "title": "Basemap",
+                                    "baseMapLayers": [
+                                        {
+                                            "url": "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer"
+                                        }
+                                    ]
+                                },
+                                "exportOptions": {
+                                    "dpi": 150
+                                },
+                                "layoutOptions": {
+                                    "titleText": "Testdruck",
+                                    "authorText": "Testdruck Autor",
+                                    "copyrightText": "Testdruck Copyright",
+                                    "customTextElements": [
+                                        {
+                                            "email": "${mail}"
+                                        },
+                                        {
+                                            "city": "${city}"
+                                        },
+                                        {
+                                            "country": "${country}"
+                                        },
+                                        {
+                                            "phonenumber": "${phonenumber}"
+                                        },
+                                        {
+                                            "sn": "${sn}"
+                                        },
+                                        {
+                                            "street": "${street}"
+                                        },
+                                        {
+                                            "testString": "testString"
+                                        },
+                                        {
+                                            "date": "11/3/2022"
+                                        }
+                                    ],
+                                    "scaleBarOptions": {},
+                                    "legendOptions": {
+                                        "operationalLayers": [
+                                            {
+                                                "id": "1843ce5ec22-layer-6"
+                                            }
+                                        ]
                                     }
                                 }
-                            ]
+                            },
+                            "editable": false,
+                            "required": true
                         },
-                        "Days": "{$days}"
-                    }
+                        {
+                            "name": "Format",
+                            "type": "string",
+                            "value": "PDF",
+                            "choiceList": [
+                                "PDF",
+                                "PNG32",
+                                "PNG8",
+                                "JPG",
+                                "GIF",
+                                "EPS",
+                                "SVG",
+                                "SVGZ",
+                                "AIX",
+                                "TIFF"
+                            ],
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "Layout_Template",
+                            "type": "string",
+                            "value": "A4 Landscape",
+                            "choiceList": [
+                                "A3 Landscape",
+                                "A3 Portrait",
+                                "A4 Landscape",
+                                "A4 Portrait",
+                                "Letter ANSI A Landscape",
+                                "Letter ANSI A Portrait",
+                                "Tabloid ANSI B Landscape",
+                                "Tabloid ANSI B Portrait",
+                                "MAP_ONLY"
+                            ],
+                            "editable": true,
+                            "required": true
+                        }
+                    ]
                 },
                 {
-                    "id": "gp_resultcenter_1",
-                    "title": "Geoprocessing Resultcenter 1",
-                    "tooltip": "Geoprocessing Resultcenter 1",
+                    "id": "gp_toolset_2",
+                    "title": "Asynchrones Geocoding",
+                    "tooltip": "Asynchrones Geocoding",
                     "rules": {
-                        "datasourceIdInResultcenter": [
-                            "libraries"
+                        "roles": [
+                            "maAdmin",
+                            "maEditor"
                         ],
-                        "minimumSelectedItemsInResultcenter": 1,
-                        "maximumSelectedItemsInResultcenter": 1,
                         "ruleSuccessProperty": "enabled"
                     },
-                    "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_Currents_World/GPServer/MessageInABottle",
-                    "params": {
-                        "Input_Point": {
-                            "features": [
-                                {
-                                    "geometry": {
-                                        "x": 0,
-                                        "y": 0
-                                    }
-                                }
-                            ]
+                    "url": "https://dev0312w.conterra.de/server/rest/services/Utilities/OfflinePackaging/GPServer/CreateMapArea",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "mapItemId",
+                            "type": "string"
                         },
-                        // reference an attribute
-                        // only possible if only one result is selected and toolRole = resultcenter
-                        "Days": "{OBJECTID}"
-                    },
-                    "toolRole": "resultcenter"
-                },
-                {
-                    "id": "gp_resultcenter_2",
-                    "title": "Geoprocessing Resultcenter 2",
-                    "tooltip": "Geoprocessing Resultcenter 2",
-                    "rules": {
-                        "datasourceIdInResultcenter": [
-                            "libraries"
-                        ],
-                        "minimumSelectedItemsInResultcenter": 1,
-                        "ruleSuccessProperty": "enabled"
-                    },
-                    "url": "https://dev.laixoversum.ch/dev1ags2/rest/services/invers_automations/gpBundleTester/GPServer/GP_Bundle_Tester",
-                    "params": {
-                        "APP_JSON_FIX_PARAMETER": {
-                            "features": [
-                                {
-                                    "geometry": {
-                                        "x": 0,
-                                        "y": 0
-                                    }
-                                }
-                            ]
+                        {
+                            "name": "extent",
+                            "type": "string"
                         },
-                        "OBJECTIDS": "{SELECTED_IDS}"
-                    },
-                    "toolRole": "resultcenter"
+                        {
+                            "name": "areaType",
+                            "type": "string"
+                        },
+                        {
+                            "name": "area",
+                            "type": "string"
+                        },
+                        {
+                            "name": "outputName",
+                            "type": "string"
+                        },
+                        {
+                            "name": "mapAreaItemId",
+                            "type": "string"
+                        }
+
+                    ]
                 }
             ],
             "Config": {
-                "supportEmailAddress": "support@laixo.ch"
+                "supportEmailAddress": "support@conterra.de"
             }
         },
         "agssearch": {

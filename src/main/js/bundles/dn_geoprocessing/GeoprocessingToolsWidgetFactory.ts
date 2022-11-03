@@ -15,12 +15,12 @@
 ///
 
 import type {InjectedReference} from "apprt-core/InjectedReference";
-import GeoprocessingWidget from "./GeoprocessingWidget.vue";
+import GeoprocessingToolsWidget from "./GeoprocessingToolsWidget.vue";
 import {Vue} from "apprt-vue/module";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding, {Bindable} from "apprt-binding/Binding";
 
-export default class GeoprocessingWidgetFactory {
+export default class GeoprocessingToolsWidgetFactory {
 
     private vm: Vue;
     private binding: Bindable;
@@ -40,7 +40,7 @@ export default class GeoprocessingWidgetFactory {
 
     createInstance(): any {
         return VueDijit(this.vm, {
-            class: "geoprocessing-widget"
+            class: "geoprocessing-tools-widget"
         });
     }
 
@@ -52,9 +52,10 @@ export default class GeoprocessingWidgetFactory {
     private initComponent(): void {
         const model = this._model;
         const controller = this._controller;
-        const vm = this.vm = new Vue(GeoprocessingWidget);
+        const vm = this.vm = new Vue(GeoprocessingToolsWidget);
         vm.i18n = this._i18n.get().ui;
 
+        // called by clicking "start geoprocessing" button in GeoprocessingToolsWidget
         vm.$on("start-geoprocessing", (toolId) => {
             controller.startGeoprocessing(toolId);
         });
