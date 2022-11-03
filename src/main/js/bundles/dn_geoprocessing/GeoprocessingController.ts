@@ -344,7 +344,7 @@ export default class GeoprocessingController {
 
     /**
      * showParametersWidget()
-     * Called by startGeoprocessingTool() when editable parameters are configured
+     * Called by startGeoprocessingTool() when showWidget is configured as true
      *
      * @param parameters Parameters configured in the app.json for the geoprocessing service
      * @param tool A tool definition taken from the app.json
