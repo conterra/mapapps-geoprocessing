@@ -438,17 +438,9 @@ export default class GeoprocessingController {
      * @private
      */
     private reloadLayersAfterGeoprocessing(layerIds) {
-        const mapWidgetModel = this._mapWidgetModel;
-        const view = mapWidgetModel.view;
-
         layerIds.forEach(layerId => {
             const layer = this.getLayer(layerId);
-            if (layer.refresh && layer.refresh()) {
-                layer.refresh();
-            } else {
-                // workaround to refresh non-feature layers
-                view.extent = view.extent;
-            }
+            layer?.refresh && layer.refresh();
         });
     }
 
