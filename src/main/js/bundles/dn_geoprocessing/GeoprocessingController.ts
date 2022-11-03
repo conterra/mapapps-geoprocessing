@@ -443,9 +443,9 @@ export default class GeoprocessingController {
 
         layerIds.forEach(layerId => {
             const layer = this.getLayer(layerId);
-            if (layer.type === "feature") {
+            if (layer.refresh && layer.refresh()) {
                 layer.refresh();
-            } else if (layer.type) {
+            } else {
                 // workaround to refresh non-feature layers
                 view.extent = view.extent;
             }
