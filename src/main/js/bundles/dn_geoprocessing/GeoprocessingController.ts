@@ -444,6 +444,12 @@ export default class GeoprocessingController {
         });
     }
 
+    /**
+     * Returns one layer of the map
+     *
+     * @param layerIdPath
+     * @private
+     */
     private getLayer(layerIdPath) {
         const mapWidgetModel = this._mapWidgetModel;
 
