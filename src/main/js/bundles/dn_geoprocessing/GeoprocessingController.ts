@@ -44,7 +44,7 @@ export default class GeoprocessingController {
     private _model!: InjectedReference<typeof GeoprocessingModel>;
     private _i18n!: InjectedReference<any>;
     private _logService!: InjectedReference<LogService>;
-    private _mapWidgetModel!: InjectedReference<any>;
+    private _mapWidgetModel!: InjectedReference<LogService>;
 
     private bundleContext: BundleContext;
     private widgetServiceRegistration: ServiceRegistration;
@@ -438,14 +438,32 @@ export default class GeoprocessingController {
      * @private
      */
     private reloadLayersAfterGeoprocessing(layerIds) {
-        const view = this._mapWidgetModel.view;
-        const layers = view.map.layers;
+        const mapWidgetModel = this._mapWidgetModel;
+        const view = mapWidgetModel.view;
 
         layerIds.forEach(layerId => {
-            const foundLayer = layers.find(layer => layer.id === layerId);
-            if (foundLayer.type === "feature") {
-                foundLayer.refresh();
+            const layer = this.getLayer(layerId);
+            if (layer.type === "feature") {
+                layer.refresh();
+            } else if (layer.type) {
+                // workaround to refresh non-feature layers
+                view.extent = view.extent;
             }
         });
+    }
+
+    private getLayer(layerIdPath) {
+        const mapWidgetModel = this._mapWidgetModel;
+
+        const parts = layerIdPath.split("/");
+        const layerId = parts[0];
+        const sublayerId = parts[1];
+
+        const layer = mapWidgetModel?.map?.findLayerById(layerId);
+        if (!sublayerId) {
+            return layer;
+        }
+
+        return layer.findSublayerById(parseInt(sublayerId, 10));
     }
 }

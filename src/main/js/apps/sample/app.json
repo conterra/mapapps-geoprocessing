@@ -49,6 +49,7 @@
                     },
                     "url": "https://services.conterra.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
                     "showWidget": true,
+                    "refreshLayerIds": ["libraries", "stoerungen"],
                     "parameters": [
                         {
                             "name": "Web_Map_as_JSON",
@@ -272,6 +273,12 @@
                 ],
                 "map": {
                     "layers": [
+                        {
+                            "id": "stoerungen",
+                            "title": "Störungen",
+                            "type": "AGS_DYNAMIC",
+                            "url": "https://services.conterra.de/arcgis/rest/services/mapapps/stoerung/MapServer"
+                        },
                         {
                             "id": "libraries",
                             "title": "Bibliotheken",
