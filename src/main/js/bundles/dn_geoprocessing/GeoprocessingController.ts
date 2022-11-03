@@ -68,10 +68,10 @@ export default class GeoprocessingController {
     deactivate(): void {
     }
 
-    // TODO: add caller
+
     /**
      * addTool()
-     * Run on ???
+     * Run by SCR on adding tool
      * Calls addTool() of GeoprocessingModel
      * Adds all tools specified in app.json to this.tools
      *
@@ -84,10 +84,10 @@ export default class GeoprocessingController {
         this.tools.push(tool);
     }
 
-    // TODO: add caller
+
     /**
      * removeTool()
-     * Run on ???
+     * Run by SCR on removing tool
      * Removes a specific tool from the list of tools in this.tools
      *
      * @param tool A tool definition taken from the app.json
