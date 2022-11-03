@@ -43,7 +43,7 @@ gulp.task("default",
         "copy-resources",
         "themes-copy",
         gulp.parallel(
-            //"js-lint",
+            "js-lint",
             //"style-lint",
             "js-transpile",
             "themes-compile"

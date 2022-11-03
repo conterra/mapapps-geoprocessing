@@ -34,8 +34,7 @@
                     item-value="id"
                     item-text="title"
                     :label="i18n.selectTool"
-                >
-                </v-select>
+                />
                 <v-btn
                     color="primary"
                     block

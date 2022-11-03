@@ -176,7 +176,7 @@ export default class GeoprocessingController {
                 // case: geoprocessing service ran successfully
 
                 // start synchronous geoprocessing service execution
-                const result = await geoprocessor.execute(tool.url, params);
+                await geoprocessor.execute(tool.url, params);
 
                 // handle finishing of geoprocessing service internally
                 model.loading = false;
@@ -217,14 +217,14 @@ export default class GeoprocessingController {
             // get status messages and add them to widget
             const options = {
                 interval: 1500,
-                statusCallback: (j) => {
+                statusCallback: () => {
                     this.addResultMessages(jobInfo);
                 }
             };
 
             try {
                 // case: geoprocessing service has completed execution successfully
-                const supportJobInfo = await jobInfo.waitForJobCompletion(options);
+                await jobInfo.waitForJobCompletion(options);
 
                 // add final status message to widget
                 this.addResultMessages(jobInfo);

@@ -29,7 +29,7 @@
                 >
                     {{ i18n.parametersTab }}
                 </v-stepper-step>
-                <v-divider></v-divider>
+                <v-divider />
                 <v-stepper-step
                     :complete="!loading"
                     step="2"
@@ -114,7 +114,7 @@
                                 </v-icon>
                             </v-list-tile-action>
                             <v-list-tile-content>
-                                <v-list-tile-title v-text="message.description"></v-list-tile-title>
+                                <v-list-tile-title v-text="message.description" />
                             </v-list-tile-content>
                         </v-list-tile>
                     </v-list>
