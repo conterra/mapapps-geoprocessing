@@ -34,7 +34,7 @@ export default class GeoprocessingToolsWidgetFactory {
 
     deactivate(): void {
         this.destroyWidget();
-        this.binding.unbind();
+        this.binding?.unbind();
         this.binding = undefined;
     }
 
