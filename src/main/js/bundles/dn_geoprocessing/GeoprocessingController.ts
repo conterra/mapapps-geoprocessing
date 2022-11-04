@@ -194,36 +194,18 @@ export default class GeoprocessingController {
     private async startSynchronousGeoprocessingService(params: object, tool: any) {
         const model = this._model;
         try {
-            await geoprocessor.execute(tool.url, params);
-
-            // handle finishing of geoprocessing service internally
-            model.loading = false;
-            model.resultState = "success";
-            tool.set("processing", false);
-
-            // if no widget is to be displayed, inform user of geoprocessing service success
-            if (!tool.showWidget) {
-                this._logService.info({
-                    message: this._i18n.get().ui.notifierSuccess
-                }, null, null, null);
-            }
-
-            if (tool.refreshLayerIds) {
-                this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
-            }
+            const result = await geoprocessor.execute(tool.url, params);
+            this.handleResults(result, tool);
         } catch (error) {
             // case: geoprocessing service ran unsuccessfully
-            // handle finishing of geoprocessing service internally
-            model.loading = false;
-            model.resultState = "error";
-            tool.set("processing", false);
-
-            // if no widget is to be displayed, inform user of geoprocessing service failure
-            if (!tool.showWidget) {
-                this._logService.info({
-                    error: this._i18n.get().ui.notifierError
-                }, null, null, null);
-            }
+            error?.details?.messages.forEach((message, i) => {
+                model.responseMessages.push({
+                    id: i,
+                    description: message,
+                    type: "error"
+                });
+            });
+            this.handleErrorCase(tool);
         }
     }
 
@@ -235,7 +217,6 @@ export default class GeoprocessingController {
      * @private
      */
     private async startAsynchronousGeoprocessingService(params: object, tool: any) {
-        const model = this._model;
         const jobInfo = await geoprocessor.submitJob(tool.url, params);
 
         // get status messages and add them to widget
@@ -248,60 +229,65 @@ export default class GeoprocessingController {
 
         try {
             await jobInfo.waitForJobCompletion(options);
-
-            // add final status message to widget
-            this.addResultMessages(jobInfo);
-
-            // handle finishing of geoprocessing service internally
-            model.loading = false;
-            model.resultState = "success";
-            tool.set("processing", false);
-
-            // if no widget is to be displayed, inform user of geoprocessing service success
-            if (!tool.showWidget) {
-                this._logService.info({
-                    message: this._i18n.get().ui.notifierSuccess
-                }, null, null, null);
-            }
-
-            if (tool.refreshLayerIds) {
-                this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
-            }
+            this.handleResults(jobInfo, tool);
         } catch (error) {
             // case: geoprocessing service has completed execution unsuccessfully
             // add final status message to widget
             this.addResultMessages(jobInfo);
+            this.handleErrorCase(tool);
+        }
+    }
 
-            // handle finishing of geoprocessing service internally
-            model.loading = false;
-            model.resultState = "error";
-            tool.set("processing", false);
+    private handleResults(result: any, tool: any): void {
+        const model = this._model;
+        this.addResultMessages(result);
+        // handle finishing of geoprocessing service internally
+        model.loading = false;
+        model.resultState = "success";
+        tool.set("processing", false);
 
-            // if no widget is to be displayed, inform user of geoprocessing service failure
-            if (!tool.showWidget) {
-                this._logService.info({
-                    error: this._i18n.get().ui.notifierError
-                }, null, null, null);
-            }
+        // if no widget is to be displayed, inform user of geoprocessing service success
+        if (!tool.showWidget) {
+            this._logService.info({
+                message: this._i18n.get().ui.notifierSuccess
+            }, null, null, null);
+        }
+
+        if (tool.refreshLayerIds) {
+            this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
+        }
+    }
+
+    private handleErrorCase(tool: any): void {
+        const model = this._model;
+        // handle finishing of geoprocessing service internally
+        model.loading = false;
+        model.resultState = "error";
+        tool.set("processing", false);
+
+        // if no widget is to be displayed, inform user of geoprocessing service failure
+        if (!tool.showWidget) {
+            this._logService.info({
+                error: this._i18n.get().ui.notifierError
+            }, null, null, null);
         }
     }
 
     /**
-     * Called by runGeoprocessingService() in the asynchronous workflow
+     * Method to add result messages to the model
      *
-     * @param jobInfo Information string returned by the geoprocessing
-     * service describing current or final execution status
+     * @param result Result object returned by the GPServer
      *
      * @private
      */
-    private addResultMessages(jobInfo): void {
+    private addResultMessages(result): void {
         const model = this._model;
 
         // clear status information previously saved in model
         model.responseMessages = [];
 
         // push new status messages into model
-        jobInfo.messages.forEach((message, i) => {
+        result.messages.forEach((message, i) => {
             model.responseMessages.push({
                 id: i,
                 description: message.description,
