@@ -32,6 +32,9 @@
     },
     "bundles": {
         "dn_geoprocessing": {
+            "Config": {
+                "supportEmailAddress": "support@conterra.de"
+            },
             "GeoprocessingTools": [
                 {
                     "id": "gp_printing",
@@ -46,10 +49,6 @@
                     },
                     "url": "https://services.conterra.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
                     "showWidget": true,
-                    "refreshLayerIds": [
-                        "libraries",
-                        "stoerungen"
-                    ],
                     "parameters": [
                         {
                             "name": "Web_Map_as_JSON",
@@ -199,8 +198,7 @@
                 },
                 {
                     "id": "gp_viewshed",
-                    "title": "Berechnung eines Viewshed",
-                    "tooltip": "Berechnung eines Viewshed",
+                    "title": "Berechnung einer Ansicht",
                     "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
                     "showWidget": true,
                     "parameters": [
@@ -252,12 +250,59 @@
                             "required": true
                         },
                         {
-                            "name": "",
+                            "name": "Viewshed_Distance",
                             "type": "linear-unit",
-                            "value": 5000,
+                            "value": {
+                                "distance": 5000,
+                                "units": "esriMeters"
+                            },
                             "required": true
                         }
                     ]
+                },
+                {
+                    "id": "gp_pdf",
+                    "title": "PDF erzeugen",
+                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/OtherGeoprocessingServices/GPServer/Windfarm%20analysis",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "Onshore_Windfarm_Proposals",
+                            "type": "string",
+                            "value": "Onshore_Windfarm_Proposals",
+                            "editable": false,
+                            "required": true
+                        },
+                        {
+                            "name": "ROAD",
+                            "type": "string",
+                            "value": "ROAD_Erase",
+                            "editable": false,
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "gp_911",
+                    "title": "911 Calls",
+                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "Query",
+                            "type": "string",
+                            "value": "(\"DATE\" > date '1998-01-01 00:00:00' AND \"DATE\" < date '1998-01-31 00:00:00') AND (\"Day\" = 'SUN' OR \"Day\"= 'SAT')",
+                            "editable": false,
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "gp_layouts",
+                    "title": "Drucklayouts",
+                    "url": "https://services.conterra.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Get%20Layout%20Templates%20Info%20Task",
+                    "showWidget": true,
+                    "parameters": []
                 },
                 {
                     "id": "gp_toolset_dev",
@@ -270,6 +315,10 @@
                         ],
                         "ruleSuccessProperty": "enabled"
                     },
+                    "refreshLayerIds": [
+                        "libraries",
+                        "stoerungen"
+                    ],
                     "url": "https://services.conterra.de/test",
                     "showWidget": true,
                     "parameters": [
@@ -351,10 +400,7 @@
                         }
                     ]
                 }
-            ],
-            "Config": {
-                "supportEmailAddress": "support@conterra.de"
-            }
+            ]
         },
         "banner": {
             "BannerWidget": {
