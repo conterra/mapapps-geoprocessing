@@ -53,6 +53,7 @@
                     "parameters": [
                         {
                             "name": "Web_Map_as_JSON",
+                            "title": "Webmap as JSON",
                             "type": "string",
                             "value": {
                                 "mapOptions": {
@@ -157,6 +158,7 @@
                         },
                         {
                             "name": "Format",
+                            "title": "Format",
                             "type": "string",
                             "value": "PDF",
                             "choiceList": [
@@ -176,6 +178,7 @@
                         },
                         {
                             "name": "Layout_Template",
+                            "title": "Layout",
                             "type": "string",
                             "value": "A4 Landscape",
                             "choiceList": [
@@ -203,6 +206,7 @@
                     "parameters": [
                         {
                             "name": "Input_Observation_Point",
+                            "title": "Beobachtungspunkt",
                             "type": "feature-record-set-layer",
                             "value": {
                                 "features": [
@@ -252,6 +256,98 @@
                             "type": "linear-unit",
                             "value": 5000,
                             "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "gp_toolset_dev",
+                    "title": "Entwicklungsbeispiel",
+                    "tooltip": "Entwicklungsbeispiel",
+                    "rules": {
+                        "roles": [
+                            "maAdmin",
+                            "maEditor"
+                        ],
+                        "ruleSuccessProperty": "enabled"
+                    },
+                    "url": "https://services.conterra.de/test",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "boolean",
+                            "title": "Boolean",
+                            "type": "boolean",
+                            "value": true,
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "string",
+                            "title": "String",
+                            "type": "string",
+                            "value": "Haus",
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "string_choicelist",
+                            "title": "String Auswahlliste",
+                            "type": "string",
+                            "value": "Apfel",
+                            "choiceList": [
+                                "Apfel",
+                                "Birne",
+                                "Traube"
+                            ],
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "sampleLong",
+                            "title": "Long",
+                            "type": "long",
+                            "value": 1337,
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "sampleLongWithRange",
+                            "title": "Long mit Wertebereich",
+                            "type": "long",
+                            "value": 5,
+                            "range": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "sampleDouble",
+                            "title": "Double",
+                            "type": "double",
+                            "value": 3.14,
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "sampleDoubleWithRange",
+                            "title": "Double mit Wertebereich",
+                            "type": "double",
+                            "value": 3.14,
+                            "range": {
+                                "min": 1.5,
+                                "max": 15.5
+                            },
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "name": "uneditable",
+                            "title": "Nicht editierbar",
+                            "type": "double",
+                            "value": 5,
+                            "editable": false
                         }
                     ]
                 }
