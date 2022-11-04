@@ -238,6 +238,13 @@ export default class GeoprocessingController {
         }
     }
 
+    /**
+     * Method to handle results
+     *
+     * @param result
+     * @param tool
+     * @private
+     */
     private handleResults(result: any, tool: any): void {
         const model = this._model;
         this.addResultMessages(result);
@@ -258,6 +265,12 @@ export default class GeoprocessingController {
         }
     }
 
+    /**
+     * Method to handle error case
+     *
+     * @param tool
+     * @private
+     */
     private handleErrorCase(tool: any): void {
         const model = this._model;
         // handle finishing of geoprocessing service internally
