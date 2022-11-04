@@ -32,6 +32,8 @@
             :label="title"
             :disabled="!editable"
             :readonly="!editable"
+            class="mt-0"
+            hide-details
             color="primary"
         ></v-switch>
         <v-text-field

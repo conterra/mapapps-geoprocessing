@@ -63,9 +63,9 @@
                     </div>
                     <div class="geoprocessing--execute">
                         <v-btn
-                            class="ml-0"
                             color="primary"
                             :disabled="!valid"
+                            block
                             @click="execute"
                         >
                             {{ i18n.executeButtonLabel }}
@@ -74,16 +74,16 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
-                    <v-list
+                    <div
                         v-if="responseMessages.length"
-                        dense
                         class="geoprocessing--messages"
                     >
-                        <v-list-tile
+                        <div
                             v-for="message in responseMessages"
                             :key="message.id"
+                            class="ct-flex-container ct-flex-container--row"
                         >
-                            <v-list-tile-action>
+                            <div class="ct-flex-item ct-flex-item--no-grow ct-flex-item--no-shrink">
                                 <v-icon
                                     v-if="message.type==='error'"
                                     color="red"
@@ -102,12 +102,12 @@
                                 >
                                     info
                                 </v-icon>
-                            </v-list-tile-action>
-                            <v-list-tile-content>
-                                <v-list-tile-title v-text="message.description"/>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                    </v-list>
+                            </div>
+                            <div class="message ct-flex-item">
+                                {{ message.description }}
+                            </div>
+                        </div>
+                    </div>
                     <div
                         v-else-if="loading"
                         class="text-xs-center"
