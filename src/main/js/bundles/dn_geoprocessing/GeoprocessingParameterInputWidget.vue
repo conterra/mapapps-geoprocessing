@@ -38,8 +38,8 @@
                 </v-stepper-step>
             </v-stepper-header>
             <v-progress-linear
-                v-if="loading"
-                :indeterminate="true"
+                v-if="loading && gpServiceResponseMessages.length"
+                indeterminate
                 color="primary"
             />
             <v-stepper-items class="fill-height">
@@ -126,10 +126,20 @@
                                 </v-icon>
                             </v-list-tile-action>
                             <v-list-tile-content>
-                                <v-list-tile-title v-text="message.description" />
+                                <v-list-tile-title v-text="message.description"/>
                             </v-list-tile-content>
                         </v-list-tile>
                     </v-list>
+                    <div
+                        v-else-if="loading"
+                        class="text-xs-center"
+                    >
+                        <v-progress-circular
+                            :size="50"
+                            color="primary"
+                            indeterminate
+                        ></v-progress-circular>
+                    </div>
                     <div class="geoprocessing--alert">
                         <v-alert
                             v-if="resultState==='success'"
