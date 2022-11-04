@@ -27,9 +27,6 @@
             "search-ui",
             "locator-store",
             "toc",
-            "agssearch",
-            "selection-resultcenter",
-            "selection-ui",
             "dn_geoprocessing"
         ]
     },
@@ -37,7 +34,7 @@
         "dn_geoprocessing": {
             "GeoprocessingTools": [
                 {
-                    "id": "gp_toolset_1",
+                    "id": "gp_printing",
                     "title": "Synchrones Drucken",
                     "tooltip": "Synchrones Drucken",
                     "rules": {
@@ -49,7 +46,10 @@
                     },
                     "url": "https://services.conterra.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
                     "showWidget": true,
-                    "refreshLayerIds": ["libraries", "stoerungen"],
+                    "refreshLayerIds": [
+                        "libraries",
+                        "stoerungen"
+                    ],
                     "parameters": [
                         {
                             "name": "Web_Map_as_JSON",
@@ -195,54 +195,69 @@
                     ]
                 },
                 {
-                    "id": "gp_toolset_2",
-                    "title": "Asynchrones Geocoding",
-                    "tooltip": "Asynchrones Geocoding",
-                    "rules": {
-                        "roles": [
-                            "maAdmin",
-                            "maEditor"
-                        ],
-                        "ruleSuccessProperty": "enabled"
-                    },
-                    "url": "https://dev0312w.conterra.de/server/rest/services/Utilities/OfflinePackaging/GPServer/CreateMapArea",
+                    "id": "gp_viewshed",
+                    "title": "Berechnung eines Viewshed",
+                    "tooltip": "Berechnung eines Viewshed",
+                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
                     "showWidget": true,
                     "parameters": [
                         {
-                            "name": "mapItemId",
-                            "type": "string"
+                            "name": "Input_Observation_Point",
+                            "type": "feature-record-set-layer",
+                            "value": {
+                                "features": [
+                                    {
+                                        "aggregateGeometries": null,
+                                        "geometry": {
+                                            "spatialReference": {
+                                                "wkid": 4326
+                                            },
+                                            "x": 7.590545246530715,
+                                            "y": 46.124155905696604
+                                        },
+                                        "symbol": {
+                                            "type": "esriSMS",
+                                            "color": [
+                                                255,
+                                                0,
+                                                0,
+                                                255
+                                            ],
+                                            "angle": 0,
+                                            "xoffset": 0,
+                                            "yoffset": 0,
+                                            "size": 12,
+                                            "style": "esriSMSCircle",
+                                            "outline": {
+                                                "type": "esriSLS",
+                                                "color": [
+                                                    255,
+                                                    255,
+                                                    255,
+                                                    255
+                                                ],
+                                                "width": 2,
+                                                "style": "esriSLSSolid"
+                                            }
+                                        },
+                                        "attributes": {},
+                                        "popupTemplate": null
+                                    }
+                                ]
+                            },
+                            "required": true
                         },
                         {
-                            "name": "extent",
-                            "type": "string"
-                        },
-                        {
-                            "name": "areaType",
-                            "type": "string"
-                        },
-                        {
-                            "name": "area",
-                            "type": "string"
-                        },
-                        {
-                            "name": "outputName",
-                            "type": "string"
-                        },
-                        {
-                            "name": "mapAreaItemId",
-                            "type": "string"
+                            "name": "",
+                            "type": "linear-unit",
+                            "value": 5000,
+                            "required": true
                         }
-
                     ]
                 }
             ],
             "Config": {
                 "supportEmailAddress": "support@conterra.de"
-            }
-        },
-        "agssearch": {
-            "AutoStoreRegistration": {
-                "componentEnabled": true
             }
         },
         "banner": {
@@ -361,10 +376,7 @@
                         "title": "Werkzeuge",
                         "cssClass": "ct-main-app-menu",
                         "tools": [
-                            "tocToggleTool",
-                            "selection-ui-tool",
-                            "geoprocessingToggleTool",
-                            "gp_*"
+                            "tocToggleTool"
                         ],
                         "registerWidget": {
                             "widgetRole": "drawer_button"
@@ -377,6 +389,20 @@
                             "below",
                             "before"
                         ]
+                    },
+                    {
+                        "id": "ctwdyw",
+                        "cssClass": "ctWDYWBtn ctPrimaryInput",
+                        "title": "Geoprocessing Tools",
+                        "tools": [
+                            "gp_*"
+                        ],
+                        "container": "map",
+                        "position": {
+                            "rel_t": 90,
+                            "rel_l": 15
+                        },
+                        "windowType": "dropdown"
                     }
                 ]
             }
