@@ -9,12 +9,6 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 1. First you need to add the bundle dn_geoprocessing to your app.
 2. Then you can configure it.
 
-To make the functions of this bundle available to the user, the following tool can be added to a toolset:
-
-| Tool ID                 | Component               | Description              |
-|-------------------------|-------------------------|--------------------------|
-| geoprocessingToggleTool | GeoprocessingToggleTool | Show or hide the widget. |
-
 ## Configuration Reference
 
 ### GeoprocessingTools
@@ -80,24 +74,24 @@ To make the functions of this bundle available to the user, the following tool c
 
 ```
 
-| Property    | Type    | Possible Values                                     | Default    | Description                                                          |
-|-------------|---------|-----------------------------------------------------|------------|----------------------------------------------------------------------|
-| id          | String  | Any String prefixed with gp_                        | ```""```   | Id of GP Service Tool                                                |
-| title       | String  | Any String                                          | ```""```   | Title of GP Service Tool                                             |
-| tooltip     | String  | Any String                                          | ```""```   | Tooltip of GP Service Tool                                           |
-| rules       | Object  | Any Object containing roles and ruleSuccessProperty | ```""```   | User access configuration                                            |
-| url         | String  | URL of GP Service                                   | ```""```   | URL of GP Service                                                    |
-| showWidget  | Boolean | `true` or `false`                                   | ```""```   | Determines whether the parameterInputWidget will be shown            |
-| parameters  | Array   | Array of any objects                                | ```[]```   | Array of parameters as required by GP Service                        |
+| Property   | Type    | Possible Values                                     | Default  | Description                                               |
+|------------|---------|-----------------------------------------------------|----------|-----------------------------------------------------------|
+| id         | String  | Any String prefixed with gp_                        | ```""``` | Id of GP Service Tool                                     |
+| title      | String  | Any String                                          | ```""``` | Title of GP Service Tool                                  |
+| tooltip    | String  | Any String                                          | ```""``` | Tooltip of GP Service Tool                                |
+| rules      | Object  | Any Object containing roles and ruleSuccessProperty | ```""``` | User access configuration                                 |
+| url        | String  | URL of GP Service                                   | ```""``` | URL of GP Service                                         |
+| showWidget | Boolean | `true` or `false`                                   | ```""``` | Determines whether the parameterInputWidget will be shown |
+| parameters | Array   | Array of any objects                                | ```[]``` | Array of parameters as required by GP Service             |
 
 ### Config
 
 ```json
 "Config": {
-"supportEmailAddress": "support@conterra.de"
+    "supportEmailAddress": "support@conterra.de"
 }
 ```
 
-| Property            | Type      | Possible Values                                  | Default     | Description                                                                                               |
-|---------------------|-----------|--------------------------------------------------|-------------|-----------------------------------------------------------------------------------------------------------|
-| supportEmailAddress | String    | Any String                                       | ```""```    | Contact email provided in widget if GP execution fails                                                    |                                                                                     |
+| Property            | Type   | Possible Values | Default  | Description                                            |
+|---------------------|--------|-----------------|----------|--------------------------------------------------------|
+| supportEmailAddress | String | Any String      | ```""``` | Contact email provided in widget if GP execution fails |

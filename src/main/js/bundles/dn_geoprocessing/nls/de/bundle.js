@@ -27,16 +27,18 @@ module.exports = {
         selectTool: "Tool wählen",
         success: "Geoprocessing erfolgreich abgeschlossen.",
         error: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an",
-        limitRuleText: "Der eingegebene Wert liegt nicht im vorgegebenen Wertebereich.",
-        NaNRuleText: "Der eingegebene Wert ist keine Zahl.",
-        pointSeparatedRuleText: "Dezimalwerte müssen mit einem Punkt getrennt sein.",
-        noDecimalsRuleText: "Long Werte könnte keine Dezimaltrennzeichen beinhalten.",
         parametersTab: "Parameter",
         resultsTab: "Ergebnisse",
-        editableParameters: "Editierbare Parameter",
         executeButtonLabel: "Ausführen",
         notifierStart: "Der Geoprocessing Service wurde erfolgreich gestartet.",
         notifierSuccess: "Der Geoprocessing Service wurde erfolgreich ausgeführt.",
-        notifierError: "Beim Ausführen des Geoprocessing Services trat ein Fehler auf."
+        notifierError: "Beim Ausführen des Geoprocessing Services trat ein Fehler auf.",
+        rules: {
+            required: "Dies ist ein Pflichtfeld",
+            range: "Der eingegebene Wert liegt nicht im vorgegebenen Wertebereich",
+            NaN: "Der eingegebene Wert ist keine Zahl",
+            noLong: "Der eingegebene Wert ist keine Ganzzahl",
+            noDouble: "Der eingegebene Wert ist keine Fließkommazahl"
+        }
     }
 };

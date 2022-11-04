@@ -44,38 +44,50 @@
             />
             <v-stepper-items class="fill-height">
                 <v-stepper-content step="1">
-                    <div class="subheading pb-2 geoprocessing--parameters-title">
-                        {{ i18n.editableParameters }}
-                    </div>
                     <div class="geoprocessing--parameters">
-                        <div
-                            v-for="(param) in parametersWithRules"
-                            :key="param.name"
-                        >
-                            <v-autocomplete
-                                v-if="param.choiceList"
-                                v-model="param.value"
-                                :label="param.name"
-                                :items="param.choiceList"
-                            />
-                            <v-text-field
-                                v-if="param.range"
-                                v-model="param.value"
-                                :rules="param.rule"
-                                :label="param.name"
-                            />
-                            <v-text-field
-                                v-if="!param.choiceList && !param.range"
-                                v-model="param.value"
-                                :label="param.name"
-                                disabled
-                            />
-                        </div>
+                        <v-form v-model="valid">
+                            <div
+                                v-for="(param) in parametersWithRules"
+                                :key="param.name"
+                            >
+                                <v-select
+                                    v-if="param.choiceList"
+                                    v-model="param.value"
+                                    :label="param.title"
+                                    :rules="param.rules"
+                                    :items="param.choiceList"
+                                    :disabled="!param.editable"
+                                />
+                                <v-switch
+                                    v-if="param.type === 'boolean'"
+                                    v-model="param.value"
+                                    :label="param.title"
+                                    :disabled="!param.editable"
+                                    color="primary"
+                                ></v-switch>
+                                <v-text-field
+                                    v-else-if="(param.type === 'long' || param.type === 'double') && param.range"
+                                    v-model="param.value"
+                                    :label="param.title"
+                                    :rules="param.rules"
+                                    :disabled="!param.editable"
+                                />
+                                <v-text-field
+                                    v-else
+                                    v-model="param.value"
+                                    :label="param.title"
+                                    :rules="param.rules"
+                                    :disabled="!param.editable"
+                                    clearable
+                                />
+                            </div>
+                        </v-form>
                     </div>
                     <div class="geoprocessing--execute">
                         <v-btn
                             class="ml-0"
                             color="primary"
+                            :disabled="!valid"
                             @click="execute"
                         >
                             {{ i18n.executeButtonLabel }}
@@ -178,67 +190,34 @@
                 default: () => []
             }
         },
+        data: function() {
+            return {
+                valid: false
+            };
+        },
         computed: {
             supportContact: function() {
                 return "mailto:" + this.supportEmailAddress;
             },
             parametersWithRules: function () {
                 return this.parameters.map(param => {
+                    param.rules = [];
+                    if (param.required) {
+                        param.rules.push(v => !!v || this.i18n.rules.required);
+                    }
                     if (param.range) {
-                        const lower = param.range.lowerLimit;
-                        const upper = param.range.upperLimit;
-
-                        param.rule = [v => (v >= lower && v <= upper) || this.i18n.limitRuleText];
-
-                        if (param.type === "double") {
-                            const temp = param.rule[0];
-                            param.rule[0] = v => {
-                                if (/^[0-9.,]*$/.test(v)) {
-                                    // valid
-                                    return true;
-                                } else {
-                                    // invalid
-                                    return this.i18n.NaNRuleText;
-                                }
-                            };
-
-                            param.rule[1] = v => {
-                                if (/^[0-9.]*$/.test(v)) {
-                                    // valid
-                                    return true;
-                                } else {
-                                    // invalid
-                                    return this.i18n.pointSeparatedRuleText;
-                                }
-                            };
-
-                            param.rule[2] = temp;
-                        } else if (param.type === "long") {
-                            const temp = param.rule[0];
-                            param.rule[0] = v => {
-                                if (/^[0-9.,]*$/.test(v)) {
-                                    // valid
-                                    return true;
-                                } else {
-                                    // invalid
-                                    return this.i18n.NaNRuleText;
-                                }
-                            };
-
-                            param.rule[1] = v => {
-                                if (/^[0-9]*$/.test(v)) {
-                                    // valid
-                                    return true;
-                                } else {
-                                    // invalid
-                                    return this.i18n.noDecimalsRuleText;
-                                }
-                            };
-
-                            param.rule[2] = temp;
-                        }
-                    } else {
-                        param.rule = [];
+                        const min = param.range.min;
+                        const max = param.range.max;
+                        param.rules.push(v => (v >= min && v <= max) || this.i18n.rules.range);
+                    }
+                    if (param.type === "long" || param.type === "double") {
+                        param.rules.push(v => /^[0-9.,]*$/.test(v) || this.i18n.rules.NaN);
+                    }
+                    if (param.type === "long") {
+                        param.rules.push(v => /^[0-9]*$/.test(v) || this.i18n.rules.noLong);
+                    }
+                    if (param.type === "double") {
+                        param.rules.push(v => /^[0-9.]*$/.test(v) || this.i18n.rules.noDouble);
                     }
                     return param;
                 });

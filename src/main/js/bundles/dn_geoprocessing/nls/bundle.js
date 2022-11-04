@@ -26,17 +26,19 @@ module.exports = {
             selectTool: "Select Tool",
             success: "Geoprocessing completed successfully.",
             error: "Geoprocessing failed. Please contact the support at",
-            limitRuleText: "Value is not within limits.",
-            NaNRuleText: "Value is not a number.",
-            pointSeparatedRuleText: "Decimal values need to be separated by a point.",
-            noDecimalsRuleText: "Long values cannot include a delimiter",
             parametersTab: "Parameters",
             resultsTab: "Results",
-            editableParameters: "Editable parameters",
             executeButtonLabel: "Execute",
             notifierStart:"The Geoprocessing Service has been started.",
             notifierSuccess: "The Geoprocessing Service was executed successfully.",
-            notifierError: "The Geoprocessing Service execution encountered an error."
+            notifierError: "The Geoprocessing Service execution encountered an error.",
+            rules: {
+                required: "This is a required field",
+                range: "The entered value is not in the specified range of values",
+                NaN: "The entered value is not a number",
+                noLong: "The entered value is not an integer",
+                noDouble: "The entered value is not a floating point number"
+            }
         }
     },
     de: true
