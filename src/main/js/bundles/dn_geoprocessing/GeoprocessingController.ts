@@ -168,6 +168,12 @@ export default class GeoprocessingController {
 
         // determine whether geoprocessing service works synchronously or asynchronously
         const metadata = await GeoprocessingController.getMetadata(tool.url);
+        if (!metadata) {
+            model.loading = false;
+            model.resultState = "error";
+            tool.set("processing", false);
+            return;
+        }
         const executionType = metadata.executionType;
 
         // synchronous workflow
@@ -302,6 +308,8 @@ export default class GeoprocessingController {
                 f: 'json'
             },
             handleAs: 'json'
+        }).then((result) => result, (error) => {
+            console.error(error);
         });
     }
 
