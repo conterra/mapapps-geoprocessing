@@ -509,10 +509,10 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:https://github.com/conterra/mapapps-remote-project-blueprint.git</connection>
-        <developerConnection>scm:git:https://github.com/conterra/mapapps-remote-project-blueprint.git
+        <connection>scm:git:https://github.com/conterra/mapapps-geoprocessing.git</connection>
+        <developerConnection>scm:git:https://github.com/conterra/mapapps-geoprocessing.git
         </developerConnection>
-        <url>https://github.com/conterra/mapapps-remote-project-blueprint</url>
+        <url>https://github.com/conterra/mapapps-geoprocessing</url>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
