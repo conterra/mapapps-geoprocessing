@@ -57,20 +57,31 @@
                                     :rules="param.rules"
                                     :items="param.choiceList"
                                     :disabled="!param.editable"
+                                    :readonly="!param.editable"
                                 />
                                 <v-switch
                                     v-if="param.type === 'boolean'"
                                     v-model="param.value"
                                     :label="param.title"
                                     :disabled="!param.editable"
+                                    :readonly="!param.editable"
                                     color="primary"
                                 ></v-switch>
                                 <v-text-field
-                                    v-else-if="(param.type === 'long' || param.type === 'double') && param.range"
+                                    v-else-if="param.type === 'long' || param.type === 'double'"
                                     v-model="param.value"
                                     :label="param.title"
                                     :rules="param.rules"
                                     :disabled="!param.editable"
+                                    :readonly="!param.editable"
+                                />
+                                <v-textarea
+                                    v-else-if="isObject(param.value)"
+                                    :value="JSON.stringify(param.value)"
+                                    :label="param.title"
+                                    :rules="param.rules"
+                                    :disabled="!param.editable"
+                                    :readonly="!param.editable"
                                 />
                                 <v-text-field
                                     v-else
@@ -78,6 +89,7 @@
                                     :label="param.title"
                                     :rules="param.rules"
                                     :disabled="!param.editable"
+                                    :readonly="!param.editable"
                                     clearable
                                 />
                             </div>
@@ -234,6 +246,9 @@
             }
         },
         methods: {
+            isObject: function (value) {
+                return typeof value==='object';
+            },
             execute: function () {
                 this.$emit('execute-button-clicked', this.parametersWithRules);
                 this.activeStep = 2;
