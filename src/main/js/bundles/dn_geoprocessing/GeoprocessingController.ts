@@ -175,12 +175,13 @@ export default class GeoprocessingController {
             return;
         }
         const executionType = metadata.executionType;
+        const inputParameters = metadata.parameters.filter((param) => param.direction == "esriGPParameterDirectionInput");
+        const outputParameters = metadata.parameters.filter((param) => param.direction == "esriGPParameterDirectionOutput");
 
-        // synchronous workflow
         if (executionType === "esriExecutionTypeSynchronous") {
             await this.startSynchronousGeoprocessingService(params, tool);
         } else {
-            await this.startAsynchronousGeoprocessingService(params, tool);
+            await this.startAsynchronousGeoprocessingService(params, tool, outputParameters);
         }
     }
 
@@ -195,7 +196,8 @@ export default class GeoprocessingController {
         const model = this._model;
         try {
             const result = await geoprocessor.execute(tool.url, params);
-            this.handleResults(result, tool);
+            this.handleResultCase(result, tool);
+            this.handleResults(result.results);
         } catch (error) {
             // case: geoprocessing service ran unsuccessfully
             error?.details?.messages.forEach((message, i) => {
@@ -214,14 +216,15 @@ export default class GeoprocessingController {
      *
      * @param params
      * @param tool
+     * @param outputParameters
      * @private
      */
-    private async startAsynchronousGeoprocessingService(params: object, tool: any) {
+    private async startAsynchronousGeoprocessingService(params: object, tool: any, outputParameters: Array<object>) {
         const jobInfo = await geoprocessor.submitJob(tool.url, params);
 
         // get status messages and add them to widget
         const options = {
-            interval: 1500,
+            interval: 1000,
             statusCallback: () => {
                 this.addResultMessages(jobInfo);
             }
@@ -229,7 +232,11 @@ export default class GeoprocessingController {
 
         try {
             await jobInfo.waitForJobCompletion(options);
-            this.handleResults(jobInfo, tool);
+            this.handleResultCase(jobInfo, tool);
+            const promises = outputParameters.map((outputParameter: any) =>
+                jobInfo.fetchResultData(outputParameter.name));
+            const results = await Promise.all(promises);
+            this.handleResults(results);
         } catch (error) {
             // case: geoprocessing service has completed execution unsuccessfully
             // add final status message to widget
@@ -239,15 +246,16 @@ export default class GeoprocessingController {
     }
 
     /**
-     * Method to handle results
+     * Method to handle result case
      *
      * @param result
      * @param tool
      * @private
      */
-    private handleResults(result: any, tool: any): void {
+    private handleResultCase(result: any, tool: any): void {
         const model = this._model;
         this.addResultMessages(result);
+
         // handle finishing of geoprocessing service internally
         model.loading = false;
         model.resultState = "success";
@@ -284,6 +292,25 @@ export default class GeoprocessingController {
                 error: this._i18n.get().ui.notifierError
             }, null, null, null);
         }
+    }
+
+    /**
+     * Method to handle results
+     *
+     * @param results
+     * @private
+     */
+    private handleResults(results: any): void {
+        results?.forEach((result: any) => {
+            const value = result.value;
+            switch (result.dataType) {
+                case "string":
+                    break;
+                case "data-file":
+                    window.open(value.url, '_blank').focus();
+                    break;
+            }
+        });
     }
 
     /**
@@ -409,8 +436,7 @@ export default class GeoprocessingController {
         vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("loading", "resultState", "supportEmailAddress",
-                "responseMessages", "responseResults")
+            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages")
             .enable()
             .syncToLeftNow();
 
