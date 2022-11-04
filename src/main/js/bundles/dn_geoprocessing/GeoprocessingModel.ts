@@ -19,8 +19,8 @@ import {Mutable, properties} from "apprt-core/Mutable";
 function defineProperties<Impl, P>(mutableDefinition: any,
     mutableProperties: {
         supportEmailAddress: string; responseMessages: string[]; results: object[];
-        responseResults: string[]; addTool(tool: any): void; removeTool(tool: any): void;
-        resultState: string; loading: boolean; tools: any[]; editableParams: object[]
+        resultState: string; loading: boolean; tools: any[];
+        addTool(tool: any): void; removeTool(tool: any): void;
     }): Impl & Mutable<P> {
     properties(mutableDefinition, mutableProperties);
     return mutableDefinition;
@@ -46,10 +46,9 @@ interface GeoprocessingModelProps {
 export default defineProperties<GeoprocessingModel, GeoprocessingModelProps>(GeoprocessingModel,
     {
         loading: false,
-        resultState: "false",
-        supportEmailAddress: "false",
+        resultState: "",
+        supportEmailAddress: "",
         tools: [],
-        editableParams: [],
 
         responseMessages: [],
         results: [],
