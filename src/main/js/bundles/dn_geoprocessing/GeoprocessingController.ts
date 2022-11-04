@@ -411,7 +411,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * hideWidget()
      * Helper function used to close widget
      *
      * @private
@@ -429,7 +428,6 @@ export default class GeoprocessingController {
     }
 
     /**
-     * reloadLayersAfterGeoprocessing()
      * Helper function used to refresh configured layers after successful geoprocessing service execution
      *
      * @param layerIds Array of layerId strings to refresh
