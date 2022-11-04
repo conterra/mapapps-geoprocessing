@@ -38,7 +38,7 @@
                 </v-stepper-step>
             </v-stepper-header>
             <v-progress-linear
-                v-if="loading && gpServiceResponseMessages.length"
+                v-if="loading && responseMessages.length"
                 indeterminate
                 color="primary"
             />
@@ -75,12 +75,12 @@
 
                 <v-stepper-content step="2">
                     <v-list
-                        v-if="gpServiceResponseMessages.length"
+                        v-if="responseMessages.length"
                         dense
                         class="geoprocessing--messages"
                     >
                         <v-list-tile
-                            v-for="message in gpServiceResponseMessages"
+                            v-for="message in responseMessages"
                             :key="message.id"
                         >
                             <v-list-tile-action>
@@ -174,11 +174,11 @@
                 type: String,
                 default: ""
             },
-            gpServiceResponseMessages: {
+            responseMessages: {
                 type: Array,
                 default: () => []
             },
-            gpServiceResponseResults: {
+            responseResults: {
                 type: Array,
                 default: () => []
             }

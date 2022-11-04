@@ -158,7 +158,7 @@ export default class GeoprocessingController {
         tool.set("processing", true);
         model.loading = true;
         model.resultState = undefined;
-        model.gpServiceResponseMessages = [];
+        model.responseMessages = [];
         const params = {};
 
         // add params from array to object as property: value
@@ -282,11 +282,11 @@ export default class GeoprocessingController {
         const model = this._model;
 
         // clear status information previously saved in model
-        model.gpServiceResponseMessages = [];
+        model.responseMessages = [];
 
         // push new status messages into model
         jobInfo.messages.forEach((message, i) => {
-            model.gpServiceResponseMessages.push({
+            model.responseMessages.push({
                 id: i,
                 description: message.description,
                 type: message.type
@@ -395,7 +395,7 @@ export default class GeoprocessingController {
 
         Binding.for(vm, this._model)
             .syncAllToLeft("loading", "resultState", "supportEmailAddress",
-                "gpServiceResponseMessages", "gpServiceResponseResults")
+                "responseMessages", "responseResults")
             .enable()
             .syncToLeftNow();
 
