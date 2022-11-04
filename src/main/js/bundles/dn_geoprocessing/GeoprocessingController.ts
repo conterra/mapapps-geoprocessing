@@ -144,7 +144,7 @@ export default class GeoprocessingController {
      *
      * @private
      */
-    private async runGeoprocessingService(parameters: any[], tool) {
+    private async runGeoprocessingService(parameters: any[], tool: any) {
         const model = this._model;
 
         // if no widget is to be displayed, inform user of geoprocessing service start
@@ -178,94 +178,110 @@ export default class GeoprocessingController {
 
         // synchronous workflow
         if (executionType === "esriExecutionTypeSynchronous") {
-            try {
-                // case: geoprocessing service ran successfully
-
-                // start synchronous geoprocessing service execution
-                await geoprocessor.execute(tool.url, params);
-
-                // handle finishing of geoprocessing service internally
-                model.loading = false;
-                model.resultState = "success";
-                tool.set("processing", false);
-
-                // if no widget is to be displayed, inform user of geoprocessing service success
-                if (!tool.showWidget) {
-                    this._logService.info({
-                        message: this._i18n.get().ui.notifierSuccess
-                    }, null, null, null);
-                }
-
-                if (tool.refreshLayerIds) {
-                    this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
-                }
-            } catch (error) {
-                // case: geoprocessing service ran unsuccessfully
-
-                // handle finishing of geoprocessing service internally
-                model.loading = false;
-                model.resultState = "error";
-                tool.set("processing", false);
-
-                // if no widget is to be displayed, inform user of geoprocessing service failure
-                if (!tool.showWidget) {
-                    this._logService.info({
-                        error: this._i18n.get().ui.notifierError
-                    }, null, null, null);
-                }
-            }
+            await this.startSynchronousGeoprocessingService(params, tool);
         } else {
-            // asynchronous workflow
+            await this.startAsynchronousGeoprocessingService(params, tool);
+        }
+    }
 
-            // start asynchronous geoprocessing service execution
-            const jobInfo = await geoprocessor.submitJob(tool.url, params);
+    /**
+     * Method to start synchronous geoprocessing service execution
+     *
+     * @param params
+     * @param tool
+     * @private
+     */
+    private async startSynchronousGeoprocessingService(params: object, tool: any) {
+        const model = this._model;
+        try {
+            await geoprocessor.execute(tool.url, params);
 
-            // get status messages and add them to widget
-            const options = {
-                interval: 1500,
-                statusCallback: () => {
-                    this.addResultMessages(jobInfo);
-                }
-            };
+            // handle finishing of geoprocessing service internally
+            model.loading = false;
+            model.resultState = "success";
+            tool.set("processing", false);
 
-            try {
-                // case: geoprocessing service has completed execution successfully
-                await jobInfo.waitForJobCompletion(options);
+            // if no widget is to be displayed, inform user of geoprocessing service success
+            if (!tool.showWidget) {
+                this._logService.info({
+                    message: this._i18n.get().ui.notifierSuccess
+                }, null, null, null);
+            }
 
-                // add final status message to widget
+            if (tool.refreshLayerIds) {
+                this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
+            }
+        } catch (error) {
+            // case: geoprocessing service ran unsuccessfully
+            // handle finishing of geoprocessing service internally
+            model.loading = false;
+            model.resultState = "error";
+            tool.set("processing", false);
+
+            // if no widget is to be displayed, inform user of geoprocessing service failure
+            if (!tool.showWidget) {
+                this._logService.info({
+                    error: this._i18n.get().ui.notifierError
+                }, null, null, null);
+            }
+        }
+    }
+
+    /**
+     * Method to start asynchronous geoprocessing service execution
+     *
+     * @param params
+     * @param tool
+     * @private
+     */
+    private async startAsynchronousGeoprocessingService(params: object, tool: any) {
+        const model = this._model;
+        const jobInfo = await geoprocessor.submitJob(tool.url, params);
+
+        // get status messages and add them to widget
+        const options = {
+            interval: 1500,
+            statusCallback: () => {
                 this.addResultMessages(jobInfo);
+            }
+        };
 
-                // handle finishing of geoprocessing service internally
-                model.loading = false;
-                model.resultState = "success";
-                tool.set("processing", false);
+        try {
+            await jobInfo.waitForJobCompletion(options);
 
-                // if no widget is to be displayed, inform user of geoprocessing service success
-                if (!tool.showWidget) {
-                    this._logService.info({
-                        message: this._i18n.get().ui.notifierSuccess
-                    }, null, null, null);
-                }
+            // add final status message to widget
+            this.addResultMessages(jobInfo);
 
-                if (tool.refreshLayerIds) {
-                    this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
-                }
-            } catch (error) {
-                // case: geoprocessing service has completed execution unsuccessfully
-                // add final status message to widget
-                this.addResultMessages(jobInfo);
+            // handle finishing of geoprocessing service internally
+            model.loading = false;
+            model.resultState = "success";
+            tool.set("processing", false);
 
-                // handle finishing of geoprocessing service internally
-                model.loading = false;
-                model.resultState = "error";
-                tool.set("processing", false);
+            // if no widget is to be displayed, inform user of geoprocessing service success
+            if (!tool.showWidget) {
+                this._logService.info({
+                    message: this._i18n.get().ui.notifierSuccess
+                }, null, null, null);
+            }
 
-                // if no widget is to be displayed, inform user of geoprocessing service failure
-                if (!tool.showWidget) {
-                    this._logService.info({
-                        error: this._i18n.get().ui.notifierError
-                    }, null, null, null);
-                }
+            if (tool.refreshLayerIds) {
+                this.reloadLayersAfterGeoprocessing(tool.refreshLayerIds);
+            }
+        } catch (error) {
+            // case: geoprocessing service has completed execution unsuccessfully
+            // add final status message to widget
+            this.addResultMessages(jobInfo);
+
+            // handle finishing of geoprocessing service internally
+            model.loading = false;
+            model.resultState = "error";
+            tool.set("processing", false);
+
+            // if no widget is to be displayed, inform user of geoprocessing service failure
+            if (!tool.showWidget) {
+                this._logService.info({
+                    error: this._i18n.get().ui.notifierError
+                }, null, null, null);
             }
         }
     }
