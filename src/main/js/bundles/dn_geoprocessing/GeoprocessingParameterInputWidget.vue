@@ -134,6 +134,33 @@
                             {{ i18n.error }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
                         </v-alert>
                     </div>
+                    <div
+                        v-if="results.length"
+                        class="geoprocessing--results"
+                    >
+                        <div
+                            v-for="result in results"
+                            :key="result.name"
+                        >
+                            <div v-if="result.dataType==='string'">
+                                <v-textarea
+                                    :value="JSON.stringify(result.value)"
+                                    :label="i18n.result"
+                                    readonly
+                                />
+                            </div>
+                            <div v-if="result.dataType==='data-file'">
+                                <v-btn
+                                    color="primary"
+                                    block
+                                    :href="result.value.url"
+                                    target="_blank"
+                                >
+                                    {{ i18n.downloadResult }}
+                                </v-btn>
+                            </div>
+                        </div>
+                    </div>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
@@ -178,7 +205,7 @@
                 type: Array,
                 default: () => []
             },
-            responseResults: {
+            results: {
                 type: Array,
                 default: () => []
             }

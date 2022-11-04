@@ -159,6 +159,7 @@ export default class GeoprocessingController {
         model.loading = true;
         model.resultState = undefined;
         model.responseMessages = [];
+        model.results = [];
         const params = {};
 
         // add params from array to object as property: value
@@ -175,8 +176,10 @@ export default class GeoprocessingController {
             return;
         }
         const executionType = metadata.executionType;
-        const inputParameters = metadata.parameters.filter((param) => param.direction == "esriGPParameterDirectionInput");
-        const outputParameters = metadata.parameters.filter((param) => param.direction == "esriGPParameterDirectionOutput");
+        const inputParameters = metadata.parameters.filter((param) =>
+            param.direction == "esriGPParameterDirectionInput");
+        const outputParameters = metadata.parameters.filter((param) =>
+            param.direction == "esriGPParameterDirectionOutput");
 
         if (executionType === "esriExecutionTypeSynchronous") {
             await this.startSynchronousGeoprocessingService(params, tool);
@@ -301,16 +304,21 @@ export default class GeoprocessingController {
      * @private
      */
     private handleResults(results: any): void {
-        results?.forEach((result: any) => {
-            const value = result.value;
-            switch (result.dataType) {
-                case "string":
-                    break;
-                case "data-file":
-                    window.open(value.url, '_blank').focus();
-                    break;
-            }
-        });
+        const model = this._model;
+        if (results.length) {
+            results.forEach((result: any) => {
+                switch (result.dataType) {
+                    case "string":
+                    case "data-file":
+                        model.results.push(result);
+                        break;
+                    case "record-set":
+                        break;
+                    case "raster-data-layer":
+                        break;
+                }
+            });
+        }
     }
 
     /**
@@ -436,7 +444,7 @@ export default class GeoprocessingController {
         vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages")
+            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results")
             .enable()
             .syncToLeftNow();
 

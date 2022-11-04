@@ -30,6 +30,8 @@ module.exports = {
         parametersTab: "Parameter",
         resultsTab: "Ergebnisse",
         executeButtonLabel: "Ausführen",
+        result: "Ergebnis",
+        downloadResult: "Ergebnis herunterladen",
         notifierStart: "Der Geoprocessing Service wurde erfolgreich gestartet.",
         notifierSuccess: "Der Geoprocessing Service wurde erfolgreich ausgeführt.",
         notifierError: "Beim Ausführen des Geoprocessing Services trat ein Fehler auf.",
