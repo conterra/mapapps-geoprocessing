@@ -116,7 +116,8 @@
                 } catch (e) {
                     return false;
                 }
-                return true;
+                const regex = new RegExp('\\{.*:\\{.*:.*}}', 'g');
+                return regex.test(string);
             }
         }
     };
