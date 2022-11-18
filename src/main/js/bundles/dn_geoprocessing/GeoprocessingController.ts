@@ -417,7 +417,7 @@ export default class GeoprocessingController {
 
         // finish widget creation
         const serviceProperties = {
-            "widgetRole": "inputParameterEntryWidget"
+            "widgetRole": "geoprocessingParameterWidget"
         };
         const interfaces = ["dijit.Widget"];
         this.widgetServiceRegistration = this.bundleContext.registerService(interfaces, widget, serviceProperties);

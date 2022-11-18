@@ -71,7 +71,7 @@
             }
         },
         {
-            "widgetRole": "inputParameterEntryWidget",
+            "widgetRole": "geoprocessingParameterWidget",
             "sublayout": [
                 "desktop"
             ],

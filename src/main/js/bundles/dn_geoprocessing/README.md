@@ -148,3 +148,9 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 | Property            | Type   | Possible Values | Default  | Description                                            |
 |---------------------|--------|-----------------|----------|--------------------------------------------------------|
 | supportEmailAddress | String | Any String      | ```""``` | Contact email provided in widget if GP execution fails |
+
+### Customize widget configuration
+
+To customize the appearance of the widget, use the widgetRole _geoprocessingParameterWidget_.
+
+More information about customizing a widget can be found here: https://docs.conterra.de/en/mapapps/latest/apps/configuring-apps/layout.html#customize-widgets
