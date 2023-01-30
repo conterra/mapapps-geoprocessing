@@ -375,7 +375,10 @@ export default class GeoprocessingController {
         return new Promise((resolve) => {
             apprt_when(dataModel.getSelected(), (selectedIds) => {
                 apprt_when(dataModel.queryById(selectedIds), (result) => {
-                    const newParameters = parameters.map((parameter) => {
+                    let clonedParameters = JSON.stringify(parameters);
+                    clonedParameters = JSON.parse(clonedParameters);
+
+                    const newParameters = clonedParameters.map((parameter) => {
                         if (parameter.value === "{SELECTED_IDS}") {
                             parameter.value = selectedIds.toString();
                         }
