@@ -27,6 +27,7 @@
             "search-ui",
             "locator-store",
             "toc",
+            "authentication",
             "dn_geoprocessing"
         ]
     },
