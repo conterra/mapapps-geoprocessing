@@ -57,6 +57,10 @@
                                     :rules="param.rules"
                                     :choice-list="param.choiceList"
                                     :editable="param.editable"
+                                    :i18n="i18n"
+                                    :easting="easting"
+                                    :northing="northing"
+                                    @getLocationButtonClicked="$emit('getLocationButtonClicked', (parametersWithRules))"
                                 />
                             </div>
                         </v-form>
@@ -116,7 +120,7 @@
                             :size="50"
                             color="primary"
                             indeterminate
-                        ></v-progress-circular>
+                        />
                     </div>
                     <div class="geoprocessing--alert">
                         <v-alert
@@ -208,6 +212,14 @@
             results: {
                 type: Array,
                 default: () => []
+            },
+            easting: {
+                type: Number,
+                default: 0
+            },
+            northing: {
+                type: Number,
+                default: 0
             }
         },
         data: function() {

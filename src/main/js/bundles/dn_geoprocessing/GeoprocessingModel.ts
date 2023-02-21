@@ -18,8 +18,12 @@ import {Mutable, properties} from "apprt-core/Mutable";
 
 function defineProperties<Impl, P>(mutableDefinition: any,
     mutableProperties: {
-        supportEmailAddress: string; responseMessages: string[]; results: object[];
-        resultState: string; loading: boolean; tools: any[];
+        supportEmailAddress: string;
+        responseMessages: string[];
+        results: object[];
+        resultState: string;
+        loading: boolean;
+        tools: any[];
         addTool(tool: any): void; removeTool(tool: any): void;
     }): Impl & Mutable<P> {
     properties(mutableDefinition, mutableProperties);

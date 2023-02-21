@@ -28,6 +28,7 @@ import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
+import { ifDefined } from "apprt-binding/Transformers";
 
 interface Tool {
     id: string,
@@ -49,6 +50,8 @@ export default class GeoprocessingController {
     private bundleContext: BundleContext;
     private widgetServiceRegistration: ServiceRegistration;
     private tools: Tool[];
+    private view: __esri.View;
+    private mapClickWatcher: __esri.WatchHandle;
 
     /**
      * Run automatically on component activation
@@ -412,6 +415,25 @@ export default class GeoprocessingController {
         const widget = this.getInputParameterWidget(parameters);
         const vm = widget.getVM();
 
+        // add listener to the locate button event
+        vm.$on('getLocationButtonClicked', (parametersWithRules) => {
+            this.getView().then((view: __esri.View) => {
+                this.view = view;
+
+                if (this.mapClickWatcher) {
+                    this.clearWatcher(view);
+                } else {
+                    view.surface.style.cursor = "crosshair";
+                    this.mapClickWatcher = view.on("click", evt => {
+                        //todo: pass click event location to widget
+                        const clickLocation = evt.mapPoint;
+                        vm.easting = clickLocation.x;
+                        vm.northing = clickLocation.y;
+                    });
+                }
+            });
+        });
+
         // add listener to the execution button click event
         vm.$on('execute-button-clicked', async parametersWithRules => {
             // run geoprocessing service with edited parameters
@@ -430,6 +452,7 @@ export default class GeoprocessingController {
                 window.set("title", tool.title);
                 window.on("Close", () => {
                     this.hideWidget();
+                    this.clearWatcher(this.view);
                 });
             }
         }, 100);
@@ -448,6 +471,8 @@ export default class GeoprocessingController {
 
         Binding.for(vm, this._model)
             .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results")
+            .sync("easting", ifDefined(), ifDefined())
+            .sync("northing", ifDefined(), ifDefined())
             .enable()
             .syncToLeftNow();
 
@@ -512,5 +537,32 @@ export default class GeoprocessingController {
         }
 
         return layer.findSublayerById(parseInt(sublayerId, 10));
+    }
+
+      /**
+     * getView()
+     * Helper function used to ensure view can be accessed
+     *
+     * @private
+     */
+      private getView(): Promise<__esri.View> {
+        const mapWidgetModel = this._mapWidgetModel;
+
+        return new Promise((resolve) => {
+            if (mapWidgetModel.view) {
+                resolve(mapWidgetModel.view);
+            } else {
+                const watcher = mapWidgetModel.watch("view", ({value: view}) => {
+                    watcher.remove();
+                    resolve(view);
+                });
+            }
+        });
+    }
+
+    private clearWatcher(view: __esri.View): void {
+        this.mapClickWatcher.remove();
+        this.mapClickWatcher = undefined;
+        view.surface.style.cursor = "default";
     }
 }

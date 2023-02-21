@@ -17,8 +17,35 @@
 -->
 <template>
     <div>
+        <div
+            v-if="type === 'feature-record-set-layer'"
+            :rules="rules"
+            :disabled="!editable"
+            :readonly="!editable"
+        >
+            {{ title }}
+            <v-layout row>
+                <v-text-field
+                    v-model="easting"
+                    :label="i18n.parameters.easting"
+                />
+                <v-text-field
+                    v-model="northing"
+                    :label="i18n.parameters.northing"
+                />
+                <v-btn
+                    icon
+                    color="primary"
+                    @click="$emit('getLocationButtonClicked')"
+                >
+                    <v-icon>
+                        icon-map-locate
+                    </v-icon>
+                </v-btn>
+            </v-layout>
+        </div>
         <v-select
-            v-if="choiceList"
+            v-else-if="choiceList"
             v-model="localValue"
             :label="title"
             :rules="rules"
@@ -35,7 +62,7 @@
             class="mt-0"
             hide-details
             color="primary"
-        ></v-switch>
+        />
         <v-text-field
             v-else-if="type === 'long' || type === 'double'"
             v-model="localValue"
@@ -67,6 +94,12 @@
 <script>
     export default {
         props: {
+            i18n: {
+                type: Object,
+                default: () => {
+                    return {};
+                }
+            },
             value: undefined,
             title: {
                 type: String,
@@ -87,6 +120,14 @@
             editable: {
                 type: Boolean,
                 default: false
+            },
+            easting: {
+                type: Number,
+                default: 0
+            },
+            northing: {
+                type: Number,
+                default: 0
             }
         },
         computed: {
