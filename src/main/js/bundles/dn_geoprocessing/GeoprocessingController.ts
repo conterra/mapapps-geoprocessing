@@ -28,7 +28,6 @@ import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
-import { ifDefined } from "apprt-binding/Transformers";
 
 interface Tool {
     id: string,
@@ -416,19 +415,21 @@ export default class GeoprocessingController {
         const vm = widget.getVM();
 
         // add listener to the locate button event
-        vm.$on('getLocationButtonClicked', (parametersWithRules) => {
+        vm.$on('getLocationButtonClicked', () => {
+            const model = this._model;
+
             this.getView().then((view: __esri.View) => {
                 this.view = view;
 
                 if (this.mapClickWatcher) {
-                    this.clearWatcher(view);
+                    this.clearWatcher();
                 } else {
                     view.surface.style.cursor = "crosshair";
                     this.mapClickWatcher = view.on("click", evt => {
-                        //todo: pass click event location to widget
                         const clickLocation = evt.mapPoint;
                         vm.easting = clickLocation.x;
                         vm.northing = clickLocation.y;
+                        model.clickedWkid = clickLocation.spatialReference.wkid;
                     });
                 }
             });
@@ -436,7 +437,26 @@ export default class GeoprocessingController {
 
         // add listener to the execution button click event
         vm.$on('execute-button-clicked', async parametersWithRules => {
+            const model = this._model;
+
             // run geoprocessing service with edited parameters
+            const pointEntryParam = parametersWithRules.find(param => param.type === "feature-record-set-layer");
+            if (pointEntryParam) {
+                const geometry = pointEntryParam.value.features[0].geometry;
+                if (vm.easting !== geometry?.x || vm.northing !== geometry?.y) {
+                    const index = parametersWithRules.findIndex(param => param.type === "feature-record-set-layer");
+                    parametersWithRules[index].value.features[0].geometry.x = vm.easting;
+                    parametersWithRules[index].value.features[0].geometry.y = vm.northing;
+                    if (model.clickedWkid){
+                        parametersWithRules[index].value.features[0].geometry.spatialReference.wkid = model.clickedWkid;
+                    }
+                }
+            }
+
+            if (this.mapClickWatcher) {
+                this.clearWatcher();
+            }
+
             await this.runGeoprocessingService(parametersWithRules, tool);
         });
 
@@ -452,7 +472,9 @@ export default class GeoprocessingController {
                 window.set("title", tool.title);
                 window.on("Close", () => {
                     this.hideWidget();
-                    this.clearWatcher(this.view);
+                    if (this.mapClickWatcher) {
+                        this.clearWatcher();
+                    }
                 });
             }
         }, 100);
@@ -467,12 +489,17 @@ export default class GeoprocessingController {
     private getInputParameterWidget(parameters): any {
         const vm = new Vue(InputParameterEntryMask);
         vm.i18n = this._i18n.get().ui;
+
+        const pointEntryParam = parameters.find(param => param.type === "feature-record-set-layer");
+        if (pointEntryParam) {
+            const geometry = pointEntryParam.value.features[0].geometry;
+            vm.easting = geometry?.x;
+            vm.northing = geometry?.y;
+        }
         vm.parameters = parameters;
 
         Binding.for(vm, this._model)
             .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results")
-            .sync("easting", ifDefined(), ifDefined())
-            .sync("northing", ifDefined(), ifDefined())
             .enable()
             .syncToLeftNow();
 
@@ -560,9 +587,9 @@ export default class GeoprocessingController {
         });
     }
 
-    private clearWatcher(view: __esri.View): void {
+    private clearWatcher(): void {
         this.mapClickWatcher.remove();
         this.mapClickWatcher = undefined;
-        view.surface.style.cursor = "default";
+        this.view.surface.style.cursor = "default";
     }
 }

@@ -58,9 +58,9 @@
                                     :choice-list="param.choiceList"
                                     :editable="param.editable"
                                     :i18n="i18n"
-                                    :easting="easting"
-                                    :northing="northing"
-                                    @getLocationButtonClicked="$emit('getLocationButtonClicked', (parametersWithRules))"
+                                    :easting.sync="easting"
+                                    :northing.sync="northing"
+                                    @getLocationButtonClicked="$emit('getLocationButtonClicked')"
                                 />
                             </div>
                         </v-form>

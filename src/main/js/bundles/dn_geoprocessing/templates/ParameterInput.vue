@@ -26,12 +26,14 @@
             {{ title }}
             <v-layout row>
                 <v-text-field
-                    v-model="easting"
+                    v-model="localEasting"
                     :label="i18n.parameters.easting"
+                    type="number"
                 />
                 <v-text-field
-                    v-model="northing"
+                    v-model="localNorthing"
                     :label="i18n.parameters.northing"
+                    type="number"
                 />
                 <v-btn
                     icon
@@ -144,6 +146,22 @@
                         value = JSON.parse(value);
                     }
                     this.$emit("input", value);
+                }
+            },
+            localEasting: {
+                get: function(){
+                    return this.easting;
+                },
+                set: function(easting){
+                    this.$emit("update:easting", parseFloat(easting));
+                }
+            },
+            localNorthing: {
+                get: function(){
+                    return this.northing;
+                },
+                set: function(northing){
+                    this.$emit("update:northing",  parseFloat(northing));
                 }
             }
         },
