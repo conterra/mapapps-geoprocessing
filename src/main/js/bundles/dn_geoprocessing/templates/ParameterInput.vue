@@ -24,16 +24,21 @@
             :readonly="!editable"
         >
             {{ title }}
-            <v-layout row>
+            <v-layout
+                row
+                class="parameterInput__coordinate-entry-layout"
+            >
                 <v-text-field
                     v-model="localEasting"
                     :label="i18n.parameters.easting"
                     type="number"
+                    class="parameterInput__coordinate-entry-text-field"
                 />
                 <v-text-field
                     v-model="localNorthing"
                     :label="i18n.parameters.northing"
                     type="number"
+                    class="parameterInput__coordinate-entry-text-field"
                 />
                 <v-btn
                     icon

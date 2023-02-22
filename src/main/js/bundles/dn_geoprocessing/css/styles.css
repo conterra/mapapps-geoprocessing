@@ -82,3 +82,11 @@
     padding-top: 7px;
     padding-left: 4px;
 }
+
+.ctAppRoot .geoprocessing-parameter-widget .parameterInput__coordinate-entry-layout {
+    padding-top: 5px;
+}
+
+.ctAppRoot .geoprocessing-parameter-widget .parameterInput__coordinate-entry-text-field {
+    padding-right: 10px;
+}
