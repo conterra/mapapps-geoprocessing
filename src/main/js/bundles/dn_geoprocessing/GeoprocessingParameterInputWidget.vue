@@ -58,9 +58,7 @@
                                     :choice-list="param.choiceList"
                                     :editable="param.editable"
                                     :i18n="i18n"
-                                    :easting.sync="easting"
-                                    :northing.sync="northing"
-                                    @getLocationButtonClicked="$emit('getLocationButtonClicked')"
+                                    @getLocationButtonClicked="handleLocationButtonClick"
                                 />
                             </div>
                         </v-form>
@@ -212,14 +210,6 @@
             results: {
                 type: Array,
                 default: () => []
-            },
-            easting: {
-                type: Number,
-                default: 0
-            },
-            northing: {
-                type: Number,
-                default: 0
             }
         },
         data: function() {
@@ -234,6 +224,7 @@
             parametersWithRules: function () {
                 return this.parameters.map(param => {
                     param.rules = [];
+                    //if punkt -> x und y hinzufügen , die dann als model
                     if (param.required) {
                         param.rules.push(v => !!v || this.i18n.rules.required);
                     }
@@ -259,6 +250,9 @@
             execute: function () {
                 this.$emit('execute-button-clicked', this.parametersWithRules);
                 this.activeStep = 2;
+            },
+            handleLocationButtonClick: function (title) {
+                this.$emit('getLocationButtonClicked', title);
             }
         }
     };

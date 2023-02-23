@@ -24,6 +24,7 @@ function defineProperties<Impl, P>(mutableDefinition: any,
         resultState: string;
         loading: boolean;
         tools: any[];
+        parameters: any[];
         addTool(tool: any): void; removeTool(tool: any): void;
     }): Impl & Mutable<P> {
     properties(mutableDefinition, mutableProperties);
@@ -41,6 +42,7 @@ interface GeoprocessingModelProps {
 
     responseMessages: object[],
     results: object[],
+    parameters: any[],
 
     addTool(tool): void
 
@@ -56,6 +58,7 @@ export default defineProperties<GeoprocessingModel, GeoprocessingModelProps>(Geo
 
         responseMessages: [],
         results: [],
+        parameters: [],
 
         addTool(tool: any): void {
             const id = tool?.id;

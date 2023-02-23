@@ -43,7 +43,8 @@
                 <v-btn
                     icon
                     color="primary"
-                    @click="$emit('getLocationButtonClicked')"
+                    :class="clickWatcherActive ? 'parameterInput__coordinate-entry-button--active' : ''"
+                    @click="handleLocationButtonClick"
                 >
                     <v-icon>
                         icon-map-locate
@@ -135,6 +136,10 @@
             northing: {
                 type: Number,
                 default: 0
+            },
+            clickWatcherActive: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
@@ -155,18 +160,18 @@
             },
             localEasting: {
                 get: function(){
-                    return this.easting;
+                    return this.value.features[0].geometry.x;
                 },
                 set: function(easting){
-                    this.$emit("update:easting", parseFloat(easting));
+                    this.value.features[0].geometry.x = parseFloat(easting);
                 }
             },
             localNorthing: {
                 get: function(){
-                    return this.northing;
+                    return this.value.features[0].geometry.y;
                 },
                 set: function(northing){
-                    this.$emit("update:northing",  parseFloat(northing));
+                    this.value.features[0].geometry.y = parseFloat(northing);
                 }
             }
         },
@@ -182,6 +187,10 @@
                 }
                 const regex = new RegExp('\\{.*:\\{.*:.*}}', 'g');
                 return regex.test(string);
+            },
+            handleLocationButtonClick: function() {
+                this.$emit('getLocationButtonClicked', this.title);
+                this.clickWatcherActive = !this.clickWatcherActive;
             }
         }
     };

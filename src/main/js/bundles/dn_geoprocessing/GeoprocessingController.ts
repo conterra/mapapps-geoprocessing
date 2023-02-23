@@ -415,7 +415,7 @@ export default class GeoprocessingController {
         const vm = widget.getVM();
 
         // add listener to the locate button event
-        vm.$on('getLocationButtonClicked', () => {
+        vm.$on('getLocationButtonClicked', (title) => {
             const model = this._model;
 
             this.getView().then((view: __esri.View) => {
@@ -427,9 +427,8 @@ export default class GeoprocessingController {
                     view.surface.style.cursor = "crosshair";
                     this.mapClickWatcher = view.on("click", evt => {
                         const clickLocation = evt.mapPoint;
-                        vm.easting = clickLocation.x;
-                        vm.northing = clickLocation.y;
-                        model.clickedWkid = clickLocation.spatialReference.wkid;
+                        const targetParam  = model.parameters.find(param => param.title === title);
+                        targetParam.value.features[0].geometry = clickLocation;
                     });
                 }
             });
@@ -487,6 +486,9 @@ export default class GeoprocessingController {
      * @private
      */
     private getInputParameterWidget(parameters): any {
+        const model = this._model;
+        model.parameters = parameters;
+
         const vm = new Vue(InputParameterEntryMask);
         vm.i18n = this._i18n.get().ui;
 
@@ -496,10 +498,9 @@ export default class GeoprocessingController {
             vm.easting = geometry?.x;
             vm.northing = geometry?.y;
         }
-        vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results")
+            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results", "parameters")
             .enable()
             .syncToLeftNow();
 

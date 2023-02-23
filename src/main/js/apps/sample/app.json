@@ -251,6 +251,53 @@
                             "required": true
                         },
                         {
+                            "name": "Input_Observation_Point2",
+                            "title": "Beobachtungspunkt2",
+                            "type": "feature-record-set-layer",
+                            "value": {
+                                "features": [
+                                    {
+                                        "aggregateGeometries": null,
+                                        "geometry": {
+                                            "spatialReference": {
+                                                "wkid": 4326
+                                            },
+                                            "x": 7.590545246530715,
+                                            "y": 46.124155905696604
+                                        },
+                                        "symbol": {
+                                            "type": "esriSMS",
+                                            "color": [
+                                                255,
+                                                0,
+                                                0,
+                                                255
+                                            ],
+                                            "angle": 0,
+                                            "xoffset": 0,
+                                            "yoffset": 0,
+                                            "size": 12,
+                                            "style": "esriSMSCircle",
+                                            "outline": {
+                                                "type": "esriSLS",
+                                                "color": [
+                                                    255,
+                                                    255,
+                                                    255,
+                                                    255
+                                                ],
+                                                "width": 2,
+                                                "style": "esriSLSSolid"
+                                            }
+                                        },
+                                        "attributes": {},
+                                        "popupTemplate": null
+                                    }
+                                ]
+                            },
+                            "required": true
+                        },
+                        {
                             "name": "Viewshed_Distance",
                             "type": "linear-unit",
                             "value": {

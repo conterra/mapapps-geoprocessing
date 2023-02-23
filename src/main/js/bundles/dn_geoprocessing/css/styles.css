@@ -90,3 +90,7 @@
 .ctAppRoot .geoprocessing-parameter-widget .parameterInput__coordinate-entry-text-field {
     padding-right: 10px;
 }
+
+.ctAppRoot .geoprocessing-parameter-widget .parameterInput__coordinate-entry-layout .v-btn.v-btn--icon.parameterInput__coordinate-entry-button--active {
+    border: 3px solid rgb(43, 42, 104) !important;
+}
