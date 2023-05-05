@@ -499,7 +499,7 @@ export default class GeoprocessingController {
      * @param layerIdPath
      * @private
      */
-    private getLayerById(layerIdPath: any): __esri.Layer | __esri.Sublayer {
+    private getLayerById(layerIdPath: string): __esri.Layer | __esri.Sublayer {
         if (typeof layerIdPath !== "string") {
             return undefined;
         }
