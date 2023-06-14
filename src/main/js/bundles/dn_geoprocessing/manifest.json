@@ -17,7 +17,7 @@
     "i18n": [
         "bundle"
     ],
-    "CSS-Themes-Extension": [
+    "cssThemesExtension": [
         {
             "name": "*",
             "files": [
