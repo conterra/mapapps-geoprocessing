@@ -541,7 +541,7 @@ export default class GeoprocessingController {
      */
     private reloadLayersAfterGeoprocessing(layerIds) {
         layerIds.forEach(layerId => {
-            const layer = this.getLayer(layerId);
+            const layer = this.getLayerById(layerId);
             layer?.refresh && layer.refresh();
         });
     }
@@ -552,7 +552,11 @@ export default class GeoprocessingController {
      * @param layerIdPath
      * @private
      */
-    private getLayer(layerIdPath) {
+    private getLayerById(layerIdPath: string): __esri.Layer | __esri.Sublayer {
+        if (typeof layerIdPath !== "string") {
+            return undefined;
+        }
+
         const mapWidgetModel = this._mapWidgetModel;
 
         const parts = layerIdPath.split("/");
