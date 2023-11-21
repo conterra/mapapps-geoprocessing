@@ -48,18 +48,46 @@
                         <v-form v-model="valid">
                             <div
                                 v-for="(param) in parametersWithRules"
-                                :key="param.name"
+                                :key="param.id"
                             >
-                                <parameter-input
-                                    v-model="param.value"
-                                    :title="param.title"
-                                    :type="param.type"
-                                    :rules="param.rules"
-                                    :choice-list="param.choiceList"
-                                    :editable="param.editable"
-                                    :i18n="i18n"
-                                    @getLocationButtonClicked="handleLocationButtonClick"
-                                />
+                                <div v-if="param.type === 'GPFeatureRecordSetLayer'">
+                                    <feature-record-set
+                                        :id="param.id"
+                                        v-model="param.value"
+                                        :title="param.title"
+                                        :type="param.type"
+                                        :rules="param.rules"
+                                        :choice-list="param.choiceList"
+                                        :editable="param.editable"
+                                        :click-watcher-active="param.id === activeClickWatcherId"
+                                        :i18n="i18n"
+                                        @getLocationButtonClicked="handleLocationButtonClick"
+                                    />
+                                </div>
+                                <div v-else-if="param.type === 'GPLinearUnit'">
+                                    <linear-unit
+                                        :id="param.id"
+                                        v-model="param.value"
+                                        :title="param.title"
+                                        :type="param.type"
+                                        :rules="param.rules"
+                                        :choice-list="param.choiceList"
+                                        :editable="param.editable"
+                                        :i18n="i18n"
+                                    />
+                                </div>
+                                <div v-else>
+                                    <base-parameter-input
+                                        :id="param.id"
+                                        v-model="param.value"
+                                        :title="param.title"
+                                        :type="param.type"
+                                        :rules="param.rules"
+                                        :choice-list="param.choiceList"
+                                        :editable="param.editable"
+                                        :i18n="i18n"
+                                    />
+                                </div>
                             </div>
                         </v-form>
                     </div>
@@ -171,10 +199,15 @@
 
 <script>
     import ParameterInput from "./templates/ParameterInput.vue";
+    import GPFeatureRecordSetLayerInput from "./templates/GPFeatureRecordSetLayerInput.vue";
+    import GPLinearUnit from "./templates/GPLinearUnit.vue";
+
 
     export default {
         components: {
-            "parameter-input": ParameterInput
+            "base-parameter-input": ParameterInput,
+            "feature-record-set": GPFeatureRecordSetLayerInput,
+            "linear-unit": GPLinearUnit
         },
         props: {
             i18n: {
@@ -214,7 +247,8 @@
         },
         data: function() {
             return {
-                valid: false
+                valid: false,
+                activeClickWatcherId: null
             };
         },
         computed: {
@@ -222,7 +256,7 @@
                 return "mailto:" + this.supportEmailAddress;
             },
             parametersWithRules: function () {
-                return this.parameters.map(param => {
+                return this.parameters.map((param, index) => {
                     param.rules = [];
                     //if punkt -> x und y hinzufügen , die dann als model
                     if (param.required) {
@@ -242,6 +276,8 @@
                     if (param.type === "double") {
                         param.rules.push(v => /^[0-9.]*$/.test(v) || this.i18n.rules.noDouble);
                     }
+
+                    param.id = `GEOPROCESS_PARAM_${index}`;
                     return param;
                 });
             }
@@ -251,8 +287,16 @@
                 this.$emit('execute-button-clicked', this.parametersWithRules);
                 this.activeStep = 2;
             },
-            handleLocationButtonClick: function (title) {
-                this.$emit('getLocationButtonClicked', title);
+            handleLocationButtonClick: function (id, clickWatcherActive) {
+                if (clickWatcherActive) {
+                    this.$emit('getLocationButtonClicked', id, false);
+                    this.activeClickWatcherId = null;
+                } else {
+                    this.$emit('getLocationButtonClicked', id, false);
+                    this.$emit('getLocationButtonClicked', id, true);
+                    this.activeClickWatcherId = id;
+                }
+
             }
         }
     };

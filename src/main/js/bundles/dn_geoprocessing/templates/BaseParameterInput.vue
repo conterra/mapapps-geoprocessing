@@ -17,43 +17,8 @@
 -->
 <template>
     <div>
-        <div
-            v-if="type === 'feature-record-set-layer'"
-            :rules="rules"
-            :disabled="!editable"
-            :readonly="!editable"
-        >
-            {{ title }}
-            <v-layout
-                row
-                class="parameterInput__coordinate-entry-layout"
-            >
-                <v-text-field
-                    v-model="localEasting"
-                    :label="i18n.parameters.easting"
-                    type="number"
-                    class="parameterInput__coordinate-entry-text-field"
-                />
-                <v-text-field
-                    v-model="localNorthing"
-                    :label="i18n.parameters.northing"
-                    type="number"
-                    class="parameterInput__coordinate-entry-text-field"
-                />
-                <v-btn
-                    icon
-                    color="primary"
-                    :class="clickWatcherActive ? 'parameterInput__coordinate-entry-button--active' : ''"
-                    @click="handleLocationButtonClick"
-                >
-                    <v-icon>
-                        icon-map-locate
-                    </v-icon>
-                </v-btn>
-            </v-layout>
-        </div>
         <v-select
-            v-else-if="choiceList"
+            v-if="choiceList"
             v-model="localValue"
             :label="title"
             :rules="rules"
@@ -72,7 +37,7 @@
             color="primary"
         />
         <v-text-field
-            v-else-if="type === 'long' || type === 'double'"
+            v-else-if="type === 'long' || type === 'double' || type === 'GPString'"
             v-model="localValue"
             :label="title"
             :rules="rules"
@@ -108,6 +73,10 @@
                     return {};
                 }
             },
+            id: {
+                type: String,
+                default: undefined
+            },
             value: undefined,
             title: {
                 type: String,
@@ -128,18 +97,6 @@
             editable: {
                 type: Boolean,
                 default: false
-            },
-            easting: {
-                type: Number,
-                default: 0
-            },
-            northing: {
-                type: Number,
-                default: 0
-            },
-            clickWatcherActive: {
-                type: Boolean,
-                default: false
             }
         },
         computed: {
@@ -157,22 +114,6 @@
                     }
                     this.$emit("input", value);
                 }
-            },
-            localEasting: {
-                get: function(){
-                    return this.value.features[0].geometry.x;
-                },
-                set: function(easting){
-                    this.value.features[0].geometry.x = parseFloat(easting);
-                }
-            },
-            localNorthing: {
-                get: function(){
-                    return this.value.features[0].geometry.y;
-                },
-                set: function(northing){
-                    this.value.features[0].geometry.y = parseFloat(northing);
-                }
             }
         },
         methods: {
@@ -187,10 +128,6 @@
                 }
                 const regex = new RegExp('\\{.*:\\{.*:.*}}', 'g');
                 return regex.test(string);
-            },
-            handleLocationButtonClick: function() {
-                this.$emit('getLocationButtonClicked', this.title);
-                this.clickWatcherActive = !this.clickWatcherActive;
             }
         }
     };
