@@ -415,47 +415,49 @@ export default class GeoprocessingController {
         const vm = widget.getVM();
 
         // add listener to the locate button event
-        vm.$on('getLocationButtonClicked', (title) => {
+        vm.$on('getLocationButtonClicked', (id: string, activate: boolean) => {
             const model = this._model;
 
-            this.getView().then((view: __esri.View) => {
-                this.view = view;
-
+            if (!activate) {
                 if (this.mapClickWatcher) {
                     this.clearWatcher();
-                } else {
-                    view.surface.style.cursor = "crosshair";
-                    this.mapClickWatcher = view.on("click", evt => {
-                        const clickLocation = evt.mapPoint;
-                        const targetParam  = model.parameters.find(param => param.title === title);
-                        targetParam.value.features[0].geometry = clickLocation;
-                    });
                 }
-            });
+            } else {
+                this.getView().then((view: __esri.View) => {
+                    this.view = view;
+
+                    if (this.mapClickWatcher) {
+                        this.clearWatcher();
+                    } else {
+                        view.surface.style.cursor = "crosshair";
+                        this.mapClickWatcher = view.on("click", evt => {
+                            const clickLocation = evt.mapPoint;
+                            const targetParam  = model.parameters.find(param => param.id === id);
+                            targetParam.value = {
+                                "spatialReference" : clickLocation.spatialReference,
+                                "features" : [
+                                    {
+                                        "geometry" : {
+                                            "x" : clickLocation.x,
+                                            "y" : clickLocation.y,
+                                            "spatialReference" : {
+                                                "wkid" : clickLocation.spatialReference.wkid
+                                            }
+                                        }
+                                    }
+                                ]
+                            };
+
+                            this.clearWatcher();
+                            vm.activeClickWatcherId = null;
+                        });
+                    }
+                });
+            }
         });
 
         // add listener to the execution button click event
         vm.$on('execute-button-clicked', async parametersWithRules => {
-            const model = this._model;
-
-            // run geoprocessing service with edited parameters
-            const pointEntryParam = parametersWithRules.find(param => param.type === "feature-record-set-layer");
-            if (pointEntryParam) {
-                const geometry = pointEntryParam.value.features[0].geometry;
-                if (vm.easting !== geometry?.x || vm.northing !== geometry?.y) {
-                    const index = parametersWithRules.findIndex(param => param.type === "feature-record-set-layer");
-                    parametersWithRules[index].value.features[0].geometry.x = vm.easting;
-                    parametersWithRules[index].value.features[0].geometry.y = vm.northing;
-                    if (model.clickedWkid){
-                        parametersWithRules[index].value.features[0].geometry.spatialReference.wkid = model.clickedWkid;
-                    }
-                }
-            }
-
-            if (this.mapClickWatcher) {
-                this.clearWatcher();
-            }
-
             await this.runGeoprocessingService(parametersWithRules, tool);
         });
 
@@ -491,13 +493,6 @@ export default class GeoprocessingController {
 
         const vm = new Vue(InputParameterEntryMask);
         vm.i18n = this._i18n.get().ui;
-
-        const pointEntryParam = parameters.find(param => param.type === "feature-record-set-layer");
-        if (pointEntryParam) {
-            const geometry = pointEntryParam.value.features[0].geometry;
-            vm.easting = geometry?.x;
-            vm.northing = geometry?.y;
-        }
 
         Binding.for(vm, this._model)
             .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results", "parameters")
@@ -571,13 +566,7 @@ export default class GeoprocessingController {
         return layer.findSublayerById(parseInt(sublayerId, 10));
     }
 
-      /**
-     * getView()
-     * Helper function used to ensure view can be accessed
-     *
-     * @private
-     */
-      private getView(): Promise<__esri.View> {
+    private getView(): Promise<__esri.View> {
         const mapWidgetModel = this._mapWidgetModel;
 
         return new Promise((resolve) => {
