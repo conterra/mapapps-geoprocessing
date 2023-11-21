@@ -30,7 +30,8 @@ module.exports = {
         parametersTab: "Parameter",
         parameters: {
             easting: "Rechtswert",
-            northing: "Hochwert"
+            northing: "Hochwert",
+            radius: "Radius"
         },
         resultsTab: "Ergebnisse",
         executeButtonLabel: "Ausführen",

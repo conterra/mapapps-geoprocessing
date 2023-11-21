@@ -29,7 +29,8 @@ module.exports = {
             parametersTab: "Parameters",
             parameters: {
                 easting: "Easting",
-                northing: "Northing"
+                northing: "Northing",
+                radius: "Radius"
             },
             resultsTab: "Results",
             executeButtonLabel: "Execute",
