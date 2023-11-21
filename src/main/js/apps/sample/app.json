@@ -198,6 +198,35 @@
                     ]
                 },
                 {
+                    "id": "gp_kreisdienst",
+                    "title": "Sample Kreisdienst",
+                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "title": "Kreismitte",
+                            "name": "GPFeatureRecordSetLayer",
+                            "type": "GPFeatureRecordSetLayer",
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "title": "Kreisradius",
+                            "name": "GPLinearUnit",
+                            "type": "GPLinearUnit",
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "title": "Freitext",
+                            "name": "GPString",
+                            "type": "GPString",
+                            "editable": true,
+                            "required": false
+                        }
+                    ]
+                },
+                {
                     "id": "gp_viewshed",
                     "title": "Berechnung einer Ansicht",
                     "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
@@ -206,7 +235,7 @@
                         {
                             "name": "Input_Observation_Point",
                             "title": "Beobachtungspunkt",
-                            "type": "feature-record-set-layer",
+                            "type": "GPFeatureRecordSetLayer",
                             "value": {
                                 "features": [
                                     {
@@ -253,7 +282,7 @@
                         {
                             "name": "Input_Observation_Point2",
                             "title": "Beobachtungspunkt2",
-                            "type": "feature-record-set-layer",
+                            "type": "GPFeatureRecordSetLayer",
                             "value": {
                                 "features": [
                                     {
