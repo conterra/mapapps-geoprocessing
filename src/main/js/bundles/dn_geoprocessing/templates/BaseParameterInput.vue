@@ -37,7 +37,7 @@
             color="primary"
         />
         <v-text-field
-            v-else-if="type === 'long' || type === 'double' || type === 'GPString'"
+            v-else-if="type === 'long' || type === 'double' || type === 'string'"
             v-model="localValue"
             :label="title"
             :rules="rules"

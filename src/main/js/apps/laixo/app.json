@@ -8,6 +8,8 @@
             "bundles"
         ],
         "allowedBundles": [
+            "agssearch",
+            "result-ui",
             "system",
             "console",
             "notifier",
@@ -27,16 +29,89 @@
             "search-ui",
             "locator-store",
             "toc",
-            "authentication",
+            "selection-resultcenter",
+            "selection-tools",
+            "selection-ui",
             "dn_geoprocessing"
         ]
     },
     "bundles": {
+        "agssearch": {
+            "AutoStoreRegistration": {
+                "componentEnabled": true
+            }
+        },
         "dn_geoprocessing": {
             "Config": {
                 "supportEmailAddress": "support@conterra.de"
             },
             "GeoprocessingTools": [
+                {
+                    "id": "gp_resultcenter_2",
+                    "title": "Geoprocessing Resultcenter 2",
+                    "tooltip": "Geoprocessing Resultcenter 2",
+                    "rules": {
+                        "datasourceIdInResultcenter": [
+                            "libraries"
+                        ],
+                        "minimumSelectedItemsInResultcenter": 1,
+                        "ruleSuccessProperty": "enabled"
+                    },
+                    "url": "https://dev.laixoversum.ch/dev1ags2/rest/services/invers_automations/gpBundleTester/GPServer/GP_Bundle_Tester",
+                    "parameters": [
+                        {
+                            "name": "APP_JSON_FIX_PARAMETER",
+                            "value": {
+                                "features": [
+                                    {
+                                        "geometry": {
+                                            "x": 0,
+                                            "y": 0
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "OBJECTIDS",
+                            "value": "{SELECTED_IDS}"
+                        }
+                    ],
+                    "toolRole": "resultcenter"
+                },
+                {
+                    "id": "gp_resultcenter_2_1",
+                    "title": "Geoprocessing Resultcenter 2_1",
+                    "tooltip": "Geoprocessing Resultcenter 2_1",
+                    "rules": {
+                        "datasourceIdInResultcenter": [
+                            "libraries"
+                        ],
+                        "minimumSelectedItemsInResultcenter": 1,
+                        "ruleSuccessProperty": "enabled"
+                    },
+                    "url": "https://dev.laixoversum.ch/dev1ags2/rest/services/invers_automations/gpBundleTester/GPServer/GP_Bundle_Tester",
+                    "parameters": [
+                        {
+                            "name": "APP_JSON_FIX_PARAMETER",
+                            "value": {
+                                "features": [
+                                    {
+                                        "geometry": {
+                                            "x": 0,
+                                            "y": 0
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "OBJECTIDS",
+                            "value": "{SELECTED_IDS}"
+                        }
+                    ],
+                    "toolRole": "resultcenter"
+                },
                 {
                     "id": "gp_printing",
                     "title": "Synchrones Drucken",
@@ -198,35 +273,6 @@
                     ]
                 },
                 {
-                    "id": "gp_kreisdienst",
-                    "title": "Sample Kreisdienst",
-                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
-                    "showWidget": true,
-                    "parameters": [
-                        {
-                            "title": "Kreismitte",
-                            "name": "GPFeatureRecordSetLayer",
-                            "type": "feature-record-set-layer",
-                            "editable": true,
-                            "required": true
-                        },
-                        {
-                            "title": "Kreisradius",
-                            "name": "GPLinearUnit",
-                            "type": "linear-unit",
-                            "editable": true,
-                            "required": true
-                        },
-                        {
-                            "title": "Freitext",
-                            "name": "GPString",
-                            "type": "string",
-                            "editable": true,
-                            "required": false
-                        }
-                    ]
-                },
-                {
                     "id": "gp_viewshed",
                     "title": "Berechnung einer Ansicht",
                     "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
@@ -235,53 +281,6 @@
                         {
                             "name": "Input_Observation_Point",
                             "title": "Beobachtungspunkt",
-                            "type": "feature-record-set-layer",
-                            "value": {
-                                "features": [
-                                    {
-                                        "aggregateGeometries": null,
-                                        "geometry": {
-                                            "spatialReference": {
-                                                "wkid": 4326
-                                            },
-                                            "x": 7.590545246530715,
-                                            "y": 46.124155905696604
-                                        },
-                                        "symbol": {
-                                            "type": "esriSMS",
-                                            "color": [
-                                                255,
-                                                0,
-                                                0,
-                                                255
-                                            ],
-                                            "angle": 0,
-                                            "xoffset": 0,
-                                            "yoffset": 0,
-                                            "size": 12,
-                                            "style": "esriSMSCircle",
-                                            "outline": {
-                                                "type": "esriSLS",
-                                                "color": [
-                                                    255,
-                                                    255,
-                                                    255,
-                                                    255
-                                                ],
-                                                "width": 2,
-                                                "style": "esriSLSSolid"
-                                            }
-                                        },
-                                        "attributes": {},
-                                        "popupTemplate": null
-                                    }
-                                ]
-                            },
-                            "required": true
-                        },
-                        {
-                            "name": "Input_Observation_Point2",
-                            "title": "Beobachtungspunkt2",
                             "type": "feature-record-set-layer",
                             "value": {
                                 "features": [
@@ -496,7 +495,7 @@
                         "title": "Straßenkarte (grau)",
                         "thumbnailUrl": "resource('${app}:/images/streets.png')",
                         "selected": true,
-                        "basemap": "gray-vector"
+                        "basemap": "gray"
                     },
                     {
                         "id": "esri_hybrid",
@@ -575,7 +574,8 @@
                             "zoomOutTool",
                             "compassTool",
                             "restoreInitialViewTool",
-                            "viewmodeSwitcherTool"
+                            "viewmodeSwitcherTool",
+                            "selection-ui-tool"
                         ],
                         "registerWidget": {
                             "widgetRole": "mapview_tools"

@@ -50,8 +50,8 @@
                                 v-for="(param) in parametersWithRules"
                                 :key="param.id"
                             >
-                                <div v-if="param.type === 'GPFeatureRecordSetLayer'">
-                                    <feature-record-set
+                                <div v-if="param.type === 'feature-record-set-layer'">
+                                    <feature-record-set-layer
                                         :id="param.id"
                                         v-model="param.value"
                                         :title="param.title"
@@ -64,7 +64,7 @@
                                         @getLocationButtonClicked="handleLocationButtonClick"
                                     />
                                 </div>
-                                <div v-else-if="param.type === 'GPLinearUnit'">
+                                <div v-else-if="param.type === 'linear-unit'">
                                     <linear-unit
                                         :id="param.id"
                                         v-model="param.value"
@@ -198,15 +198,15 @@
 </template>
 
 <script>
-    import ParameterInput from "./templates/ParameterInput.vue";
+    import BaseParameterInput from "./templates/BaseParameterInput.vue";
     import GPFeatureRecordSetLayerInput from "./templates/GPFeatureRecordSetLayerInput.vue";
     import GPLinearUnit from "./templates/GPLinearUnit.vue";
 
 
     export default {
         components: {
-            "base-parameter-input": ParameterInput,
-            "feature-record-set": GPFeatureRecordSetLayerInput,
+            "base-parameter-input": BaseParameterInput,
+            "feature-record-set-layer": GPFeatureRecordSetLayerInput,
             "linear-unit": GPLinearUnit
         },
         props: {
