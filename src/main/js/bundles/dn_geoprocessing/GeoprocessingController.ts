@@ -429,7 +429,7 @@ export default class GeoprocessingController {
                     if (this.mapClickWatcher) {
                         this.clearWatcher();
                     } else {
-                        view.surface.style.cursor = "crosshair";
+                        view.cursor = "crosshair";
                         this.mapClickWatcher = view.on("click", evt => {
                             const clickLocation = evt.mapPoint;
                             const targetParam  = model.parameters.find(param => param.id === id);
@@ -584,6 +584,6 @@ export default class GeoprocessingController {
     private clearWatcher(): void {
         this.mapClickWatcher.remove();
         this.mapClickWatcher = undefined;
-        this.view.surface.style.cursor = "default";
+        this.view.cursor = "default";
     }
 }
