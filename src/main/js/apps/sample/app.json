@@ -42,11 +42,11 @@
                     "title": "Synchrones Drucken",
                     "tooltip": "Synchrones Drucken",
                     "rules": {
-                        // "roles": [
-                        //     "maAdmin",
-                        //     "maEditor"
-                        // ],
-                        // "ruleSuccessProperty": "enabled"
+                        "roles": [
+                            "maAdmin",
+                            "maEditor"
+                        ],
+                        "ruleSuccessProperty": "enabled"
                     },
                     "url": "https://services.conterra.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
                     "showWidget": true,
@@ -284,12 +284,19 @@
                                     }
                                 ]
                             },
-                            "required": true
+                            "required": true,
+                            "editable": true
                         },
                         {
                             "name": "Input_Observation_Point2",
                             "title": "Beobachtungspunkt2",
                             "type": "feature-record-set-layer",
+                            "filter": {
+                                "type": "featureClass",
+                                "list": [
+                                    "esriGeometryPoint"
+                                ]
+                            },
                             "value": {
                                 "features": [
                                     {
@@ -331,7 +338,8 @@
                                     }
                                 ]
                             },
-                            "required": true
+                            "required": true,
+                            "editable": true
                         },
                         {
                             "name": "Viewshed_Distance",
@@ -340,7 +348,8 @@
                                 "distance": 5000,
                                 "units": "esriMeters"
                             },
-                            "required": true
+                            "required": true,
+                            "editable": true
                         }
                     ]
                 },

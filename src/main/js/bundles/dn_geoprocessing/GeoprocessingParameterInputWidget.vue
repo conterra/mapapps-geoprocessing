@@ -78,7 +78,7 @@
                                             :i18n="i18n"
                                         />
                                     </div>
-                                    <div v-else>
+                                    <div v-else-if="param.value">
                                         <base-parameter-input
                                             :id="param.id"
                                             v-model="param.value"

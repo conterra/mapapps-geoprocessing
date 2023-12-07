@@ -21,6 +21,7 @@
         :disabled="!editable"
         :readonly="!editable"
     >
+        <p class="mb-0">{{ title }}</p>
         <v-layout
             v-if="filter.list.includes('esriGeometryPoint')"
             row
@@ -29,18 +30,25 @@
             <v-text-field
                 v-model="easting"
                 :label="i18n.parameters.easting"
+                :rules="rules"
+                :disabled="!editable"
+                :readonly="!editable"
                 type="number"
                 class="parameterInput__coordinate-entry-text-field"
             />
             <v-text-field
                 v-model="northing"
                 :label="i18n.parameters.northing"
+                :rules="rules"
+                :disabled="!editable"
+                :readonly="!editable"
                 type="number"
                 class="parameterInput__coordinate-entry-text-field"
             />
             <v-btn
                 icon
                 color="primary"
+                :disabled="!editable"
                 :class="clickWatcherActive ? 'parameterInput__coordinate-entry-button--active' : ''"
                 @click="handleLocationButtonClick"
             >
