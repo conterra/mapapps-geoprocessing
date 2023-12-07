@@ -28,9 +28,8 @@ module.exports = {
             error: "Geoprocessing failed. Please contact the support at",
             parametersTab: "Parameters",
             parameters: {
-                easting: "Easting",
-                northing: "Northing",
-                radius: "Radius"
+                x: "Easting",
+                y: "Northing"
             },
             resultsTab: "Results",
             executeButtonLabel: "Execute",

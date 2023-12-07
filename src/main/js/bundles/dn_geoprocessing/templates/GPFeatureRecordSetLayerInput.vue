@@ -21,15 +21,17 @@
         :disabled="!editable"
         :readonly="!editable"
     >
-        <p class="mb-0">{{ title }}</p>
+        <p class="mb-0">
+            {{ title }}
+        </p>
         <v-layout
             v-if="filter.list.includes('esriGeometryPoint')"
             row
             class="parameterInput__coordinate-entry-layout"
         >
             <v-text-field
-                v-model="easting"
-                :label="i18n.parameters.easting"
+                v-model="x"
+                :label="i18n.parameters.x"
                 :rules="rules"
                 :disabled="!editable"
                 :readonly="!editable"
@@ -37,8 +39,8 @@
                 class="parameterInput__coordinate-entry-text-field"
             />
             <v-text-field
-                v-model="northing"
-                :label="i18n.parameters.northing"
+                v-model="y"
+                :label="i18n.parameters.y"
                 :rules="rules"
                 :disabled="!editable"
                 :readonly="!editable"
@@ -92,10 +94,6 @@
                 type: Array,
                 default: () => []
             },
-            choiceList: {
-                type: Array,
-                default: () => undefined
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -105,91 +103,33 @@
                 default: false
             }
         },
-        data: function() {
-            return {
-                easting: undefined,
-                northing: undefined
-            };
-        },
         computed: {
-            localValue: {
+            x: {
                 get() {
-                    if (this.easting && this.northing) {
-                        return {
-                            "spatialReference" : {"wkid" : 4326},
-                            "features" : [
-                                {
-                                    "geometry" : {
-                                        "x" : this.easting,
-                                        "y" : this.northing,
-                                        "spatialReference" : {
-                                            "wkid" : 4326
-                                        }
-                                    }
-                                }
-                            ]
-                        };
+                    if(this.value && this.value.features.length) {
+                        return this.value.features[0].geometry.x;
                     } else {
-                        return {};
+                        return 0;
                     }
                 },
-                set() {
-                    this.$emit("input", this.localValue);
+                set(x) {
+                    this.value.features[0].geometry.x = Number(x);
                 }
-            }
-        },
-        watch: {
-            easting: function(value) {
-                this.localValue = {
-                    "spatialReference" : {"wkid" : 4326},
-                    "features" : [
-                        {
-                            "geometry" : {
-                                "x" : value,
-                                "y" : this.northing,
-                                "spatialReference" : {
-                                    "wkid" : 4326
-                                }
-                            }
-                        }
-                    ]
-                };
             },
-            northing: function(value) {
-                this.localValue = {
-                    "spatialReference" : {"wkid" : 4326},
-                    "features" : [
-                        {
-                            "geometry" : {
-                                "x" : this.easting,
-                                "y" : value,
-                                "spatialReference" : {
-                                    "wkid" : 4326
-                                }
-                            }
-                        }
-                    ]
-                };
-            },
-            value: function(value) {
-                const geometry = value.features[0].geometry;
-                this.easting = geometry.x;
-                this.northing = geometry.y;
+            y: {
+                get() {
+                    if(this.value && this.value.features.length) {
+                        return this.value.features[0].geometry.y;
+                    } else {
+                        return 0;
+                    }
+                },
+                set(y) {
+                    this.value.features[0].geometry.y = Number(y);
+                }
             }
         },
         methods: {
-            isObject: function (value) {
-                return typeof value === 'object';
-            },
-            isJsonString(string) {
-                try {
-                    JSON.parse(string);
-                } catch (e) {
-                    return false;
-                }
-                const regex = new RegExp('\\{.*:\\{.*:.*}}', 'g');
-                return regex.test(string);
-            },
             handleLocationButtonClick: function() {
                 this.$emit('getLocationButtonClicked', this.id, this.clickWatcherActive);
             }

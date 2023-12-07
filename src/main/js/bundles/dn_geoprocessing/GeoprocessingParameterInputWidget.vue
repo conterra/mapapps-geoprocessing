@@ -59,7 +59,6 @@
                                             :type="param.type"
                                             :filter="param.filter"
                                             :rules="param.rules"
-                                            :choice-list="param.choiceList"
                                             :editable="param.editable"
                                             :click-watcher-active="param.id === activeClickWatcherId"
                                             :i18n="i18n"
@@ -73,12 +72,11 @@
                                             :title="param.title"
                                             :type="param.type"
                                             :rules="param.rules"
-                                            :choice-list="param.choiceList"
                                             :editable="param.editable"
                                             :i18n="i18n"
                                         />
                                     </div>
-                                    <div v-else-if="param.value">
+                                    <div v-else>
                                         <base-parameter-input
                                             :id="param.id"
                                             v-model="param.value"

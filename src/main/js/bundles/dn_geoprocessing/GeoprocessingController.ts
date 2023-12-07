@@ -14,7 +14,7 @@
 /// limitations under the License.
 ///
 
-import type {InjectedReference} from "apprt-core/InjectedReference";
+import type { InjectedReference } from "apprt-core/InjectedReference";
 import * as geoprocessor from "esri/rest/geoprocessor";
 import apprt_request from "apprt-request";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
@@ -23,7 +23,7 @@ import apprt_when from "apprt-core/when";
 import ct_util from "ct/ui/desktop/util";
 import ServiceRegistration from "apprt/ServiceRegistration";
 import BundleContext from "apprt/BundleContext";
-import {LogService} from "system/module";
+import { LogService } from "system/module";
 import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
@@ -406,9 +406,29 @@ export default class GeoprocessingController {
      *
      * @private
      */
-    private showParametersWidget(parameters: object, tool: any): void {
+    private async showParametersWidget(parameters: any[], tool: any): Promise<void> {
         // if widget is already opened, close it
         this.hideWidget();
+        const view = await this.getView();
+
+        // add missing point values
+        parameters.forEach((param) => {
+            if (param.type === "feature-record-set-layer" && param.filter && !param.value) {
+                if (param.filter.type === "featureClass" && param.filter.list.includes("esriGeometryPoint")) {
+                    param.value = {
+                        features: [
+                            {
+                                geometry: {
+                                    x: 0,
+                                    y: 0,
+                                    spatialReference: view.spatialReference.toJSON()
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        });
 
         // start widget creation
         const widget = this.getInputParameterWidget(parameters);
@@ -430,19 +450,17 @@ export default class GeoprocessingController {
                         this.clearWatcher();
                     } else {
                         view.cursor = "crosshair";
+                        view.popup.autoOpenEnabled = false;
                         this.mapClickWatcher = view.on("click", evt => {
                             const clickLocation = evt.mapPoint;
-                            const targetParam  = model.parameters.find(param => param.id === id);
+                            const targetParam = model.parameters.find(param => param.id === id);
                             targetParam.value = {
-                                "spatialReference" : clickLocation.spatialReference,
-                                "features" : [
+                                features: [
                                     {
-                                        "geometry" : {
-                                            "x" : clickLocation.x,
-                                            "y" : clickLocation.y,
-                                            "spatialReference" : {
-                                                "wkid" : clickLocation.spatialReference.wkid
-                                            }
+                                        geometry: {
+                                            x: clickLocation.x,
+                                            y: clickLocation.y,
+                                            spatialReference: clickLocation.spatialReference.toJSON()
                                         }
                                     }
                                 ]
@@ -573,7 +591,7 @@ export default class GeoprocessingController {
             if (mapWidgetModel.view) {
                 resolve(mapWidgetModel.view);
             } else {
-                const watcher = mapWidgetModel.watch("view", ({value: view}) => {
+                const watcher = mapWidgetModel.watch("view", ({ value: view }) => {
                     watcher.remove();
                     resolve(view);
                 });
@@ -585,5 +603,6 @@ export default class GeoprocessingController {
         this.mapClickWatcher.remove();
         this.mapClickWatcher = undefined;
         this.view.cursor = "default";
+        this.view.popup.autoOpenEnabled = true;
     }
 }

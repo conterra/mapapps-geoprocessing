@@ -208,6 +208,12 @@
                             "title": "Kreismitte",
                             "name": "GPFeatureRecordSetLayer",
                             "type": "feature-record-set-layer",
+                            "filter": {
+                                "type": "featureClass",
+                                "list": [
+                                    "esriGeometryPoint"
+                                ]
+                            },
                             "editable": true,
                             "required": true
                         },
@@ -251,8 +257,8 @@
                                             "spatialReference": {
                                                 "wkid": 4326
                                             },
-                                            "x": 7.590545246530715,
-                                            "y": 46.124155905696604
+                                            "x": 7.5867,
+                                            "y": 46.8361
                                         },
                                         "symbol": {
                                             "type": "esriSMS",

@@ -29,9 +29,8 @@ module.exports = {
         error: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an",
         parametersTab: "Parameter",
         parameters: {
-            easting: "Rechtswert",
-            northing: "Hochwert",
-            radius: "Radius"
+            x: "Rechtswert",
+            y: "Hochwert"
         },
         resultsTab: "Ergebnisse",
         executeButtonLabel: "Ausführen",

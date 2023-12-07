@@ -19,7 +19,10 @@
     <div>
         <v-text-field
             v-model="localValue"
-            :label="i18n.parameters.radius"
+            :label="title"
+            :rules="rules"
+            :disabled="!editable"
+            :readonly="!editable"
             type="number"
             class="parameterInput__coordinate-entry-text-field"
         />
@@ -50,10 +53,6 @@
             rules: {
                 type: Array,
                 default: () => []
-            },
-            choiceList: {
-                type: Array,
-                default: () => undefined
             },
             editable: {
                 type: Boolean,

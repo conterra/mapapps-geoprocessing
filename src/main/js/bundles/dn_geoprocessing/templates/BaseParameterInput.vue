@@ -37,7 +37,7 @@
             color="primary"
         />
         <v-textarea
-            v-else-if="localValue.length>10 && type === 'string'"
+            v-else-if="localValue && localValue.length>10 && type === 'string'"
             v-model="localValue"
             :label="title"
             :rules="rules"
