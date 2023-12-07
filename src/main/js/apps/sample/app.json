@@ -42,11 +42,11 @@
                     "title": "Synchrones Drucken",
                     "tooltip": "Synchrones Drucken",
                     "rules": {
-                        "roles": [
-                            "maAdmin",
-                            "maEditor"
-                        ],
-                        "ruleSuccessProperty": "enabled"
+                        // "roles": [
+                        //     "maAdmin",
+                        //     "maEditor"
+                        // ],
+                        // "ruleSuccessProperty": "enabled"
                     },
                     "url": "https://services.conterra.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
                     "showWidget": true,
@@ -154,7 +154,8 @@
                                 }
                             },
                             "editable": true,
-                            "required": true
+                            "required": true,
+                            "visible": false
                         },
                         {
                             "name": "Format",

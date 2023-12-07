@@ -49,6 +49,7 @@
                             <div
                                 v-for="(param) in parametersWithRules"
                                 :key="param.id"
+                                v-if="shouldBeVisible(param)"
                             >
                                 <div v-if="param.type === 'feature-record-set-layer'">
                                     <feature-record-set-layer
@@ -297,6 +298,13 @@
                     this.activeClickWatcherId = id;
                 }
 
+            },
+            shouldBeVisible: function (param) {
+                if(param.visible === undefined) {
+                    return true;
+                } else {
+                    return param.visible;
+                }
             }
         }
     };

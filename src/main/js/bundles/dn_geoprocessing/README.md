@@ -119,7 +119,8 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
                 "title": "Nicht editierbar",
                 "type": "double",
                 "value": 5,
-                "editable": false
+                "editable": false,
+                "visible": false
             }
         ]
     }
