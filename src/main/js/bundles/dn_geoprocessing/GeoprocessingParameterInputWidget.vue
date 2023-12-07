@@ -49,45 +49,47 @@
                             <div
                                 v-for="(param) in parametersWithRules"
                                 :key="param.id"
-                                v-if="shouldBeVisible(param)"
                             >
-                                <div v-if="param.type === 'feature-record-set-layer'">
-                                    <feature-record-set-layer
-                                        :id="param.id"
-                                        v-model="param.value"
-                                        :title="param.title"
-                                        :type="param.type"
-                                        :rules="param.rules"
-                                        :choice-list="param.choiceList"
-                                        :editable="param.editable"
-                                        :click-watcher-active="param.id === activeClickWatcherId"
-                                        :i18n="i18n"
-                                        @getLocationButtonClicked="handleLocationButtonClick"
-                                    />
-                                </div>
-                                <div v-else-if="param.type === 'linear-unit'">
-                                    <linear-unit
-                                        :id="param.id"
-                                        v-model="param.value"
-                                        :title="param.title"
-                                        :type="param.type"
-                                        :rules="param.rules"
-                                        :choice-list="param.choiceList"
-                                        :editable="param.editable"
-                                        :i18n="i18n"
-                                    />
-                                </div>
-                                <div v-else>
-                                    <base-parameter-input
-                                        :id="param.id"
-                                        v-model="param.value"
-                                        :title="param.title"
-                                        :type="param.type"
-                                        :rules="param.rules"
-                                        :choice-list="param.choiceList"
-                                        :editable="param.editable"
-                                        :i18n="i18n"
-                                    />
+                                <div v-if="shouldBeVisible(param)">
+                                    <div v-if="param.type === 'feature-record-set-layer' && param.filter && param.filter.type === 'featureClass'">
+                                        <feature-record-set-layer
+                                            :id="param.id"
+                                            v-model="param.value"
+                                            :title="param.title"
+                                            :type="param.type"
+                                            :filter="param.filter"
+                                            :rules="param.rules"
+                                            :choice-list="param.choiceList"
+                                            :editable="param.editable"
+                                            :click-watcher-active="param.id === activeClickWatcherId"
+                                            :i18n="i18n"
+                                            @getLocationButtonClicked="handleLocationButtonClick"
+                                        />
+                                    </div>
+                                    <div v-else-if="param.type === 'linear-unit'">
+                                        <linear-unit
+                                            :id="param.id"
+                                            v-model="param.value"
+                                            :title="param.title"
+                                            :type="param.type"
+                                            :rules="param.rules"
+                                            :choice-list="param.choiceList"
+                                            :editable="param.editable"
+                                            :i18n="i18n"
+                                        />
+                                    </div>
+                                    <div v-else>
+                                        <base-parameter-input
+                                            :id="param.id"
+                                            v-model="param.value"
+                                            :title="param.title"
+                                            :type="param.type"
+                                            :rules="param.rules"
+                                            :choice-list="param.choiceList"
+                                            :editable="param.editable"
+                                            :i18n="i18n"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </v-form>

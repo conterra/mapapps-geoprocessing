@@ -237,6 +237,12 @@
                             "name": "Input_Observation_Point",
                             "title": "Beobachtungspunkt",
                             "type": "feature-record-set-layer",
+                            "filter": {
+                                "type": "featureClass",
+                                "list": [
+                                    "esriGeometryPoint"
+                                ]
+                            },
                             "value": {
                                 "features": [
                                     {

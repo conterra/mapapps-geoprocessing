@@ -22,6 +22,7 @@
         :readonly="!editable"
     >
         <v-layout
+            v-if="filter.list.includes('esriGeometryPoint')"
             row
             class="parameterInput__coordinate-entry-layout"
         >
@@ -63,7 +64,10 @@
                 type: String,
                 default: undefined
             },
-            value: undefined,
+            value: {
+                type: Object,
+                default: undefined
+            },
             title: {
                 type: String,
                 default: ""
@@ -71,6 +75,10 @@
             type: {
                 type: String,
                 default: ""
+            },
+            filter: {
+                type: Object,
+                default: undefined
             },
             rules: {
                 type: Array,

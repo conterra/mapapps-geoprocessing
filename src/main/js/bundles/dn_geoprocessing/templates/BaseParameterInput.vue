@@ -18,7 +18,7 @@
 <template>
     <div>
         <v-select
-            v-if="choiceList"
+            v-if="choiceList && type === 'string'"
             v-model="localValue"
             :label="title"
             :rules="rules"
@@ -36,6 +36,14 @@
             hide-details
             color="primary"
         />
+        <v-textarea
+            v-else-if="localValue.length>10 && type === 'string'"
+            v-model="localValue"
+            :label="title"
+            :rules="rules"
+            :disabled="!editable"
+            :readonly="!editable"
+        />
         <v-text-field
             v-else-if="type === 'long' || type === 'double' || type === 'string'"
             v-model="localValue"
@@ -44,16 +52,8 @@
             :disabled="!editable"
             :readonly="!editable"
         />
-        <v-textarea
-            v-else-if="localValue.length>10"
-            v-model="localValue"
-            :label="title"
-            :rules="rules"
-            :disabled="!editable"
-            :readonly="!editable"
-        />
         <v-text-field
-            v-else
+            v-else-if="type === 'string'"
             v-model="localValue"
             :label="title"
             :rules="rules"
