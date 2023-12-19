@@ -52,15 +52,6 @@
             :disabled="!editable"
             :readonly="!editable"
         />
-        <v-text-field
-            v-else-if="type === 'string'"
-            v-model="localValue"
-            :label="title"
-            :rules="rules"
-            :disabled="!editable"
-            :readonly="!editable"
-            clearable
-        />
     </div>
 </template>
 
