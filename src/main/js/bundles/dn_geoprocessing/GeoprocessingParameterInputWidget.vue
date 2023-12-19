@@ -99,7 +99,7 @@
                             block
                             @click="execute"
                         >
-                            {{ i18n.executeButtonLabel }}
+                            {{ computedButtonLabel }}
                         </v-btn>
                     </div>
                 </v-stepper-content>
@@ -249,7 +249,8 @@
         data: function() {
             return {
                 valid: false,
-                activeClickWatcherId: null
+                activeClickWatcherId: null,
+                executeButtonText: null
             };
         },
         computed: {
@@ -281,6 +282,13 @@
                     param.id = `GEOPROCESS_PARAM_${index}`;
                     return param;
                 });
+            },
+            computedButtonLabel: function() {
+                let text = this.i18n.executeButtonLabel;
+                if (this.executeButtonText){
+                    text = this.executeButtonText;
+                }
+                return text;
             }
         },
         methods: {

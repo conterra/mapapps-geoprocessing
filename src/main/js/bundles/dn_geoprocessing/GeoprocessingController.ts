@@ -425,7 +425,7 @@ export default class GeoprocessingController {
                                 }
                             }
                         ]
-                    }
+                    };
                 }
             }
         });
@@ -433,6 +433,10 @@ export default class GeoprocessingController {
         // start widget creation
         const widget = this.getInputParameterWidget(parameters);
         const vm = widget.getVM();
+
+        if (tool.executeButtonText) {
+            vm.executeButtonText = tool.executeButtonText;
+        }
 
         // add listener to the locate button event
         vm.$on('getLocationButtonClicked', (id: string, activate: boolean) => {
