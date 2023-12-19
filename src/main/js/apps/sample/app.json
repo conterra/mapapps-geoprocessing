@@ -201,12 +201,13 @@
                 {
                     "id": "gp_kreisdienst",
                     "title": "Sample Kreisdienst",
-                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
+                    "url": "https://dev0402w.conterra.de/server/rest/services/LRA_Starnberg/CircleCreation/GPServer/Cirlce%20Creation",
                     "showWidget": true,
+                    "executeButtonText": "Kreisfl\u00e4che erstellen",
                     "parameters": [
                         {
-                            "title": "Kreismitte",
-                            "name": "GPFeatureRecordSetLayer",
+                            "title": "Center",
+                            "name": "center",
                             "type": "feature-record-set-layer",
                             "filter": {
                                 "type": "featureClass",
@@ -218,15 +219,22 @@
                             "required": true
                         },
                         {
-                            "title": "Kreisradius",
-                            "name": "GPLinearUnit",
-                            "type": "linear-unit",
+                            "title": "Radius",
+                            "name": "radius",
+                            "type": "double",
                             "editable": true,
                             "required": true
                         },
                         {
-                            "title": "Freitext",
-                            "name": "GPString",
+                            "title": "Text",
+                            "name": "text",
+                            "type": "string",
+                            "editable": true,
+                            "required": false
+                        },
+                        {
+                            "title": "Text_field",
+                            "name": "text_field",
                             "type": "string",
                             "editable": true,
                             "required": false
