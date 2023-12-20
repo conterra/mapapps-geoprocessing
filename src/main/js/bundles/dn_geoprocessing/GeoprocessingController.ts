@@ -28,7 +28,7 @@ import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
-import Layer from "esri/layers/Layer";
+import { ActionService } from "map-actions/api";
 
 interface Tool {
     id: string,
@@ -42,6 +42,7 @@ interface Tool {
 
 export default class GeoprocessingController {
 
+    private _actionService: InjectedReference<ActionService>;
     private _dataModel!: InjectedReference<any>;
     private _model!: InjectedReference<typeof GeoprocessingModel>;
     private _i18n!: InjectedReference<any>;
@@ -309,6 +310,7 @@ export default class GeoprocessingController {
      */
     private handleResults(results: any, tool: Tool): void {
         const model = this._model;
+        const actionService = this._actionService;
         if (results.length) {
             results.forEach((result: any) => {
                 switch (result.dataType) {
@@ -322,7 +324,18 @@ export default class GeoprocessingController {
                             const targetLayerIdParam = outputParams.find(param => "addToFeatureLayerId" in param);
                             const targetLayerUrlParam = outputParams.find(param => "addToFeatureLayerUrl" in param);
                             if (targetLayerIdParam || targetLayerUrlParam) {
-                                this.applyFeaturesToService(result, outputParams);
+                                const targetParam = targetLayerIdParam ? targetLayerIdParam : targetLayerUrlParam;
+
+                                if (targetParam.actions){
+                                    const actionConfig = targetParam.actionsConfig || {};
+                                    const mergedConfig = {...actionConfig, ...{
+                                        "items": result.value.features,
+                                        "addToFeatureLayerId": targetParam?.addToFeatureLayerId,
+                                        "addToFeatureLayerUrl": targetParam?.addToFeatureLayerUrl
+                                    }};
+
+                                    actionService.trigger(targetParam.actions, mergedConfig);
+                                }
                             }
                         }
 
@@ -332,38 +345,6 @@ export default class GeoprocessingController {
                         break;
                     case "raster-data-layer":
                         break;
-                }
-            });
-        }
-    }
-
-    private applyFeaturesToService(result: any, outputParams: Array<object>): void {
-        const targetLayerIdParam = outputParams.find(param => "addToFeatureLayerId" in param);
-        const targetLayerUrlParam = outputParams.find(param => "addToFeatureLayerUrl" in param);
-        const resultFeatures = result.value.features;
-
-        if (targetLayerIdParam) {
-            const targetLayerId = targetLayerIdParam.addToFeatureLayerId;
-            const layer = this.getLayerById(targetLayerId);
-            if (layer && layer.type === "feature") {
-                const edits = {
-                    addFeatures: resultFeatures
-                };
-                layer.applyEdits(edits);
-            }
-        }
-        else if (targetLayerUrlParam) {
-            const targetLayerUrl = targetLayerUrlParam.addToFeatureLayerUrl;
-            Layer.fromArcGISServerUrl(targetLayerUrl).then(layer => {
-                if (layer && layer.type === "feature") {
-                    const edits = {
-                        addFeatures: resultFeatures
-                    };
-                    layer.applyEdits(edits);
-
-                    this.getView().then(view => {
-                        view.map.add(layer);
-                    });
                 }
             });
         }
@@ -654,24 +635,5 @@ export default class GeoprocessingController {
         this.mapClickWatcher = undefined;
         this.view.cursor = "default";
         this.view.popup.autoOpenEnabled = true;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
-    private getLayerById(layerIdPath: string): __esri.Layer | __esri.Sublayer {
-        if (typeof layerIdPath !== "string") {
-            return undefined;
-        }
-
-        const mapWidgetModel = this._mapWidgetModel;
-
-        const parts = layerIdPath.split("/");
-        const layerId = parts[0];
-        const sublayerId = parts[1];
-
-        const layer = mapWidgetModel?.map?.findLayerById(layerId);
-        if (!sublayerId) {
-            return layer;
-        }
-        return layer.findSublayerById(parseInt(sublayerId, 10));
     }
 }
