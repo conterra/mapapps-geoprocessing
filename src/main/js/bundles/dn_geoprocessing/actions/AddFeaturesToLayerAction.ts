@@ -34,7 +34,7 @@ interface AddFeaturesToLayerActionOptions extends ActionOptions {
  * Action for adding gp service result features to a layer using id or url.
  */
 export class AddFeaturesToLayerAction implements Action {
-    readonly id = "addfeaturestolayer";
+    readonly id = "geoprocessing-addfeaturestolayer";
 
     private _mapWidgetModel: InjectedReference<MapWidgetModel>;
 
