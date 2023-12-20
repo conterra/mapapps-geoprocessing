@@ -246,10 +246,10 @@
                             "type": "feature-record-set-layer",
                             "actions": ["geoprocessing-addfeaturestolayer", "zoomto"],
                             "actionsConfig": {
-                                "zoomto-scale": 1000
-                            },
-                            "addToFeatureLayerId": "fieldnotes",
-                            "addToFeatureLayerUrl": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
+                                "zoomto-scale": 1000,
+                                "addto-featurelayer-id": "fieldnotes",
+                                "addto-featurelayer-url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
+                            }
                         }
                     ]
                 },

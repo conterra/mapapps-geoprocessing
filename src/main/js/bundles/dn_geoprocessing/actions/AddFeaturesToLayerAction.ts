@@ -25,8 +25,8 @@ import Layer from "esri/layers/Layer";
 
 interface AddFeaturesToLayerActionOptions extends ActionOptions {
     readonly "items": readonly ActionItem[];
-    readonly "addToFeatureLayerId"?: string;
-    readonly "addToFeatureLayerUrl"?: string;
+    readonly "addto-featurelayer-id"?: string;
+    readonly "addto-featurelayer-url"?: string;
 }
 
 /**
@@ -46,15 +46,21 @@ export class AddFeaturesToLayerAction implements Action {
                     "Cannot execute AddFeaturesToLayerAction since no trigger options with 'items' property have been specified."
             );
         }
+        if (!options["addto-featurelayer-id"] && !options["addto-featurelayer-url"]) {
+            throw new Error(
+                "AddFeaturesToLayerAction.trigger: " +
+                    "Cannot execute AddFeaturesToLayerAction since neither id nor url property have been specified."
+            );
+        }
 
         if (!options.items.length) {
             return;
         }
 
-        if(options.addToFeatureLayerId) {
-            this.applyFeaturesToServiceWithId(options.items, options.addToFeatureLayerId);
-        } else if (options.addToFeatureLayerUrl) {
-            this.applyFeaturesToServiceWithUrl(options.items, options.addToFeatureLayerUrl);
+        if (options["addto-featurelayer-id"]) {
+            this.applyFeaturesToServiceWithId(options.items, options["addto-featurelayer-id"]);
+        } else if (options["addto-featurelayer-url"]) {
+            this.applyFeaturesToServiceWithUrl(options.items, options["addto-featurelayer-url"]);
         }
     }
 

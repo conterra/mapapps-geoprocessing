@@ -324,11 +324,7 @@ export default class GeoprocessingController {
                             const targetParam = outputParams.find(param => "actions" in param);
                             if (targetParam){
                                 const actionConfig = targetParam.actionsConfig || {};
-                                const mergedConfig = {...actionConfig, ...{
-                                    "items": result.value.features,
-                                    "addToFeatureLayerId": targetParam?.addToFeatureLayerId,
-                                    "addToFeatureLayerUrl": targetParam?.addToFeatureLayerUrl
-                                }};
+                                const mergedConfig = {...actionConfig, ...{"items": result.value.features}};
 
                                 actionService.trigger(targetParam.actions, mergedConfig);
                             }
