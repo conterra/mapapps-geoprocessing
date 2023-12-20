@@ -17,12 +17,11 @@
 /*
  * Copyright (C) con terra GmbH
  */
-import { CancelablePromise } from "apprt-core/CancelablePromise";
+import { InjectedReference } from "@conterra/ct-mapapps-typings/apprt-core/InjectedReference";
 import type { MapWidgetModel } from "map-widget/api";
-import { createViewReadyWatcher, ViewReadyWatcher } from "map-widget/ViewReadyWatcher";
+
 import { Action, ActionItem, ActionOptions } from "map-actions/api";
 import Layer from "esri/layers/Layer";
-import { InjectedReference } from "@conterra/ct-mapapps-typings/apprt-core/InjectedReference";
 
 interface AddFeaturesToLayerActionOptions extends ActionOptions {
     readonly "items": readonly ActionItem[];
@@ -38,23 +37,8 @@ export class AddFeaturesToLayerAction implements Action {
 
     private _mapWidgetModel: InjectedReference<MapWidgetModel>;
 
-    #viewWatcher: ViewReadyWatcher | undefined;
-    #pending: CancelablePromise<void> | undefined;
-
-    set mapWidgetModel(model: MapWidgetModel | undefined) {
-        this.#pending?.cancel();
-        this.#pending = undefined;
-        this.#viewWatcher?.destroy();
-        this.#viewWatcher = model ? createViewReadyWatcher(model) : undefined;
-    }
-
-    /**
-     * Sets the view to the geometry of the first item in the options' `items` property.
-     */
     async trigger(options?: AddFeaturesToLayerActionOptions): Promise<void> {
-        this.#viewWatcher?.clear();
-        this.#pending?.cancel();
-        this.#pending = undefined;
+
 
         if (!options || !options.items) {
             throw new Error(
@@ -72,53 +56,6 @@ export class AddFeaturesToLayerAction implements Action {
         } else if (options.addToFeatureLayerUrl) {
             this.applyFeaturesToServiceWithUrl(options.items, options.addToFeatureLayerUrl);
         }
-
-        // const geometries = options.items.map((item) => findGeometry(item)).filter((geom) => !!geom) as Geometry[];
-        // if (!geometries || !geometries.length) {
-        //     throw new Error("ZoomToAction.trigger: Unable to zoom to items since no geometries were found.");
-        // }
-
-        // let zoomScale = options["zoomto-scale"] || 0;
-        // let zoomGeometry: Geometry;
-        // if (geometries.length > 1) {
-        //     const calculatedExtent = calcExtent(geometries);
-        //     if (!calculatedExtent) {
-        //         throw new Error("ZoomToAction.trigger: Unable to zoom to items since no geometries were found.");
-        //     }
-        //     zoomGeometry = calculatedExtent;
-        // } else {
-        //     // zoom to a single/first geometry
-        //     zoomGeometry = geometries[0]!;
-        //     if (zoomGeometry.type === "point") {
-        //         zoomScale = options["zoomto-point-scale"] || zoomScale;
-        //     }
-        // }
-
-        // const extentExpansionFactor = options["zoomto-extent-expansion-factor"] || 1;
-        // if (zoomGeometry.extent && extentExpansionFactor !== 1) {
-        //     zoomGeometry = zoomGeometry.extent.clone().expand(extentExpansionFactor);
-        // }
-
-        // const animationOptions = options["zoomto-animation-options"];
-        // const goToTarget: GoToTarget = {
-        //     target: zoomGeometry
-        // };
-        // if (zoomScale > 0) {
-        //     goToTarget.scale = zoomScale;
-        // }
-
-        // this.#pending = new CancelablePromise<void>((resolve, reject, oncancel) => {
-        //     oncancel(() => this.#viewWatcher?.clear());
-        //     this.#viewWatcher!.addOnly(async ({ mapWidgetModel }: { mapWidgetModel: any }) => {
-        //         try {
-        //             await mapWidgetModel?.view?.goTo(goToTarget, animationOptions);
-        //             resolve();
-        //         } catch (e) {
-        //             reject(e);
-        //         }
-        //     });
-        // });
-        // return this.#pending;
     }
 
     private applyFeaturesToServiceWithId(items: Array<any>, id: string): void {
