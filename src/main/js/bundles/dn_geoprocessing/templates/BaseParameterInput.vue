@@ -18,7 +18,7 @@
 <template>
     <div>
         <v-select
-            v-if="choiceList"
+            v-if="choiceList && type === 'string'"
             v-model="localValue"
             :label="title"
             :rules="rules"
@@ -35,17 +35,9 @@
             class="mt-0"
             hide-details
             color="primary"
-        ></v-switch>
-        <v-text-field
-            v-else-if="type === 'long' || type === 'double'"
-            v-model="localValue"
-            :label="title"
-            :rules="rules"
-            :disabled="!editable"
-            :readonly="!editable"
         />
         <v-textarea
-            v-else-if="localValue.length>10"
+            v-else-if="localValue && localValue.length>10 && type === 'string'"
             v-model="localValue"
             :label="title"
             :rules="rules"
@@ -53,13 +45,12 @@
             :readonly="!editable"
         />
         <v-text-field
-            v-else
+            v-else-if="type === 'long' || type === 'double' || type === 'string'"
             v-model="localValue"
             :label="title"
             :rules="rules"
             :disabled="!editable"
             :readonly="!editable"
-            clearable
         />
     </div>
 </template>
@@ -67,6 +58,16 @@
 <script>
     export default {
         props: {
+            i18n: {
+                type: Object,
+                default: () => {
+                    return {};
+                }
+            },
+            id: {
+                type: String,
+                default: undefined
+            },
             value: undefined,
             title: {
                 type: String,

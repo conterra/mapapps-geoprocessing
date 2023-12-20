@@ -15,7 +15,12 @@
  */
 .ctAppRoot .geoprocessing-tools-widget .v-alert.error a,
 .ctAppRoot .geoprocessing-parameter-widget .v-alert.error a {
-    color: white;
+    color: #fff;
+}
+
+.ctAppRoot .geoprocessing-parameter-widget .v-alert.error .v-alert__icon,
+.ctAppRoot .geoprocessing-parameter-widget .v-alert.success .v-alert__icon {
+    color: #fff;
 }
 
 .ctAppRoot .ctWindow .geoprocessing-parameter-widget.vue-base {
@@ -54,6 +59,10 @@
     border: 0;
 }
 
+.ctAppRoot .geoprocessing-parameter-widget .v-stepper .geoprocessing--alert {
+    padding-top: 5px;
+}
+
 .ctAppRoot .geoprocessing-parameter-widget .v-stepper .geoprocessing--parameters-title {
     flex-shrink: 1;
 }
@@ -72,6 +81,8 @@
     flex-grow: 1;
     flex-shrink: 1;
     overflow: auto;
+    flex-direction: column-reverse;
+    display: flex
 }
 
 .ctAppRoot .geoprocessing-parameter-widget .v-stepper .geoprocessing--messages .v-icon {
@@ -81,4 +92,16 @@
 .ctAppRoot .geoprocessing-parameter-widget .v-stepper .geoprocessing--messages .message {
     padding-top: 7px;
     padding-left: 4px;
+}
+
+.ctAppRoot .geoprocessing-parameter-widget .parameterInput__coordinate-entry-layout {
+    padding-top: 5px;
+}
+
+.ctAppRoot .geoprocessing-parameter-widget .parameterInput__coordinate-entry-text-field {
+    padding-right: 10px;
+}
+
+.ctAppRoot .geoprocessing-parameter-widget .parameterInput__coordinate-entry-layout .v-btn.v-btn--icon.parameterInput__coordinate-entry-button--active {
+    border: 3px solid rgb(43, 42, 104) !important;
 }

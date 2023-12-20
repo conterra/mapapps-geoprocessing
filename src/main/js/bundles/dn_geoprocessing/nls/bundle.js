@@ -27,6 +27,10 @@ module.exports = {
             success: "Geoprocessing completed successfully.",
             error: "Geoprocessing failed. Please contact the support at",
             parametersTab: "Parameters",
+            parameters: {
+                x: "Easting",
+                y: "Northing"
+            },
             resultsTab: "Results",
             executeButtonLabel: "Execute",
             result: "Result",

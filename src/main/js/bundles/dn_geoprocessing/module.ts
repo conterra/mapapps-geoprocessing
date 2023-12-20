@@ -35,3 +35,4 @@ import "ct/tools/Tool";
 import "./GeoprocessingModel";
 import "./GeoprocessingController";
 import "./GeoprocessingToolsWidgetFactory";
+import "./actions/AddFeaturesToLayerAction";

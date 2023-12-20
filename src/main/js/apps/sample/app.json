@@ -154,7 +154,8 @@
                                 }
                             },
                             "editable": true,
-                            "required": true
+                            "required": true,
+                            "visible": false
                         },
                         {
                             "name": "Format",
@@ -198,6 +199,61 @@
                     ]
                 },
                 {
+                    "id": "gp_kreisdienst",
+                    "title": "Sample Kreisdienst",
+                    "url": "",
+                    "showWidget": true,
+                    "executeButtonText": "Kreisfl\u00e4che erstellen",
+                    "parameters": [
+                        {
+                            "title": "Center",
+                            "name": "center",
+                            "type": "feature-record-set-layer",
+                            "filter": {
+                                "type": "featureClass",
+                                "list": [
+                                    "esriGeometryPoint"
+                                ]
+                            },
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "title": "Radius",
+                            "name": "radius",
+                            "type": "double",
+                            "editable": true,
+                            "required": true
+                        },
+                        {
+                            "title": "Text",
+                            "name": "text",
+                            "type": "string",
+                            "editable": true,
+                            "required": false
+                        },
+                        {
+                            "title": "Text_field",
+                            "name": "text_field",
+                            "type": "string",
+                            "editable": true,
+                            "required": false
+                        }
+                    ],
+                    "outputParameters": [
+                        {
+                            "name": "output",
+                            "type": "feature-record-set-layer",
+                            "actions": ["geoprocessing-addfeaturestolayer", "zoomto"],
+                            "actionsConfig": {
+                                "zoomto-scale": 1000,
+                                "addto-featurelayer-id": "fieldnotes",
+                                "addto-featurelayer-url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
+                            }
+                        }
+                    ]
+                },
+                {
                     "id": "gp_viewshed",
                     "title": "Berechnung einer Ansicht",
                     "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed",
@@ -207,6 +263,66 @@
                             "name": "Input_Observation_Point",
                             "title": "Beobachtungspunkt",
                             "type": "feature-record-set-layer",
+                            "filter": {
+                                "type": "featureClass",
+                                "list": [
+                                    "esriGeometryPoint"
+                                ]
+                            },
+                            "value": {
+                                "features": [
+                                    {
+                                        "aggregateGeometries": null,
+                                        "geometry": {
+                                            "spatialReference": {
+                                                "wkid": 4326
+                                            },
+                                            "x": 7.5867,
+                                            "y": 46.8361
+                                        },
+                                        "symbol": {
+                                            "type": "esriSMS",
+                                            "color": [
+                                                255,
+                                                0,
+                                                0,
+                                                255
+                                            ],
+                                            "angle": 0,
+                                            "xoffset": 0,
+                                            "yoffset": 0,
+                                            "size": 12,
+                                            "style": "esriSMSCircle",
+                                            "outline": {
+                                                "type": "esriSLS",
+                                                "color": [
+                                                    255,
+                                                    255,
+                                                    255,
+                                                    255
+                                                ],
+                                                "width": 2,
+                                                "style": "esriSLSSolid"
+                                            }
+                                        },
+                                        "attributes": {},
+                                        "popupTemplate": null
+                                    }
+                                ]
+                            },
+                            "required": true,
+                            "editable": true
+                        },
+                        {
+                            "name": "Input_Observation_Point2",
+                            "title": "Beobachtungspunkt2",
+                            "type": "feature-record-set-layer",
+                            "filter": {
+                                "type": "featureClass",
+                                "list": [
+                                    "esriGeometryPoint"
+                                ]
+                            },
                             "value": {
                                 "features": [
                                     {
@@ -248,7 +364,8 @@
                                     }
                                 ]
                             },
-                            "required": true
+                            "required": true,
+                            "editable": true
                         },
                         {
                             "name": "Viewshed_Distance",
@@ -257,7 +374,8 @@
                                 "distance": 5000,
                                 "units": "esriMeters"
                             },
-                            "required": true
+                            "required": true,
+                            "editable": true
                         }
                     ]
                 },
@@ -432,6 +550,12 @@
                 "map": {
                     "layers": [
                         {
+                            "title": "Feldnotizen: Polygone",
+                            "id": "fieldnotes",
+                            "type": "AGS_FEATURE",
+                            "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
+                        },
+                        {
                             "id": "stoerungen",
                             "title": "Störungen",
                             "type": "AGS_DYNAMIC",
@@ -545,7 +669,10 @@
                             "rel_t": 90,
                             "rel_l": 15
                         },
-                        "windowType": "dropdown"
+                        "windowType": "dropdown",
+                        "tooltipPositions": [
+                            "after"
+                        ]
                     }
                 ]
             }

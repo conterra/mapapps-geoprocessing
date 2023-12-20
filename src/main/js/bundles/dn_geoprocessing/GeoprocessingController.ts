@@ -14,7 +14,7 @@
 /// limitations under the License.
 ///
 
-import type {InjectedReference} from "apprt-core/InjectedReference";
+import type { InjectedReference } from "apprt-core/InjectedReference";
 import * as geoprocessor from "esri/rest/geoprocessor";
 import apprt_request from "apprt-request";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
@@ -23,23 +23,26 @@ import apprt_when from "apprt-core/when";
 import ct_util from "ct/ui/desktop/util";
 import ServiceRegistration from "apprt/ServiceRegistration";
 import BundleContext from "apprt/BundleContext";
-import {LogService} from "system/module";
+import { LogService } from "system/module";
 import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
+import { ActionService } from "map-actions/api";
 
 interface Tool {
     id: string,
     url: string,
     synchronous: boolean,
     params: object,
+    outputParameters: Array<object>,
 
     set(string, boolean): void
 }
 
 export default class GeoprocessingController {
 
+    private _actionService: InjectedReference<ActionService>;
     private _dataModel!: InjectedReference<any>;
     private _model!: InjectedReference<typeof GeoprocessingModel>;
     private _i18n!: InjectedReference<any>;
@@ -49,6 +52,8 @@ export default class GeoprocessingController {
     private bundleContext: BundleContext;
     private widgetServiceRegistration: ServiceRegistration;
     private tools: Tool[];
+    private view: __esri.View;
+    private mapClickWatcher: __esri.WatchHandle;
 
     /**
      * Run automatically on component activation
@@ -200,7 +205,7 @@ export default class GeoprocessingController {
         try {
             const result = await geoprocessor.execute(tool.url, params);
             this.handleResultCase(result, tool);
-            this.handleResults(result.results);
+            this.handleResults(result.results, tool);
         } catch (error) {
             // case: geoprocessing service ran unsuccessfully
             error?.details?.messages.forEach((message, i) => {
@@ -239,7 +244,7 @@ export default class GeoprocessingController {
             const promises = outputParameters.map((outputParameter: any) =>
                 jobInfo.fetchResultData(outputParameter.name));
             const results = await Promise.all(promises);
-            this.handleResults(results);
+            this.handleResults(results, tool);
         } catch (error) {
             // case: geoprocessing service has completed execution unsuccessfully
             // add final status message to widget
@@ -303,8 +308,9 @@ export default class GeoprocessingController {
      * @param results
      * @private
      */
-    private handleResults(results: any): void {
+    private handleResults(results: any, tool: Tool): void {
         const model = this._model;
+        const actionService = this._actionService;
         if (results.length) {
             results.forEach((result: any) => {
                 switch (result.dataType) {
@@ -312,6 +318,20 @@ export default class GeoprocessingController {
                     case "data-file":
                         model.results.push(result);
                         break;
+                    case "feature-record-set-layer": {
+                        const outputParams = tool.outputParameters;
+                        if (outputParams) {
+                            const targetParam = outputParams.find(param => "actions" in param);
+                            if (targetParam){
+                                const actionConfig = targetParam.actionsConfig || {};
+                                const mergedConfig = {...actionConfig, ...{"items": result.value.features}};
+
+                                actionService.trigger(targetParam.actions, mergedConfig);
+                            }
+                        }
+
+                        break;
+                    }
                     case "record-set":
                         break;
                     case "raster-data-layer":
@@ -336,7 +356,7 @@ export default class GeoprocessingController {
 
         // push new status messages into model
         result.messages.forEach((message, i) => {
-            model.responseMessages.push({
+            model.responseMessages.unshift({
                 id: i,
                 description: message.description,
                 type: message.type
@@ -404,17 +424,80 @@ export default class GeoprocessingController {
      *
      * @private
      */
-    private showParametersWidget(parameters: object, tool: any): void {
+    private async showParametersWidget(parameters: any[], tool: any): Promise<void> {
         // if widget is already opened, close it
         this.hideWidget();
+        const view = await this.getView();
+
+        // add missing point values
+        parameters.forEach((param) => {
+            if (param.type === "feature-record-set-layer" && param.filter && !param.value) {
+                if (param.filter.type === "featureClass" && param.filter.list.includes("esriGeometryPoint")) {
+                    param.value = {
+                        features: [
+                            {
+                                geometry: {
+                                    x: 0,
+                                    y: 0,
+                                    spatialReference: view.spatialReference.toJSON()
+                                }
+                            }
+                        ]
+                    };
+                }
+            }
+        });
 
         // start widget creation
         const widget = this.getInputParameterWidget(parameters);
         const vm = widget.getVM();
 
+        if (tool.executeButtonText) {
+            vm.executeButtonText = tool.executeButtonText;
+        }
+
+        // add listener to the locate button event
+        vm.$on('getLocationButtonClicked', (id: string, activate: boolean) => {
+            const model = this._model;
+
+            if (!activate) {
+                if (this.mapClickWatcher) {
+                    this.clearWatcher();
+                }
+            } else {
+                this.getView().then((view: __esri.View) => {
+                    this.view = view;
+
+                    if (this.mapClickWatcher) {
+                        this.clearWatcher();
+                    } else {
+                        view.cursor = "crosshair";
+                        view.popup.autoOpenEnabled = false;
+                        this.mapClickWatcher = view.on("click", evt => {
+                            const clickLocation = evt.mapPoint;
+                            const targetParam = model.parameters.find(param => param.id === id);
+                            targetParam.value = {
+                                features: [
+                                    {
+                                        geometry: {
+                                            x: clickLocation.x,
+                                            y: clickLocation.y,
+                                            spatialReference: clickLocation.spatialReference.toJSON()
+                                        }
+                                    }
+                                ]
+                            };
+
+                            this.clearWatcher();
+                            vm.activeClickWatcherId = null;
+                        });
+                    }
+                });
+            }
+        });
+
         // add listener to the execution button click event
         vm.$on('execute-button-clicked', async parametersWithRules => {
-            // run geoprocessing service with edited parameters
             await this.runGeoprocessingService(parametersWithRules, tool);
         });
 
@@ -430,6 +513,9 @@ export default class GeoprocessingController {
                 window.set("title", tool.title);
                 window.on("Close", () => {
                     this.hideWidget();
+                    if (this.mapClickWatcher) {
+                        this.clearWatcher();
+                    }
                 });
             }
         }, 100);
@@ -442,12 +528,14 @@ export default class GeoprocessingController {
      * @private
      */
     private getInputParameterWidget(parameters): any {
+        const model = this._model;
+        model.parameters = parameters;
+
         const vm = new Vue(InputParameterEntryMask);
         vm.i18n = this._i18n.get().ui;
-        vm.parameters = parameters;
 
         Binding.for(vm, this._model)
-            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results")
+            .syncAllToLeft("loading", "resultState", "supportEmailAddress", "responseMessages", "results", "parameters")
             .enable()
             .syncToLeftNow();
 
@@ -516,5 +604,27 @@ export default class GeoprocessingController {
         }
 
         return layer.findSublayerById(parseInt(sublayerId, 10));
+    }
+
+    private getView(): Promise<__esri.View> {
+        const mapWidgetModel = this._mapWidgetModel;
+
+        return new Promise((resolve) => {
+            if (mapWidgetModel.view) {
+                resolve(mapWidgetModel.view);
+            } else {
+                const watcher = mapWidgetModel.watch("view", ({ value: view }) => {
+                    watcher.remove();
+                    resolve(view);
+                });
+            }
+        });
+    }
+
+    private clearWatcher(): void {
+        this.mapClickWatcher.remove();
+        this.mapClickWatcher = undefined;
+        this.view.cursor = "default";
+        this.view.popup.autoOpenEnabled = true;
     }
 }

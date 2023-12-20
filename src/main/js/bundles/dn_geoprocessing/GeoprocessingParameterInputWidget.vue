@@ -48,16 +48,47 @@
                         <v-form v-model="valid">
                             <div
                                 v-for="(param) in parametersWithRules"
-                                :key="param.name"
+                                :key="param.id"
                             >
-                                <parameter-input
-                                    v-model="param.value"
-                                    :title="param.title"
-                                    :type="param.type"
-                                    :rules="param.rules"
-                                    :choice-list="param.choiceList"
-                                    :editable="param.editable"
-                                />
+                                <div v-if="shouldBeVisible(param)">
+                                    <div v-if="param.type === 'feature-record-set-layer' && param.filter && param.filter.type === 'featureClass'">
+                                        <feature-record-set-layer
+                                            :id="param.id"
+                                            v-model="param.value"
+                                            :title="param.title"
+                                            :type="param.type"
+                                            :filter="param.filter"
+                                            :rules="param.rules"
+                                            :editable="param.editable"
+                                            :click-watcher-active="param.id === activeClickWatcherId"
+                                            :i18n="i18n"
+                                            @getLocationButtonClicked="handleLocationButtonClick"
+                                        />
+                                    </div>
+                                    <div v-else-if="param.type === 'linear-unit'">
+                                        <linear-unit
+                                            :id="param.id"
+                                            v-model="param.value"
+                                            :title="param.title"
+                                            :type="param.type"
+                                            :rules="param.rules"
+                                            :editable="param.editable"
+                                            :i18n="i18n"
+                                        />
+                                    </div>
+                                    <div v-else>
+                                        <base-parameter-input
+                                            :id="param.id"
+                                            v-model="param.value"
+                                            :title="param.title"
+                                            :type="param.type"
+                                            :rules="param.rules"
+                                            :choice-list="param.choiceList"
+                                            :editable="param.editable"
+                                            :i18n="i18n"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </v-form>
                     </div>
@@ -68,7 +99,7 @@
                             block
                             @click="execute"
                         >
-                            {{ i18n.executeButtonLabel }}
+                            {{ computedButtonLabel }}
                         </v-btn>
                     </div>
                 </v-stepper-content>
@@ -116,7 +147,7 @@
                             :size="50"
                             color="primary"
                             indeterminate
-                        ></v-progress-circular>
+                        />
                     </div>
                     <div class="geoprocessing--alert">
                         <v-alert
@@ -168,11 +199,16 @@
 </template>
 
 <script>
-    import ParameterInput from "./templates/ParameterInput.vue";
+    import BaseParameterInput from "./templates/BaseParameterInput.vue";
+    import GPFeatureRecordSetLayerInput from "./templates/GPFeatureRecordSetLayerInput.vue";
+    import GPLinearUnit from "./templates/GPLinearUnit.vue";
+
 
     export default {
         components: {
-            "parameter-input": ParameterInput
+            "base-parameter-input": BaseParameterInput,
+            "feature-record-set-layer": GPFeatureRecordSetLayerInput,
+            "linear-unit": GPLinearUnit
         },
         props: {
             i18n: {
@@ -212,7 +248,9 @@
         },
         data: function() {
             return {
-                valid: false
+                valid: false,
+                activeClickWatcherId: null,
+                executeButtonText: null
             };
         },
         computed: {
@@ -220,8 +258,9 @@
                 return "mailto:" + this.supportEmailAddress;
             },
             parametersWithRules: function () {
-                return this.parameters.map(param => {
+                return this.parameters.map((param, index) => {
                     param.rules = [];
+                    //if punkt -> x und y hinzufügen , die dann als model
                     if (param.required) {
                         param.rules.push(v => !!v || this.i18n.rules.required);
                     }
@@ -239,14 +278,41 @@
                     if (param.type === "double") {
                         param.rules.push(v => /^[0-9.]*$/.test(v) || this.i18n.rules.noDouble);
                     }
+
+                    param.id = `GEOPROCESS_PARAM_${index}`;
                     return param;
                 });
+            },
+            computedButtonLabel: function() {
+                let text = this.i18n.executeButtonLabel;
+                if (this.executeButtonText){
+                    text = this.executeButtonText;
+                }
+                return text;
             }
         },
         methods: {
             execute: function () {
                 this.$emit('execute-button-clicked', this.parametersWithRules);
                 this.activeStep = 2;
+            },
+            handleLocationButtonClick: function (id, clickWatcherActive) {
+                if (clickWatcherActive) {
+                    this.$emit('getLocationButtonClicked', id, false);
+                    this.activeClickWatcherId = null;
+                } else {
+                    this.$emit('getLocationButtonClicked', id, false);
+                    this.$emit('getLocationButtonClicked', id, true);
+                    this.activeClickWatcherId = id;
+                }
+
+            },
+            shouldBeVisible: function (param) {
+                if(param.visible === undefined) {
+                    return true;
+                } else {
+                    return param.visible;
+                }
             }
         }
     };
