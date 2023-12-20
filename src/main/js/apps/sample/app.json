@@ -669,7 +669,10 @@
                             "rel_t": 90,
                             "rel_l": 15
                         },
-                        "windowType": "dropdown"
+                        "windowType": "dropdown",
+                        "tooltipPositions": [
+                            "after"
+                        ]
                     }
                 ]
             }
