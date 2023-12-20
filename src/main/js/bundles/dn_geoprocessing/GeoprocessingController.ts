@@ -321,21 +321,16 @@ export default class GeoprocessingController {
                     case "feature-record-set-layer": {
                         const outputParams = tool.outputParameters;
                         if (outputParams) {
-                            const targetLayerIdParam = outputParams.find(param => "addToFeatureLayerId" in param);
-                            const targetLayerUrlParam = outputParams.find(param => "addToFeatureLayerUrl" in param);
-                            if (targetLayerIdParam || targetLayerUrlParam) {
-                                const targetParam = targetLayerIdParam ? targetLayerIdParam : targetLayerUrlParam;
+                            const targetParam = outputParams.find(param => "actions" in param);
+                            if (targetParam){
+                                const actionConfig = targetParam.actionsConfig || {};
+                                const mergedConfig = {...actionConfig, ...{
+                                    "items": result.value.features,
+                                    "addToFeatureLayerId": targetParam?.addToFeatureLayerId,
+                                    "addToFeatureLayerUrl": targetParam?.addToFeatureLayerUrl
+                                }};
 
-                                if (targetParam.actions){
-                                    const actionConfig = targetParam.actionsConfig || {};
-                                    const mergedConfig = {...actionConfig, ...{
-                                        "items": result.value.features,
-                                        "addToFeatureLayerId": targetParam?.addToFeatureLayerId,
-                                        "addToFeatureLayerUrl": targetParam?.addToFeatureLayerUrl
-                                    }};
-
-                                    actionService.trigger(targetParam.actions, mergedConfig);
-                                }
+                                actionService.trigger(targetParam.actions, mergedConfig);
                             }
                         }
 
