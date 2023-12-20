@@ -365,7 +365,7 @@ export default class GeoprocessingController {
 
         // push new status messages into model
         result.messages.forEach((message, i) => {
-            model.responseMessages.push({
+            model.responseMessages.unshift({
                 id: i,
                 description: message.description,
                 type: message.type
