@@ -28,12 +28,14 @@ import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
+import Layer from "esri/layers/Layer";
 
 interface Tool {
     id: string,
     url: string,
     synchronous: boolean,
     params: object,
+    outputParameters: Array<object>,
 
     set(string, boolean): void
 }
@@ -202,7 +204,7 @@ export default class GeoprocessingController {
         try {
             const result = await geoprocessor.execute(tool.url, params);
             this.handleResultCase(result, tool);
-            this.handleResults(result.results);
+            this.handleResults(result.results, tool);
         } catch (error) {
             // case: geoprocessing service ran unsuccessfully
             error?.details?.messages.forEach((message, i) => {
@@ -241,7 +243,7 @@ export default class GeoprocessingController {
             const promises = outputParameters.map((outputParameter: any) =>
                 jobInfo.fetchResultData(outputParameter.name));
             const results = await Promise.all(promises);
-            this.handleResults(results);
+            this.handleResults(results, tool);
         } catch (error) {
             // case: geoprocessing service has completed execution unsuccessfully
             // add final status message to widget
@@ -305,7 +307,7 @@ export default class GeoprocessingController {
      * @param results
      * @private
      */
-    private handleResults(results: any): void {
+    private handleResults(results: any, tool: Tool): void {
         const model = this._model;
         if (results.length) {
             results.forEach((result: any) => {
@@ -314,10 +316,54 @@ export default class GeoprocessingController {
                     case "data-file":
                         model.results.push(result);
                         break;
+                    case "feature-record-set-layer": {
+                        const outputParams = tool.outputParameters;
+                        if (outputParams) {
+                            const targetLayerIdParam = outputParams.find(param => "addToFeatureLayerId" in param);
+                            const targetLayerUrlParam = outputParams.find(param => "addToFeatureLayerUrl" in param);
+                            if (targetLayerIdParam || targetLayerUrlParam) {
+                                this.applyFeaturesToService(result, outputParams);
+                            }
+                        }
+
+                        break;
+                    }
                     case "record-set":
                         break;
                     case "raster-data-layer":
                         break;
+                }
+            });
+        }
+    }
+
+    private applyFeaturesToService(result: any, outputParams: Array<object>): void {
+        const targetLayerIdParam = outputParams.find(param => "addToFeatureLayerId" in param);
+        const targetLayerUrlParam = outputParams.find(param => "addToFeatureLayerUrl" in param);
+        const resultFeatures = result.value.features;
+
+        if (targetLayerIdParam) {
+            const targetLayerId = targetLayerIdParam.addToFeatureLayerId;
+            const layer = this.getLayerById(targetLayerId);
+            if (layer && layer.type === "feature") {
+                const edits = {
+                    addFeatures: resultFeatures
+                };
+                layer.applyEdits(edits);
+            }
+        }
+        else if (targetLayerUrlParam) {
+            const targetLayerUrl = targetLayerUrlParam.addToFeatureLayerUrl;
+            Layer.fromArcGISServerUrl(targetLayerUrl).then(layer => {
+                if (layer && layer.type === "feature") {
+                    const edits = {
+                        addFeatures: resultFeatures
+                    };
+                    layer.applyEdits(edits);
+
+                    this.getView().then(view => {
+                        view.map.add(layer);
+                    });
                 }
             });
         }
@@ -608,5 +654,24 @@ export default class GeoprocessingController {
         this.mapClickWatcher = undefined;
         this.view.cursor = "default";
         this.view.popup.autoOpenEnabled = true;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    private getLayerById(layerIdPath: string): __esri.Layer | __esri.Sublayer {
+        if (typeof layerIdPath !== "string") {
+            return undefined;
+        }
+
+        const mapWidgetModel = this._mapWidgetModel;
+
+        const parts = layerIdPath.split("/");
+        const layerId = parts[0];
+        const sublayerId = parts[1];
+
+        const layer = mapWidgetModel?.map?.findLayerById(layerId);
+        if (!sublayerId) {
+            return layer;
+        }
+        return layer.findSublayerById(parseInt(sublayerId, 10));
     }
 }

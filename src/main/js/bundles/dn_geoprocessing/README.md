@@ -20,6 +20,7 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 ### Supported output parameter types:
 - string
 - data-file
+- feature-record-set-layer
 
 ## Configuration Reference
 
@@ -44,6 +45,7 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
         ],
         "url": "https://services.conterra.de/test",
         "showWidget": true,
+        "executeButtonText": "Example String"
         "parameters": [
             {
                 "name": "boolean",
@@ -127,16 +129,18 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 ]
 ```
 
-| Property      | Type    | Possible Values   | Default  | Description                                                                                                             |
-|---------------|---------|-------------------|----------|-------------------------------------------------------------------------------------------------------------------------|
-| id            | String  |                   | ```""``` | Id of GP Service Tool                                                                                                   |
-| title         | String  |                   | ```""``` | Title of GP Service Tool                                                                                                |
-| tooltip       | String  |                   | ```""``` | Tooltip of GP Service Tool                                                                                              |
-| rules         | Object  |                   | ```""``` | Define toolrules to control tools https://docs.conterra.de/en/mapapps/latest/apps/configuring-apps/tools.html#toolrules |
-| url           | String  |                   | ```""``` | URL of GPServer                                                                                                         |
-| showWidget    | Boolean | `true` or `false` | ```""``` | Determines whether the parameterInputWidget will be shown                                                               |
-| refreshLayers | Array   |                   | ```[]``` | Array of layer ids of layers that should be refreshed after successful run of the GPServer                              |
-| parameters    | Array   |                   | ```[]``` | Array of parameters as required by GP Service                                                                           |
+| Property          | Type    | Possible Values   | Default  | Description                                                                                                             |
+|-------------------|---------|-------------------|----------|-------------------------------------------------------------------------------------------------------------------------|
+| id                | String  |                   | ```""``` | Id of GP Service Tool                                                                                                   |
+| title             | String  |                   | ```""``` | Title of GP Service Tool                                                                                                |
+| tooltip           | String  |                   | ```""``` | Tooltip of GP Service Tool                                                                                              |
+| rules             | Object  |                   | ```""``` | Define toolrules to control tools https://docs.conterra.de/en/mapapps/latest/apps/configuring-apps/tools.html#toolrules |
+| url               | String  |                   | ```""``` | URL of GPServer                                                                                                         |
+| showWidget        | Boolean | `true` or `false` | ```""``` | Determines whether the parameterInputWidget will be shown                                                               |
+| refreshLayers     | Array   |                   | ```[]``` | Array of layer ids of layers that should be refreshed after successful run of the GPServer                              |
+| parameters        | Array   |                   | ```[]``` | Array of parameters as required by GP Service                                                                           |
+| outputParameters  | Array   |                   | ```[]``` | Array of output parameters as required by GP Service                                                                    |
+| executeButtonText | String  |                   | ```""``` | Text to display on the execution button                                                                                 |
 
 ### Config
 

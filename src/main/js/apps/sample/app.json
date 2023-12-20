@@ -201,7 +201,7 @@
                 {
                     "id": "gp_kreisdienst",
                     "title": "Sample Kreisdienst",
-                    "url": "https://dev0402w.conterra.de/server/rest/services/LRA_Starnberg/CircleCreation/GPServer/Cirlce%20Creation",
+                    "url": "",
                     "showWidget": true,
                     "executeButtonText": "Kreisfl\u00e4che erstellen",
                     "parameters": [
@@ -238,6 +238,14 @@
                             "type": "string",
                             "editable": true,
                             "required": false
+                        }
+                    ],
+                    "outputParameters": [
+                        {
+                            "name": "output",
+                            "type": "feature-record-set-layer",
+                            "addToFeatureLayerId": "fieldnotes",
+                            "addToFeatureLayerUrl": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
                         }
                     ]
                 },
@@ -537,6 +545,12 @@
                 ],
                 "map": {
                     "layers": [
+                        {
+                            "title": "Feldnotizen: Polygone",
+                            "id": "fieldnotes",
+                            "type": "AGS_FEATURE",
+                            "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
+                        },
                         {
                             "id": "stoerungen",
                             "title": "Störungen",
