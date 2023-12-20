@@ -139,8 +139,53 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 | showWidget        | Boolean | `true` or `false` | ```""``` | Determines whether the parameterInputWidget will be shown                                                               |
 | refreshLayers     | Array   |                   | ```[]``` | Array of layer ids of layers that should be refreshed after successful run of the GPServer                              |
 | parameters        | Array   |                   | ```[]``` | Array of parameters as required by GP Service                                                                           |
-| outputParameters  | Array   |                   | ```[]``` | Array of output parameters as required by GP Service                                                                    |
 | executeButtonText | String  |                   | ```""``` | Text to display on the execution button                                                                                 |
+
+### Optional: Output Paramter Config
+Optionally, the output parameters can be configured. Currently this is supported for results of the type "feature-record-set-layer".
+This configuration allows to trigger actions for the result features.
+
+```json
+"GeoprocessingTools": [
+    {
+        [...]
+        "showWidget": true,
+        "executeButtonText": "Example String"
+        "parameters": [...],
+        "outputParameters": [
+            {
+                "name": "output",
+                "type": "feature-record-set-layer",
+                "actions": ["geoprocessing-addfeaturestolayer", "zoomto"],
+                "actionsConfig": {
+                    "zoomto-scale": 1000,
+                    "addto-featurelayer-id": "fieldnotes",
+                    "addto-featurelayer-url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
+                }
+            }
+        ]
+    }
+]
+[...]
+```
+
+| Property      | Type   | Possible Values | Default  | Description                                                                                                                                                                                                                        |
+|---------------|--------|-----------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name          | String |                 | ```""``` | Name of the parameter returned by GP Service                                                                                                                                                                                       |
+| type          | String |                 | ```""``` | Type of the parameter returned by GP Service                                                                                                                                                                                       |
+| actions       | Array  |                 | ```[]``` | Array of action ids providing the interface `map-actions.Action`                                                                                                                                                                   |
+| actionsConfig | Object |                 | ```{}``` | Configuration of the used actions. See [documentation](https://demos.conterra.de/mapapps/resources/jsregistry/root/index.html?lang=de#b%3Dmap-actions%3Bv%3D4.15.1%3Bvr%3D%5E4.15%3Bp%3Dmap.apps%3Bf%3Dmap-action%3B) for details. |
+
+
+### Optional: "geoprocessing-addfeaturestolayer" Action Config
+This action can be used to save the GP Service results in a FeatureLayer if they are of the type "feature-record-set-layer".
+Either of the following properties must be provided. If both are configured `addto-featurelayer-id` is used.
+
+| Property               | Type   | Possible Values                            | Default  | Description                                                                                                                        |
+|------------------------|--------|--------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------------------|
+| addto-featurelayer-id  | String | any id of a feature layer in the map       | ```""``` | Id of the feature layer to which the result will be added.                                                                         |
+| addto-featurelayer-url | String | any url leading to a feature layer service | ```""``` | Url of the service from which a layer is created. The result will be added to the created layer and the layer is added to the map. |
+
 
 ### Config
 
