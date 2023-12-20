@@ -15,7 +15,12 @@
  */
 .ctAppRoot .geoprocessing-tools-widget .v-alert.error a,
 .ctAppRoot .geoprocessing-parameter-widget .v-alert.error a {
-    color: white;
+    color: #fff;
+}
+
+.ctAppRoot .geoprocessing-parameter-widget .v-alert.error .v-alert__icon,
+.ctAppRoot .geoprocessing-parameter-widget .v-alert.success .v-alert__icon {
+    color: #fff;
 }
 
 .ctAppRoot .ctWindow .geoprocessing-parameter-widget.vue-base {
