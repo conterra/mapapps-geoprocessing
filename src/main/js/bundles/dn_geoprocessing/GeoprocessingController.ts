@@ -48,6 +48,7 @@ export default class GeoprocessingController {
     private _i18n!: InjectedReference<any>;
     private _logService!: InjectedReference<LogService>;
     private _mapWidgetModel!: InjectedReference<any>;
+    private _highlighter: InjectedReference<any>;
 
     private bundleContext: BundleContext;
     private widgetServiceRegistration: ServiceRegistration;
@@ -488,6 +489,20 @@ export default class GeoprocessingController {
                                 ]
                             };
 
+                            this._highlighter.clear();
+                            if (tool.haloSymbol) {
+                                this._highlighter.highlight({
+                                    geometry: clickLocation,
+                                    symbol: tool.haloSymbol
+                                });
+                            }
+                            if (tool.highlightSymbol) {
+                                this._highlighter.highlight({
+                                    geometry: clickLocation,
+                                    symbol: tool.highlightSymbol || undefined
+                                });
+                            }
+
                             this.clearWatcher();
                             vm.activeClickWatcherId = null;
                         });
@@ -498,6 +513,7 @@ export default class GeoprocessingController {
 
         // add listener to the execution button click event
         vm.$on('execute-button-clicked', async parametersWithRules => {
+            this._highlighter.clear();
             await this.runGeoprocessingService(parametersWithRules, tool);
         });
 

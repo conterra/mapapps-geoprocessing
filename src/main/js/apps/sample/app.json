@@ -204,6 +204,25 @@
                     "url": "",
                     "showWidget": true,
                     "executeButtonText": "Kreisfl\u00e4che erstellen",
+                    "highlightSymbol": {
+                        "type": "simple-marker",
+                        "size": 16,
+                        "style": "cross",
+                        "outline": {
+                            "width": 1.5,
+                            "style": "solid"
+                        }
+                    },
+                    "haloSymbol": {
+                        "type": "simple-marker",
+                        "size": 18,
+                        "style": "cross",
+                        "outline": {
+                            "width": 7,
+                            "style": "solid",
+                            "color": "white"
+                        }
+                    },
                     "parameters": [
                         {
                             "title": "Center",
