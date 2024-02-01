@@ -161,6 +161,10 @@
                 {
                     "name": "_actionService",
                     "providing": "map-actions.ActionService"
+                },
+                {
+                    "name": "_highlighter",
+                    "providing": "highlights.HighlightService"
                 }
             ]
         },

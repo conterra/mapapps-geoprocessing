@@ -45,7 +45,26 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
         ],
         "url": "https://services.conterra.de/test",
         "showWidget": true,
-        "executeButtonText": "Example String"
+        "executeButtonText": "Example String",
+        "highlightSymbol": {
+            "type": "simple-marker",
+            "size": 16,
+            "style": "cross",
+            "outline": {
+                "width": 1.5,
+                "style": "solid"
+            }
+        },
+        "haloSymbol": {
+            "type": "simple-marker",
+            "size": 18,
+            "style": "cross",
+            "outline": {
+                "width": 7,
+                "style": "solid",
+                "color": "white"
+            }
+        },
         "parameters": [
             {
                 "name": "boolean",
@@ -140,6 +159,8 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 | refreshLayers     | Array   |                   | ```[]``` | Array of layer ids of layers that should be refreshed after successful run of the GPServer                              |
 | parameters        | Array   |                   | ```[]``` | Array of parameters as required by GP Service                                                                           |
 | executeButtonText | String  |                   | ```""``` | Text to display on the execution button                                                                                 |
+| highlightSymbol   | Object  |                   | ```{}``` | Symbology to highlight clicked location with                                                                            |
+| haloSymbol        | Object  |                   | ```{}``` | Extended symbology to highlight clicked location with                                                                   |
 
 ### Optional: Output Paramter Config
 Optionally, the output parameters can be configured. Currently this is supported for results of the type "feature-record-set-layer".
@@ -150,7 +171,6 @@ This configuration allows to trigger actions for the result features.
     {
         [...]
         "showWidget": true,
-        "executeButtonText": "Example String"
         "parameters": [...],
         "outputParameters": [
             {
