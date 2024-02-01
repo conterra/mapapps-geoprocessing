@@ -581,6 +581,8 @@ export default class GeoprocessingController {
             // call unregister
             registration.unregister();
         }
+
+        this._highlighter.clear();
     }
 
     /**
