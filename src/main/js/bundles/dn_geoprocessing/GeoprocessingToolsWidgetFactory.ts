@@ -16,7 +16,7 @@
 
 import type {InjectedReference} from "apprt-core/InjectedReference";
 import GeoprocessingToolsWidget from "./GeoprocessingToolsWidget.vue";
-import {Vue} from "apprt-vue/module";
+import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding, {Bindable} from "apprt-binding/Binding";
 
