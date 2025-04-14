@@ -45,7 +45,10 @@
             <v-stepper-items class="fill-height">
                 <v-stepper-content step="1">
                     <div class="geoprocessing--parameters">
-                        <v-form v-model="valid">
+                        <v-form
+                            v-model="valid"
+                            :aria-label="i18n.parametersTab"
+                        >
                             <div
                                 v-for="(param) in parametersWithRules"
                                 :key="param.id"
@@ -147,12 +150,16 @@
                             :size="50"
                             color="primary"
                             indeterminate
+                            role="alert"
+                            aria-busy="true"
+                            :aria-label="i18n.processingInProgress"
                         />
                     </div>
                     <div class="geoprocessing--alert">
                         <v-alert
                             v-if="resultState==='success'"
                             :value="true"
+                            role="alert"
                             type="success"
                         >
                             {{ i18n.success }}
@@ -160,6 +167,7 @@
                         <v-alert
                             v-if="resultState==='error'"
                             :value="true"
+                            role="alert"
                             type="error"
                         >
                             {{ i18n.error }} <a :href="supportContact">{{ supportEmailAddress }}</a>!

@@ -31,6 +31,9 @@ module.exports = {
                 x: "Easting",
                 y: "Northing"
             },
+            selectCenterOnMap: "Select center coordinate on map",
+            processingInProgress: "Request in progress",
+            parametersForm: "Form for geoprocessing parameters",
             resultsTab: "Results",
             executeButtonLabel: "Execute",
             result: "Result",

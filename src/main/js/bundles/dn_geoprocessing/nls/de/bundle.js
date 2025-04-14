@@ -28,10 +28,13 @@ module.exports = {
         success: "Geoprocessing erfolgreich abgeschlossen.",
         error: "Es ist ein Fehler aufgetreten, bitte wenden Sie sich an",
         parametersTab: "Parameter",
+        parametersForm: "Formular zur Eingabe der Geoprocessing-Parameter",
         parameters: {
             x: "Rechtswert",
             y: "Hochwert"
         },
+        selectCenterOnMap: "Mittelpunktkoordinate auf der Karte auswählen",
+        processingInProgress: "Die Abfrage läuft",
         resultsTab: "Ergebnisse",
         executeButtonLabel: "Ausführen",
         result: "Ergebnis",

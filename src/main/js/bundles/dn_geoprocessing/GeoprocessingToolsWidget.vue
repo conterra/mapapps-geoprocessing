@@ -49,6 +49,7 @@
                 <v-alert
                     v-if="resultState==='success'"
                     :value="true"
+                    role="alert"
                     type="success"
                 >
                     {{ i18n.success }}
@@ -56,6 +57,7 @@
                 <v-alert
                     v-if="resultState==='error'"
                     :value="true"
+                    role="alert"
                     type="error"
                 >
                     {{ i18n.error }} <a :href="supportContact">{{ supportEmailAddress }}</a>!
