@@ -81,6 +81,7 @@
                 try {
                     JSON.parse(string);
                 } catch (e) {
+                    console.info(e);
                     return false;
                 }
                 const regex = new RegExp('\\{.*:\\{.*:.*}}', 'g');

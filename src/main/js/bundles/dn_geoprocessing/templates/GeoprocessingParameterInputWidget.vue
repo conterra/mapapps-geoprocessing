@@ -207,10 +207,9 @@
 </template>
 
 <script>
-    import BaseParameterInput from "./templates/BaseParameterInput.vue";
-    import GPFeatureRecordSetLayerInput from "./templates/GPFeatureRecordSetLayerInput.vue";
-    import GPLinearUnit from "./templates/GPLinearUnit.vue";
-
+    import BaseParameterInput from "./components/BaseParameterInput.vue";
+    import GPFeatureRecordSetLayerInput from "./components/GPFeatureRecordSetLayerInput.vue";
+    import GPLinearUnit from "./components/GPLinearUnit.vue";
 
     export default {
         components: {
