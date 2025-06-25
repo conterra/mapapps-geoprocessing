@@ -114,6 +114,7 @@
             isJsonString(string) {
                 try {
                     JSON.parse(string);
+                /* eslint-disable-next-line no-unused-vars */
                 } catch (e) {
                     return false;
                 }
