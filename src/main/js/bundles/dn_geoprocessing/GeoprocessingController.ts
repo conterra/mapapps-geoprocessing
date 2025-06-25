@@ -27,7 +27,7 @@ import { LogService } from "system/module";
 import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
-import InputParameterEntryMask from "./GeoprocessingParameterInputWidget.vue";
+import InputParameterEntryMask from "./templates/GeoprocessingParameterInputWidget.vue";
 import { ActionService } from "map-actions/api";
 
 interface Tool {
