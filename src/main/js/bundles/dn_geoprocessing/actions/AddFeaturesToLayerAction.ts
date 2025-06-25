@@ -14,9 +14,6 @@
 /// limitations under the License.
 ///
 
-/*
- * Copyright (C) con terra GmbH
- */
 import { InjectedReference } from "@conterra/ct-mapapps-typings/apprt-core/InjectedReference";
 import type { MapWidgetModel } from "map-widget/api";
 

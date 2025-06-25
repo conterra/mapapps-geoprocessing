@@ -40,7 +40,7 @@ interface Tool {
     set(string, boolean): void
 }
 
-export default class GeoprocessingController {
+export class GeoprocessingController {
 
     private _actionService: InjectedReference<ActionService>;
     private _dataModel!: InjectedReference<any>;

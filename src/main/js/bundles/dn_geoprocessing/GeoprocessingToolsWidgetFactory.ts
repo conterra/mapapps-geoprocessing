@@ -20,7 +20,7 @@ import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding, {Bindable} from "apprt-binding/Binding";
 
-export default class GeoprocessingToolsWidgetFactory {
+export class GeoprocessingToolsWidgetFactory {
 
     private vm: Vue;
     private binding: Bindable;
