@@ -13,18 +13,12 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-
-import { InjectedReference } from "@conterra/ct-mapapps-typings/apprt-core/InjectedReference";
-import type { MapWidgetModel } from "map-widget/api";
-
-import { Action, ActionItem, ActionOptions } from "map-actions/api";
+import { Action } from "map-actions/api";
 import Layer from "esri/layers/Layer";
 
-interface AddFeaturesToLayerActionOptions extends ActionOptions {
-    readonly "items": readonly ActionItem[];
-    readonly "addto-featurelayer-id"?: string;
-    readonly "addto-featurelayer-url"?: string;
-}
+import type { InjectedReference } from "@conterra/ct-mapapps-typings/apprt-core/InjectedReference";
+import type { MapWidgetModel } from "map-widget/api";
+import type { AddFeaturesToLayerActionOptions } from "../api";
 
 /**
  * Action for adding gp service result features to a layer using id or url.
@@ -127,4 +121,3 @@ export class AddFeaturesToLayerAction implements Action {
     }
 }
 
-export default AddFeaturesToLayerAction;

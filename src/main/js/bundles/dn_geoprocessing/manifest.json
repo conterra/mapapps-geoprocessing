@@ -217,7 +217,6 @@
         },
         {
             "name": "AddFeaturesToLayerAction",
-            "impl": "./actions/AddFeaturesToLayerAction",
             "provides": "map-actions.Action",
             "references": [
                 {

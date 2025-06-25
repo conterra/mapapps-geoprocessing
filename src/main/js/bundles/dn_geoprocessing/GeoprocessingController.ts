@@ -14,7 +14,7 @@
 /// limitations under the License.
 ///
 
-import type { InjectedReference } from "apprt-core/InjectedReference";
+import InputParameterEntryMask from "./templates/GeoprocessingParameterInputWidget.vue";
 import * as geoprocessor from "esri/rest/geoprocessor";
 import apprt_request from "apprt-request";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
@@ -23,22 +23,14 @@ import apprt_when from "apprt-core/when";
 import ct_util from "ct/ui/desktop/util";
 import ServiceRegistration from "apprt/ServiceRegistration";
 import BundleContext from "apprt/BundleContext";
-import { LogService } from "system/module";
 import Binding from "apprt-binding/Binding";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
-import InputParameterEntryMask from "./templates/GeoprocessingParameterInputWidget.vue";
-import { ActionService } from "map-actions/api";
 
-interface Tool {
-    id: string,
-    url: string,
-    synchronous: boolean,
-    params: object,
-    outputParameters: Array<object>,
-
-    set(string, boolean): void
-}
+import type { InjectedReference } from "apprt-core/InjectedReference";
+import type { ActionService } from "map-actions/api";
+import type { LogService } from "system/module";
+import type Tool from "ct/tools/Tool";
 
 export class GeoprocessingController {
 
