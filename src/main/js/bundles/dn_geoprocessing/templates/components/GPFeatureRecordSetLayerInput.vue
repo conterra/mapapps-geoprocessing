@@ -52,6 +52,7 @@
                 color="primary"
                 :disabled="!editable"
                 :class="clickWatcherActive ? 'parameterInput__coordinate-entry-button--active' : ''"
+                :aria-label="i18n.selectCenterOnMap"
                 @click="handleLocationButtonClick"
             >
                 <v-icon>
