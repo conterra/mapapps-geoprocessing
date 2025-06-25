@@ -15,6 +15,7 @@
         "esri": "^4.20.0",
         "map-actions": "^4.12.0"
     },
+    "main": "",
     "i18n": [
         "bundle"
     ],
