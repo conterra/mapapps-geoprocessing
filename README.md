@@ -2,7 +2,7 @@
 
 This bundle enables the user to trigger the execution of Geoprocessing services.
 
-![Screenshot App](https://github.com/conterra/mapapps-geoprocessing/blob/main/screenshot.jpg)
+![Screenshot App](https://github.com/conterra/mapapps-geoprocessing/blob/main/screenshot.png)
 
 ## Sample App
 https://demos.conterra.de/mapapps/resources/apps/downloads_geoprocessing/index.html
