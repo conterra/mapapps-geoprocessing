@@ -5,7 +5,7 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 ![Screenshot App](https://github.com/conterra/mapapps-geoprocessing/blob/main/screenshot.png)
 
 ## Sample App
-https://demos.conterra.de/mapapps/resources/apps/downloads_geoprocessing/index.html
+https://demos.conterra.de/mapapps/resources/apps/public_demo_geoprocessing/index.html
 
 ## Build Status
 [![devnet-bundle-snapshot](https://github.com/conterra/mapapps-geoprocessing/actions/workflows/devnet-bundle-snapshot.yml/badge.svg)](https://github.com/conterra/mapapps-geoprocessing/actions/workflows/devnet-bundle-snapshot.yml)
