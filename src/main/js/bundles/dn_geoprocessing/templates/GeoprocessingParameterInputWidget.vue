@@ -232,10 +232,6 @@
                 type: Boolean,
                 default: false
             },
-            parameters: {
-                type: Array,
-                default: () => []
-            },
             resultState: {
                 type: String,
                 default: ""
@@ -257,7 +253,8 @@
             return {
                 valid: false,
                 activeClickWatcherId: null,
-                executeButtonText: null
+                executeButtonText: null,
+                parameters: []
             };
         },
         computed: {
