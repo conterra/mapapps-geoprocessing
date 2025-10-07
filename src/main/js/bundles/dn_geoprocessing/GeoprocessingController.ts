@@ -465,7 +465,8 @@ export class GeoprocessingController {
                         this.clearWatcher();
                     } else {
                         view.cursor = "crosshair";
-                        view.popup.autoOpenEnabled = false;
+                        view.popupEnabled = false; // post ArcGIS Maps SDK 4.27
+                        view.popup.autoOpenEnabled = false; // pre ArcGIS Maps SDK 4.27
                         this.mapClickWatcher = view.on("click", evt => {
                             const clickLocation = evt.mapPoint;
                             const targetParam = model.parameters.find(param => param.id === id);
