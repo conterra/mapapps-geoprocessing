@@ -315,9 +315,9 @@ export class GeoprocessingController {
                         const outputParams = tool.outputParameters;
                         if (outputParams) {
                             const targetParam = outputParams.find(param => "actions" in param);
-                            if (targetParam){
+                            if (targetParam) {
                                 const actionConfig = targetParam.actionsConfig || {};
-                                const mergedConfig = {...actionConfig, ...{"items": result.value.features}};
+                                const mergedConfig = { ...actionConfig, ...{ "items": result.value.features } };
 
                                 actionService.trigger(targetParam.actions, mergedConfig);
                             }
@@ -465,8 +465,13 @@ export class GeoprocessingController {
                         this.clearWatcher();
                     } else {
                         view.cursor = "crosshair";
-                        view.popupEnabled = false; // post ArcGIS Maps SDK 4.27
-                        view.popup.autoOpenEnabled = false; // pre ArcGIS Maps SDK 4.27
+
+                        if ("popupEnabled" in view) {
+                            view.popupEnabled = false; // post ArcGIS Maps SDK 4.27
+                        } else if (view.popup && "autoOpenEnabled" in view.popup) {
+                            view.popup.autoOpenEnabled = false; // pre ArcGIS Maps SDK 4.27
+                        }
+
                         this.mapClickWatcher = view.on("click", evt => {
                             const clickLocation = evt.mapPoint;
                             const targetParam = model.parameters.find(param => param.id === id);
@@ -633,9 +638,17 @@ export class GeoprocessingController {
     }
 
     private clearWatcher(): void {
+        const view = this.view;
+        if(!view) return;
+
         this.mapClickWatcher.remove();
         this.mapClickWatcher = undefined;
-        this.view.cursor = "default";
-        this.view.popup.autoOpenEnabled = true;
+        view.cursor = "default";
+
+        if ("popupEnabled" in view) {
+            view.popupEnabled = true; // post ArcGIS Maps SDK 4.27
+        } else if (view.popup && "autoOpenEnabled" in view.popup) {
+            view.popup.autoOpenEnabled = true; // pre ArcGIS Maps SDK 4.27
+        }
     }
 }
