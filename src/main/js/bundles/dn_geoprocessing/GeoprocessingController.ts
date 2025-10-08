@@ -473,6 +473,8 @@ export class GeoprocessingController {
                         }
 
                         this.mapClickWatcher = view.on("click", evt => {
+                            evt.stopPropagation();
+
                             const clickLocation = evt.mapPoint;
                             const targetParam = model.parameters.find(param => param.id === id);
                             targetParam.value = {
