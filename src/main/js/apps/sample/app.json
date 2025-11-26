@@ -611,12 +611,6 @@
                             "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
                         },
                         {
-                            "id": "stoerungen",
-                            "title": "Störungen",
-                            "type": "AGS_DYNAMIC",
-                            "url": "https://services.conterra.de/arcgis/rest/services/mapapps/stoerung/MapServer"
-                        },
-                        {
                             "id": "koeln1",
                             "title": "${map.koeln1.title}",
                             "type": "GROUP",

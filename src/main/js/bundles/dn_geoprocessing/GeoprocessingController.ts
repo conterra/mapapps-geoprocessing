@@ -15,10 +15,10 @@
 ///
 
 import InputParameterEntryMask from "./templates/GeoprocessingParameterInputWidget.vue";
-import * as geoprocessor from "esri/rest/geoprocessor";
-import apprt_request from "apprt-request";
+import * as geoprocessor from "@arcgis/core/rest/geoprocessor";
+import { apprtFetch, apprtFetchJson } from "apprt-fetch";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
-import * as intl from "esri/intl";
+import * as intl from "@arcgis/core/intl";
 import apprt_when from "apprt-core/when";
 import ct_util from "ct/ui/desktop/util";
 import ServiceRegistration from "apprt/ServiceRegistration";
@@ -366,11 +366,10 @@ export class GeoprocessingController {
      * @private
      */
     private static getMetadata(url: string) {
-        return apprt_request(url, {
+        return apprtFetchJson (url, {
             query: {
                 f: 'json'
-            },
-            handleAs: 'json'
+            }
         }).then((result) => result, (error) => {
             console.error(error);
         });
@@ -641,7 +640,7 @@ export class GeoprocessingController {
 
     private clearWatcher(): void {
         const view = this.view;
-        if(!view) return;
+        if (!view) return;
 
         this.mapClickWatcher.remove();
         this.mapClickWatcher = undefined;

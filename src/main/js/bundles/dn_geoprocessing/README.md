@@ -4,7 +4,7 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 
 ## Usage
 
-**Requirement: map.apps 4.12.0**
+**Requirement: map.apps 4.20.0**
 
 1. First you need to add the bundle dn_geoprocessing to your app.
 2. Then you can configure it.
