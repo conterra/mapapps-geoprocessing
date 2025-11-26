@@ -79,6 +79,17 @@
                                             :i18n="i18n"
                                         />
                                     </div>
+                                    <div v-else-if="param.type === 'upload'">
+                                        <upload-input
+                                            :id="param.id"
+                                            v-model="param.value"
+                                            :title="param.title"
+                                            :type="param.type"
+                                            :rules="param.rules"
+                                            :editable="param.editable"
+                                            :i18n="i18n"
+                                        />
+                                    </div>
                                     <div v-else>
                                         <base-parameter-input
                                             :id="param.id"
@@ -210,12 +221,14 @@
     import BaseParameterInput from "./components/BaseParameterInput.vue";
     import GPFeatureRecordSetLayerInput from "./components/GPFeatureRecordSetLayerInput.vue";
     import GPLinearUnit from "./components/GPLinearUnit.vue";
+    import UploadInput from "./components/UploadInput.vue";
 
     export default {
         components: {
             "base-parameter-input": BaseParameterInput,
             "feature-record-set-layer": GPFeatureRecordSetLayerInput,
-            "linear-unit": GPLinearUnit
+            "linear-unit": GPLinearUnit,
+            "upload-input": UploadInput
         },
         props: {
             i18n: {

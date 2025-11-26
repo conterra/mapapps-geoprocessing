@@ -36,6 +36,7 @@ export default {
             x: "Rechtswert",
             y: "Hochwert"
         },
+        selectFile: "Datei auswählen",
         selectCenterOnMap: "Mittelpunktkoordinate auf der Karte auswählen",
         processingInProgress: "Die Abfrage läuft",
         resultsTab: "Ergebnisse",

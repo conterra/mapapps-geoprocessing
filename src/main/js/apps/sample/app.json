@@ -544,6 +544,14 @@
                             "type": "double",
                             "value": 5,
                             "editable": false
+                        },
+                        {
+                            "name": "upload",
+                            "title": "Upload",
+                            "type": "upload",
+                            "value": null,
+                            "editable": true,
+                            "required": true
                         }
                     ]
                 }
