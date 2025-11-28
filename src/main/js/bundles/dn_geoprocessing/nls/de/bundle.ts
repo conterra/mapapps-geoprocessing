@@ -37,6 +37,7 @@ export default {
             y: "Hochwert"
         },
         selectFile: "Datei auswählen",
+        uploadFile: "Datei hochladen",
         selectCenterOnMap: "Mittelpunktkoordinate auf der Karte auswählen",
         processingInProgress: "Die Abfrage läuft",
         resultsTab: "Ergebnisse",

@@ -33,6 +33,7 @@ const i18n = {
                 y: "Northing"
             },
             selectFile: "Select file",
+            uploadFile: "Upload file",
             selectCenterOnMap: "Select center coordinate on map",
             processingInProgress: "Request in progress",
             parametersForm: "Form for geoprocessing parameters",

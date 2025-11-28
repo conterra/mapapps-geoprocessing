@@ -88,6 +88,7 @@
                                             :rules="param.rules"
                                             :editable="param.editable"
                                             :i18n="i18n"
+                                            @upload-file="uploadFile($event)"
                                         />
                                     </div>
                                     <div v-else>
@@ -312,6 +313,9 @@
             execute: function () {
                 this.$emit('execute-button-clicked', this.parametersWithRules);
                 this.activeStep = 2;
+            },
+            uploadFile: function (event) {
+                this.$emit('upload-file', event);
             },
             handleLocationButtonClick: function (id, clickWatcherActive) {
                 if (clickWatcherActive) {

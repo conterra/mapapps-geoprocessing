@@ -41,7 +41,8 @@
             "bundle"
         ]
     },
-    "bundles": { "dn_geoprocessing": {
+    "bundles": {
+        "dn_geoprocessing": {
             "Config": {
                 "supportEmailAddress": "support@conterra.de"
             },
@@ -549,6 +550,11 @@
                             "name": "upload",
                             "title": "Upload",
                             "type": "upload",
+                            "upload": {
+                                "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/uploads/upload",
+                                "fileParameter": "txt",
+                                "idField": "itemID"
+                            },
                             "value": null,
                             "editable": true,
                             "required": true

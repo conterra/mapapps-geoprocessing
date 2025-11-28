@@ -16,7 +16,7 @@
 
 import InputParameterEntryMask from "./templates/GeoprocessingParameterInputWidget.vue";
 import * as geoprocessor from "@arcgis/core/rest/geoprocessor";
-import { apprtFetch, apprtFetchJson } from "apprt-fetch";
+import { ContentType, apprtFetchJson } from "apprt-fetch";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
 import * as intl from "@arcgis/core/intl";
 import apprt_when from "apprt-core/when";
@@ -366,7 +366,7 @@ export class GeoprocessingController {
      * @private
      */
     private static getMetadata(url: string) {
-        return apprtFetchJson (url, {
+        return apprtFetchJson(url, {
             query: {
                 f: 'json'
             }
@@ -516,6 +516,11 @@ export class GeoprocessingController {
             await this.runGeoprocessingService(parametersWithRules, tool);
         });
 
+        // add listener to the upload-file event
+        vm.$on("upload-file", (event: any) => {
+            this.uploadFile(event.file, event.id, tool);
+        });
+
         // finish widget creation
         const serviceProperties = {
             "widgetRole": "geoprocessingParameterWidget"
@@ -651,5 +656,30 @@ export class GeoprocessingController {
         } else if (view.popup && "autoOpenEnabled" in view.popup) {
             view.popup.autoOpenEnabled = true; // pre ArcGIS Maps SDK 4.27
         }
+    }
+
+    private uploadFile(file: File, id: string, tool: any): void {
+        const param = tool.parameters.find((p: any) => p.id === id);
+        const uploadParams = param.upload;
+        if (!uploadParams) {
+            return;
+        }
+        const formData = new FormData();
+        formData.append("f", "json");
+        formData.append("file", file);
+        apprtFetchJson(uploadParams.url, {
+            method: "POST",
+            headers: {
+                Accept: ContentType.JSON
+            },
+            query: formData,
+            queryTransport: "form"
+        }).then((result: any) => {
+            const itemId = result.item[uploadParams.idField];
+            tool.upload.itemId = itemId;
+            tool.uploaded = true;
+        }, (e) => {
+            console.error(e);
+        });
     }
 }
