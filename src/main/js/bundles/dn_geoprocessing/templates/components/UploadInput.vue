@@ -21,7 +21,7 @@
         <v-layout row>
             <v-flex grow>
                 <v-text-field
-                    :value="fileName"
+                    v-model="fileName"
                     :label="title"
                     :rules="rules"
                     :disabled="!editable"
@@ -39,6 +39,11 @@
                     accept="*"
                     @change="onFilePicked"
                 >
+                <v-checkbox
+                    v-model="uploaded"
+                    :rules="rules"
+                    class="d-none"
+                />
             </v-flex>
             <v-flex shrink>
                 <v-btn
@@ -54,7 +59,7 @@
             block
             color="primary"
             :disabled="!file"
-            @click="$emit('upload-file', {file: file, id: id})"
+            @click="$emit('upload-file', {file: file, id: id}); uploaded=true"
         >
             {{ i18n.uploadFile }}
         </v-btn>
@@ -97,7 +102,8 @@
         data() {
             return {
                 fileName: "",
-                file: ""
+                file: "",
+                uploaded: false
             };
         },
         methods: {
