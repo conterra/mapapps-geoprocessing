@@ -670,14 +670,14 @@ export class GeoprocessingController {
         apprtFetchJson(uploadParams.url, {
             method: "POST",
             headers: {
-                Accept: ContentType.JSON
+                Accept: ContentType.FORM_URLENCODED
             },
-            query: formData,
-            queryTransport: "form"
+            body: formData
         }).then((result: any) => {
             const itemId = result.item[uploadParams.idField];
-            tool.upload.itemId = itemId;
-            tool.uploaded = true;
+            param.upload.itemId = itemId;
+            param.value = itemId;
+            param.uploaded = true;
         }, (e) => {
             console.error(e);
         });

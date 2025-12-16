@@ -453,6 +453,27 @@
                     "parameters": []
                 },
                 {
+                    "id": "gp_upload",
+                    "title": "Upload",
+                    "tooltip": "Upload",
+                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "Query",
+                            "title": "Upload",
+                            "type": "upload",
+                            "upload": {
+                                "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/uploads/upload",
+                                "idField": "itemID"
+                            },
+                            "value": null,
+                            "editable": true,
+                            "required": true
+                        }
+                    ]
+                },
+                {
                     "id": "gp_toolset_dev",
                     "title": "Entwicklungsbeispiel",
                     "tooltip": "Entwicklungsbeispiel",

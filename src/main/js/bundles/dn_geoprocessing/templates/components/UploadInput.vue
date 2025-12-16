@@ -17,58 +17,48 @@
 -->
 <!-- eslint-disable vuejs-accessibility/form-control-has-label -->
 <template>
-    <v-container
-        fill-height
-        pa-0
-    >
-        <v-layout
-            column
-            fill-height
-        >
-            <v-layout row>
-                <v-flex grow>
-                    <v-text-field
-                        v-model="fileName"
-                        :label="title"
-                        :rules="rules"
-                        :disabled="!editable"
-                        prepend-icon="attach_file"
-                        single-line
-                        hide-details
-                        class="pt-1"
-                        readonly
-                        @click="selectFile"
-                    />
-                    <input
-                        ref="file"
-                        type="file"
-                        style="display: none"
-                        accept="*"
-                        @change="onFilePicked"
-                    >
-                </v-flex>
-                <v-flex shrink>
-                    <v-btn
-                        class="mr-0"
-                        color="secondary"
-                        @click="selectFile"
-                    >
-                        {{ i18n.selectFile }}
-                    </v-btn>
-                </v-flex>
-            </v-layout>
+    <div>
+        <v-layout row>
+            <v-flex grow>
+                <v-text-field
+                    :value="fileName"
+                    :label="title"
+                    :rules="rules"
+                    :disabled="!editable"
+                    prepend-icon="attach_file"
+                    single-line
+                    hide-details
+                    class="pt-1"
+                    readonly
+                    @click="selectFile"
+                />
+                <input
+                    ref="file"
+                    type="file"
+                    style="display: none"
+                    accept="*"
+                    @change="onFilePicked"
+                >
+            </v-flex>
             <v-flex shrink>
                 <v-btn
-                    block
-                    color="primary"
-                    :disabled="!file"
-                    @click="$emit('upload-file', {file: file, id: id})"
+                    class="mr-0"
+                    color="secondary"
+                    @click="selectFile"
                 >
-                    {{ i18n.uploadFile }}
+                    {{ i18n.selectFile }}
                 </v-btn>
             </v-flex>
         </v-layout>
-    </v-container>
+        <v-btn
+            block
+            color="primary"
+            :disabled="!file"
+            @click="$emit('upload-file', {file: file, id: id})"
+        >
+            {{ i18n.uploadFile }}
+        </v-btn>
+    </div>
 </template>
 <script>
     import Bindable from "apprt-vue/mixins/Bindable";
