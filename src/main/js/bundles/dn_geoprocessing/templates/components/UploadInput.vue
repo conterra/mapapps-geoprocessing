@@ -90,11 +90,11 @@
                 type: String,
                 default: ""
             },
-            rules: {
-                type: Array,
-                default: () => []
-            },
             editable: {
+                type: Boolean,
+                default: false
+            },
+            required: {
                 type: Boolean,
                 default: false
             }
@@ -105,6 +105,15 @@
                 file: "",
                 uploaded: false
             };
+        },
+        computed: {
+            rules: function() {
+                const rules = [];
+                if (this.required) {
+                    rules.push(v => !!v || this.i18n.rules.required);
+                }
+                return rules;
+            }
         },
         methods: {
             selectFile() {

@@ -61,8 +61,8 @@
                                             :title="param.title"
                                             :type="param.type"
                                             :filter="param.filter"
-                                            :rules="param.rules"
                                             :editable="param.editable"
+                                            :required="param.required"
                                             :click-watcher-active="param.id === activeClickWatcherId"
                                             :i18n="i18n"
                                             @getLocationButtonClicked="handleLocationButtonClick"
@@ -74,8 +74,8 @@
                                             v-model="param.value"
                                             :title="param.title"
                                             :type="param.type"
-                                            :rules="param.rules"
                                             :editable="param.editable"
+                                            :required="param.required"
                                             :i18n="i18n"
                                         />
                                     </div>
@@ -85,8 +85,8 @@
                                             v-model="param.value"
                                             :title="param.title"
                                             :type="param.type"
-                                            :rules="param.rules"
                                             :editable="param.editable"
+                                            :required="param.required"
                                             :i18n="i18n"
                                             @upload-file="uploadFile($event)"
                                         />
@@ -97,9 +97,9 @@
                                             v-model="param.value"
                                             :title="param.title"
                                             :type="param.type"
-                                            :rules="param.rules"
                                             :choice-list="param.choiceList"
                                             :editable="param.editable"
+                                            :required="param.required"
                                             :i18n="i18n"
                                         />
                                     </div>
@@ -277,26 +277,6 @@
             },
             parametersWithRules: function () {
                 return this.parameters.map((param, index) => {
-                    param.rules = [];
-                    //if punkt -> x und y hinzufügen , die dann als model
-                    if (param.required) {
-                        param.rules.push(v => !!v || this.i18n.rules.required);
-                    }
-                    if (param.range) {
-                        const min = param.range.min;
-                        const max = param.range.max;
-                        param.rules.push(v => (v >= min && v <= max) || this.i18n.rules.range);
-                    }
-                    if (param.type === "long" || param.type === "double") {
-                        param.rules.push(v => /^[0-9.,]*$/.test(v) || this.i18n.rules.NaN);
-                    }
-                    if (param.type === "long") {
-                        param.rules.push(v => /^[0-9]*$/.test(v) || this.i18n.rules.noLong);
-                    }
-                    if (param.type === "double") {
-                        param.rules.push(v => /^[0-9.]*$/.test(v) || this.i18n.rules.noDouble);
-                    }
-
                     param.id = `GEOPROCESS_PARAM_${index}`;
                     return param;
                 });
