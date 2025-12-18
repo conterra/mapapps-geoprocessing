@@ -15,7 +15,7 @@
 ///
 
 import { Action } from "map-actions/api";
-import Layer from "esri/layers/Layer";
+import Layer from "@arcgis/core/layers/Layer";
 
 import type { InjectedReference } from "@conterra/ct-mapapps-typings/apprt-core/InjectedReference";
 import type { MapWidgetModel } from "map-widget/api";

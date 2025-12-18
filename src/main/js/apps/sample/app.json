@@ -41,7 +41,8 @@
             "bundle"
         ]
     },
-    "bundles": { "dn_geoprocessing": {
+    "bundles": {
+        "dn_geoprocessing": {
             "Config": {
                 "supportEmailAddress": "support@conterra.de"
             },
@@ -452,6 +453,26 @@
                     "parameters": []
                 },
                 {
+                    "id": "gp_upload",
+                    "title": "Upload",
+                    "tooltip": "Upload",
+                    "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot",
+                    "showWidget": true,
+                    "parameters": [
+                        {
+                            "name": "Query",
+                            "title": "Upload",
+                            "type": "upload",
+                            "upload": {
+                                "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/uploads/upload",
+                                "idField": "itemID"
+                            },
+                            "editable": true,
+                            "required": true
+                        }
+                    ]
+                },
+                {
                     "id": "gp_toolset_dev",
                     "title": "Entwicklungsbeispiel",
                     "tooltip": "Entwicklungsbeispiel",
@@ -544,6 +565,19 @@
                             "type": "double",
                             "value": 5,
                             "editable": false
+                        },
+                        {
+                            "name": "upload",
+                            "title": "Upload",
+                            "type": "upload",
+                            "upload": {
+                                "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/uploads/upload",
+                                "fileParameter": "txt",
+                                "idField": "itemID"
+                            },
+                            "value": null,
+                            "editable": true,
+                            "required": true
                         }
                     ]
                 }
@@ -609,12 +643,6 @@
                             "id": "fieldnotes",
                             "type": "AGS_FEATURE",
                             "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
-                        },
-                        {
-                            "id": "stoerungen",
-                            "title": "Störungen",
-                            "type": "AGS_DYNAMIC",
-                            "url": "https://services.conterra.de/arcgis/rest/services/mapapps/stoerung/MapServer"
                         },
                         {
                             "id": "koeln1",

@@ -77,10 +77,6 @@
                 type: String,
                 default: ""
             },
-            rules: {
-                type: Array,
-                default: () => []
-            },
             choiceList: {
                 type: Array,
                 default: () => undefined
@@ -88,9 +84,34 @@
             editable: {
                 type: Boolean,
                 default: false
+            },
+            required: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
+            rules: function() {
+                const rules = [];
+                if (this.required) {
+                    rules.push(v => !!v || this.i18n.rules.required);
+                }
+                if (this.range) {
+                    const min = this.range.min;
+                    const max = this.range.max;
+                    rules.push(v => (v >= min && v <= max) || this.i18n.rules.range);
+                }
+                if (this.type === "long" || this.type === "double") {
+                    rules.push(v => /^[0-9.,]*$/.test(v) || this.i18n.rules.NaN);
+                }
+                if (this.type === "long") {
+                    rules.push(v => /^[0-9]*$/.test(v) || this.i18n.rules.noLong);
+                }
+                if (this.type === "double") {
+                    rules.push(v => /^[0-9.]*$/.test(v) || this.i18n.rules.noDouble);
+                }
+                return rules;
+            },
             localValue: {
                 get() {
                     if (this.isObject(this.value)) {

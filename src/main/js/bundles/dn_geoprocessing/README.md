@@ -4,7 +4,7 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 
 ## Usage
 
-**Requirement: map.apps 4.12.0**
+**Requirement: map.apps 4.20.0**
 
 1. First you need to add the bundle dn_geoprocessing to your app.
 2. Then you can configure it.
@@ -16,6 +16,7 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 - double
 - feature-record-set-layer
 - linear-unit
+- file upload
 
 ### Supported output parameter types:
 - string
@@ -142,6 +143,19 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
                 "value": 5,
                 "editable": false,
                 "visible": false
+            },
+            {
+                "name": "upload",
+                "title": "Datei-Upload",
+                "type": "upload",
+                "upload": {
+                    "url": "https://example.com/arcgis/rest/services/TestService/FeatureServer/uploads/upload",
+                    "fileParameter": "txt",
+                    "idField": "itemID"
+                },
+                "value": null,
+                "editable": true,
+                "required": true
             }
         ]
     }
@@ -149,7 +163,7 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 ```
 
 | Property          | Type    | Possible Values   | Default  | Description                                                                                                             |
-|-------------------|---------|-------------------|----------|-------------------------------------------------------------------------------------------------------------------------|
+| ----------------- | ------- | ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
 | id                | String  |                   | ```""``` | Id of GP Service Tool                                                                                                   |
 | title             | String  |                   | ```""``` | Title of GP Service Tool                                                                                                |
 | tooltip           | String  |                   | ```""``` | Tooltip of GP Service Tool                                                                                              |
@@ -161,6 +175,15 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 | executeButtonText | String  |                   | ```""``` | Text to display on the execution button                                                                                 |
 | highlightSymbol   | Object  |                   | ```{}``` | Symbology to highlight clicked location with                                                                            |
 | haloSymbol        | Object  |                   | ```{}``` | Extended symbology to highlight clicked location with                                                                   |
+
+### Upload Parameter Properties
+For parameters with `"type": "upload"`, the following additional properties can be configured:
+
+| Property                 | Type   | Possible Values | Default  | Description                                                                |
+| ------------------------ | ------ | --------------- | -------- | -------------------------------------------------------------------------- |
+| upload.url               | String |                 | ```""``` | URL of the upload service endpoint                                         |
+| upload.fileParameter     | String |                 | ```""``` | Name of the file parameter expected by the upload service                  |
+| upload.idField           | String |                 | ```""``` | Field name that contains the upload ID returned by the upload service     |
 
 ### Optional: Output Paramter Config
 Optionally, the output parameters can be configured. Currently this is supported for results of the type "feature-record-set-layer".
@@ -190,7 +213,7 @@ This configuration allows to trigger actions for the result features.
 ```
 
 | Property      | Type   | Possible Values | Default  | Description                                                                                                                                                                                                                        |
-|---------------|--------|-----------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------- | ------ | --------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | name          | String |                 | ```""``` | Name of the parameter returned by GP Service                                                                                                                                                                                       |
 | type          | String |                 | ```""``` | Type of the parameter returned by GP Service                                                                                                                                                                                       |
 | actions       | Array  |                 | ```[]``` | Array of action ids providing the interface `map-actions.Action`                                                                                                                                                                   |
@@ -202,7 +225,7 @@ This action can be used to save the GP Service results in a FeatureLayer if they
 Either of the following properties must be provided. If both are configured `addto-featurelayer-id` is used.
 
 | Property               | Type   | Possible Values                            | Default  | Description                                                                                                                        |
-|------------------------|--------|--------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------- | ------ | ------------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | addto-featurelayer-id  | String | any id of a feature layer in the map       | ```""``` | Id of the feature layer to which the result will be added.                                                                         |
 | addto-featurelayer-url | String | any url leading to a feature layer service | ```""``` | Url of the service from which a layer is created. The result will be added to the created layer and the layer is added to the map. |
 
@@ -216,7 +239,7 @@ Either of the following properties must be provided. If both are configured `add
 ```
 
 | Property            | Type   | Possible Values | Default  | Description                                            |
-|---------------------|--------|-----------------|----------|--------------------------------------------------------|
+| ------------------- | ------ | --------------- | -------- | ------------------------------------------------------ |
 | supportEmailAddress | String | Any String      | ```""``` | Contact email provided in widget if GP execution fails |
 
 ### Customize widget configuration

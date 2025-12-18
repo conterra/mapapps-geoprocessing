@@ -1,19 +1,20 @@
-/*
- * Copyright (C) 2025 con terra GmbH (info@conterra.de)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-module.exports = {
+///
+/// Copyright (C) 2025 con terra GmbH (info@conterra.de)
+///
+/// Licensed under the Apache License, Version 2.0 (the "License");
+/// you may not use this file except in compliance with the License.
+/// You may obtain a copy of the License at
+///
+///         http://www.apache.org/licenses/LICENSE-2.0
+///
+/// Unless required by applicable law or agreed to in writing, software
+/// distributed under the License is distributed on an "AS IS" BASIS,
+/// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+/// See the License for the specific language governing permissions and
+/// limitations under the License.
+///
+
+const i18n = {
     root: {
         bundleName: "Geoprocessing",
         bundleDescription: "This bundle enables the execution of Geoprocessing services.",
@@ -31,6 +32,8 @@ module.exports = {
                 x: "Easting",
                 y: "Northing"
             },
+            selectFile: "Select file",
+            uploadFile: "Upload file",
             selectCenterOnMap: "Select center coordinate on map",
             processingInProgress: "Request in progress",
             parametersForm: "Form for geoprocessing parameters",
@@ -38,7 +41,7 @@ module.exports = {
             executeButtonLabel: "Execute",
             result: "Result",
             downloadResult: "Download result",
-            notifierStart:"The Geoprocessing Service has been started.",
+            notifierStart: "The Geoprocessing Service has been started.",
             notifierSuccess: "The Geoprocessing Service was executed successfully.",
             notifierError: "The Geoprocessing Service execution encountered an error.",
             rules: {
@@ -52,3 +55,9 @@ module.exports = {
     },
     de: true
 };
+
+export type Messages = (typeof i18n)["root"];
+export interface MessagesReference {
+    get: () => Messages
+}
+export default i18n;

@@ -15,10 +15,10 @@
 ///
 
 import InputParameterEntryMask from "./templates/GeoprocessingParameterInputWidget.vue";
-import * as geoprocessor from "esri/rest/geoprocessor";
-import apprt_request from "apprt-request";
+import * as geoprocessor from "@arcgis/core/rest/geoprocessor";
+import { ContentType, apprtFetchJson } from "apprt-fetch";
 import GeoprocessingModel from "dn_geoprocessing/GeoprocessingModel";
-import * as intl from "esri/intl";
+import * as intl from "@arcgis/core/intl";
 import apprt_when from "apprt-core/when";
 import ct_util from "ct/ui/desktop/util";
 import ServiceRegistration from "apprt/ServiceRegistration";
@@ -366,11 +366,10 @@ export class GeoprocessingController {
      * @private
      */
     private static getMetadata(url: string) {
-        return apprt_request(url, {
+        return apprtFetchJson(url, {
             query: {
                 f: 'json'
-            },
-            handleAs: 'json'
+            }
         }).then((result) => result, (error) => {
             console.error(error);
         });
@@ -517,6 +516,11 @@ export class GeoprocessingController {
             await this.runGeoprocessingService(parametersWithRules, tool);
         });
 
+        // add listener to the upload-file event
+        vm.$on("upload-file", (event: any) => {
+            this.uploadFile(event.file, event.id, tool);
+        });
+
         // finish widget creation
         const serviceProperties = {
             "widgetRole": "geoprocessingParameterWidget"
@@ -641,7 +645,7 @@ export class GeoprocessingController {
 
     private clearWatcher(): void {
         const view = this.view;
-        if(!view) return;
+        if (!view) return;
 
         this.mapClickWatcher.remove();
         this.mapClickWatcher = undefined;
@@ -652,5 +656,30 @@ export class GeoprocessingController {
         } else if (view.popup && "autoOpenEnabled" in view.popup) {
             view.popup.autoOpenEnabled = true; // pre ArcGIS Maps SDK 4.27
         }
+    }
+
+    private uploadFile(file: File, id: string, tool: any): void {
+        const param = tool.parameters.find((p: any) => p.id === id);
+        const uploadParams = param.upload;
+        if (!uploadParams) {
+            return;
+        }
+        const formData = new FormData();
+        formData.append("f", "json");
+        formData.append("file", file);
+        apprtFetchJson(uploadParams.url, {
+            method: "POST",
+            headers: {
+                Accept: ContentType.FORM_URLENCODED
+            },
+            body: formData
+        }).then((result: any) => {
+            const itemId = result.item[uploadParams.idField];
+            param.upload.itemId = itemId;
+            param.value = itemId;
+            param.uploaded = true;
+        }, (e) => {
+            console.error(e);
+        });
     }
 }

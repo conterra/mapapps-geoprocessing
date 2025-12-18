@@ -1,3 +1,7 @@
+[![devnet-bundle-snapshot](https://github.com/conterra/mapapps-geoprocessing/actions/workflows/devnet-bundle-snapshot.yml/badge.svg)](https://github.com/conterra/mapapps-geoprocessing/actions/workflows/devnet-bundle-snapshot.yml)
+![Static Badge](https://img.shields.io/badge/requires_map.apps-4.20.0-e5e5e5?labelColor=%233E464F&logoColor=%23e5e5e5)
+![Static Badge](https://img.shields.io/badge/tested_for_map.apps-4.20.0-%20?labelColor=%233E464F&color=%232FC050)
+
 # Geoprocessing Bundle
 
 This bundle enables the user to trigger the execution of Geoprocessing services.
@@ -6,12 +10,6 @@ This bundle enables the user to trigger the execution of Geoprocessing services.
 
 ## Sample App
 https://demos.conterra.de/mapapps/resources/apps/public_demo_geoprocessing/index.html
-
-## Build Status
-[![devnet-bundle-snapshot](https://github.com/conterra/mapapps-geoprocessing/actions/workflows/devnet-bundle-snapshot.yml/badge.svg)](https://github.com/conterra/mapapps-geoprocessing/actions/workflows/devnet-bundle-snapshot.yml)
-
-## Installation Guide
-**Requirement: map.apps 4.12.0**
 
 [dn_geoprocessing Documentation](https://github.com/conterra/mapapps-geoprocessing/tree/master/src/main/js/bundles/dn_geoprocessing)
 
