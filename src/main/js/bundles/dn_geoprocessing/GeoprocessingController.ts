@@ -676,7 +676,7 @@ export class GeoprocessingController {
         }).then((result: any) => {
             const itemId = result.item[uploadParams.idField];
             param.upload.itemId = itemId;
-            param.value = itemId;
+            param.value = { itemID: itemId };
             param.uploaded = true;
         }, (e) => {
             console.error(e);

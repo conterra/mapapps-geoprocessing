@@ -460,7 +460,7 @@
                     "showWidget": true,
                     "parameters": [
                         {
-                            "name": "Query",
+                            "name": "itemID",
                             "title": "Upload",
                             "type": "upload",
                             "upload": {
